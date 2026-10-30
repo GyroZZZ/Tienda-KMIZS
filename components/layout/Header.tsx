@@ -52,7 +52,8 @@ export function Header() {
         <div className="flex items-center gap-2">
           <Link
             href="/carrito"
-            className="flex items-center gap-2 rounded-card border border-ink/15 px-3 py-2 text-sm font-medium tracking-wide uppercase transition-colors hover:border-ink hover:bg-ink hover:text-bone"
+            aria-label="Carrito"
+            className="flex min-h-11 items-center gap-2 rounded-card border border-ink/15 px-3 py-2 text-sm font-medium tracking-wide uppercase transition-colors hover:border-ink hover:bg-ink hover:text-bone"
           >
             <svg
               aria-hidden="true"
@@ -76,7 +77,7 @@ export function Header() {
             aria-expanded={open}
             aria-controls="menu-movil"
             aria-label={open ? "Cerrar menú" : "Abrir menú"}
-            className="rounded-card border border-ink/15 p-2 md:hidden"
+            className="flex min-h-11 min-w-11 items-center justify-center rounded-card border border-ink/15 p-2 md:hidden"
           >
             <svg
               aria-hidden="true"
