@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta negra con logotipo KMIZS">
+  <rect width="800" height="1000" fill="#e6e1d4" />
+  <path
+    d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z"
+    fill="#0c0c0e"
+  />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#2a2a2f" stroke-width="10" />
+  <text
+    x="400"
+    y="330"
+    fill="#f5f2ea"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="40"
+    font-weight="700"
+    letter-spacing="8"
+    text-anchor="middle"
+  >KMIZS</text>
+  <circle cx="372" cy="348" r="6" fill="#ff3b1f" />
+</svg>

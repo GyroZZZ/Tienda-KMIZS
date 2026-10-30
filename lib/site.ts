@@ -20,6 +20,23 @@ export const site = {
  */
 export const currentYear = new Date().getFullYear();
 
+/**
+ * URL pública del sitio.
+ * Prioridad: variable explícita → dominio del proyecto en Vercel → valor por defecto.
+ */
+export function getSiteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercelUrl) {
+    return `https://${vercelUrl}`;
+  }
+
+  return site.url;
+}
+
 export const mainNav = [
   { href: "/", label: "Inicio" },
   { href: "/productos", label: "Camisetas" },

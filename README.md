@@ -69,6 +69,26 @@ main ────●────────────●───────
 
 Copiar `.env.example` a `.env.local` y completar los valores. Ese archivo no se versiona.
 
+`NEXT_PUBLIC_SITE_URL` es opcional: en Vercel se detecta el dominio del proyecto
+automáticamente y en local se usa `http://localhost:3000`.
+
+## Despliegue en Vercel
+
+1. Importar el repositorio desde Vercel; el framework se detecta como Next.js.
+2. Cada push a `main` publica en producción.
+3. Cada rama genera un **Preview Deployment** con su propia URL.
+4. Las variables de entorno se cargan en Vercel → Settings → Environment Variables, nunca en el repo.
+
+## Estado del proyecto
+
+| Sprint | Alcance                                                       | Estado    |
+| ------ | ------------------------------------------------------------- | --------- |
+| 1      | Base en código, identidad de marca y despliegue en Vercel     | En curso  |
+| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | Pendiente |
+| 3      | Carrito, checkout, Mercado Pago y envíos                      | Pendiente |
+| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente |
+| 5      | Lanzamiento, KPIs y documentación                             | Pendiente |
+
 ## Equipo
 
 | Rol                  | Integrante                                                        |

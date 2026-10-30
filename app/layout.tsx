@@ -3,7 +3,7 @@ import { Anton, Inter } from "next/font/google";
 
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { site } from "@/lib/site";
+import { getSiteUrl, site } from "@/lib/site";
 
 import "./globals.css";
 
@@ -20,7 +20,7 @@ const inter = Inter({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? site.url;
+const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

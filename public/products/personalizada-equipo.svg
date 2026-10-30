@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta hueso con área de estampado para personalizar">
+  <rect width="800" height="1000" fill="#f5f2ea" />
+  <path
+    d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z"
+    fill="#e6e1d4"
+    stroke="#d8d3c6"
+    stroke-width="6"
+  />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#d8d3c6" stroke-width="10" />
+  <rect
+    x="285"
+    y="300"
+    width="230"
+    height="280"
+    fill="none"
+    stroke="#0c0c0e"
+    stroke-width="4"
+    stroke-dasharray="14 10"
+  />
+  <text
+    x="400"
+    y="450"
+    fill="#0c0c0e"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="28"
+    font-weight="700"
+    letter-spacing="6"
+    text-anchor="middle"
+  >TU DISEÑO</text>
+</svg>
