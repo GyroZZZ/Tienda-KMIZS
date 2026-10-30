@@ -1,0 +1,8 @@
+node_modules
+.next
+out
+build
+package-lock.json
+.agents
+skills-lock.json
+AGENTS.md

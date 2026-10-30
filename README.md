@@ -1,19 +1,19 @@
 # KMIZS
 
 Tienda en línea de camisetas básicas, gráficas y personalizadas para Colombia.
-**KMIZS** se pronuncia *ca-mi-se-tas*.
+**KMIZS** se pronuncia _ca-mi-se-tas_.
 
 Proyecto académico de comercio electrónico — 5 sprints, entrega **30 de noviembre de 2026**.
 
 ## Stack
 
-| Capa | Tecnología |
-| --- | --- |
-| Framework | Next.js (App Router) |
-| Lenguaje | TypeScript |
-| Estilos | Tailwind CSS |
-| Despliegue | Vercel |
-| Pagos | Mercado Pago (sandbox) + contraentrega |
+| Capa       | Tecnología                             |
+| ---------- | -------------------------------------- |
+| Framework  | Next.js (App Router)                   |
+| Lenguaje   | TypeScript                             |
+| Estilos    | Tailwind CSS                           |
+| Despliegue | Vercel                                 |
+| Pagos      | Mercado Pago (sandbox) + contraentrega |
 
 ## Requisitos
 
@@ -31,17 +31,17 @@ La tienda queda en <http://localhost:3000>.
 
 ## Scripts
 
-| Comando | Qué hace |
-| --- | --- |
-| `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Compila para producción |
-| `npm start` | Sirve la compilación de producción |
-| `npm run lint` | Revisa el código con ESLint |
-| `npm run format` | Formatea con Prettier |
+| Comando          | Qué hace                           |
+| ---------------- | ---------------------------------- |
+| `npm run dev`    | Servidor de desarrollo             |
+| `npm run build`  | Compila para producción            |
+| `npm start`      | Sirve la compilación de producción |
+| `npm run lint`   | Revisa el código con ESLint        |
+| `npm run format` | Formatea con Prettier              |
 
 ## Flujo de ramas
 
-Trabajamos con ramas cortas por historia y *pull request* obligatorio hacia `main`.
+Trabajamos con ramas cortas por historia y _pull request_ obligatorio hacia `main`.
 
 ```text
 main ────●────────────●────────────●────────►   producción (Vercel)
@@ -50,12 +50,12 @@ main ────●────────────●───────
                    ●──●──●──────●              feat/e2-catalogo
 ```
 
-| Rama | Uso |
-| --- | --- |
-| `main` | Producción. Solo entra código revisado, vía pull request. |
-| `feat/<tarjeta>-<tema>` | Nueva funcionalidad (ej. `feat/e3-carrito`) |
-| `fix/<tema>` | Corrección de un error |
-| `docs/<tema>` | Documentación |
+| Rama                    | Uso                                                       |
+| ----------------------- | --------------------------------------------------------- |
+| `main`                  | Producción. Solo entra código revisado, vía pull request. |
+| `feat/<tarjeta>-<tema>` | Nueva funcionalidad (ej. `feat/e3-carrito`)               |
+| `fix/<tema>`            | Corrección de un error                                    |
+| `docs/<tema>`           | Documentación                                             |
 
 ### Reglas
 
@@ -71,10 +71,10 @@ Copiar `.env.example` a `.env.local` y completar los valores. Ese archivo no se 
 
 ## Equipo
 
-| Rol | Integrante |
-| --- | --- |
-| Product Owner | Ivan Arroyo |
-| Scrum Master | Horacio Campillo |
+| Rol                  | Integrante                                                        |
+| -------------------- | ----------------------------------------------------------------- |
+| Product Owner        | Ivan Arroyo                                                       |
+| Scrum Master         | Horacio Campillo                                                  |
 | Equipo de desarrollo | Eduardo Cambronel, Jesus Bohorques, Horacio Campillo, Ivan Arroyo |
 
 ## Enlaces

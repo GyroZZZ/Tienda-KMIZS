@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="KMIZS">
+  <rect width="64" height="64" fill="#0c0c0e" />
+  <path d="M15 13h8v16.5L37.5 13H48L31 31.5 48.5 51H37.5L23 33.5V51h-8z" fill="#f5f2ea" />
+  <circle cx="52" cy="52" r="4" fill="#ff3b1f" />
+</svg>
