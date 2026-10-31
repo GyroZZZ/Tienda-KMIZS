@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta hueso con el número 01 impreso en grande">
-  <rect width="800" height="1000" fill="#0c0c0e" />
-  <path d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z" fill="#f5f2ea" />
-  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#d8d3c6" stroke-width="10" />
-  <rect x="300" y="300" width="200" height="18" fill="#ff3b1f" />
-  <text x="400" y="520" fill="#0c0c0e" font-family="Arial Black, Arial, sans-serif" font-size="210" font-weight="900" text-anchor="middle">01</text>
-  <text x="400" y="620" fill="#0c0c0e" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="10" text-anchor="middle">CAPSULA UNO</text>
-</svg>

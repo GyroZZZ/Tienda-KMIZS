@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta negra con patrón de cuadros verdes en toda la prenda">
+  <rect width="800" height="1000" fill="#e6e1d4" />
+  <defs>
+    <pattern id="ichimatsu" width="64" height="64" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="64" height="64" fill="#0c0c0e" />
+      <rect width="32" height="32" fill="#1f6b4a" />
+      <rect x="32" y="32" width="32" height="32" fill="#1f6b4a" />
+    </pattern>
+  </defs>
+  <path d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z" fill="url(#ichimatsu)" />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#2a2a2f" stroke-width="12" />
+  <path d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z" fill="none" stroke="#2a2a2f" stroke-width="4" opacity="0.6" />
+</svg>

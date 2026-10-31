@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta negra con un sombrero de paja de ala ancha impreso en el pecho">
+  <rect width="800" height="1000" fill="#e6e1d4" />
+  <path d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z" fill="#0c0c0e" />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#2a2a2f" stroke-width="10" />
+  <ellipse cx="400" cy="498" rx="172" ry="34" fill="#f5f2ea" />
+  <ellipse cx="400" cy="493" rx="172" ry="34" fill="none" stroke="#d8d3c6" stroke-width="4" />
+  <path d="M322 496 C322 350 478 350 478 496 Z" fill="#f7f4ec" stroke="#d8d3c6" stroke-width="4" />
+  <clipPath id="crown">
+    <path d="M322 496 C322 350 478 350 478 496 Z" />
+  </clipPath>
+  <g clip-path="url(#crown)">
+    <rect x="300" y="450" width="200" height="34" fill="#ff3b1f" />
+  </g>
+</svg>
