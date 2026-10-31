@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta hueso con gráfica geométrica bermellón">
+  <rect width="800" height="1000" fill="#0c0c0e" />
+  <path
+    d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z"
+    fill="#f5f2ea"
+  />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#d8d3c6" stroke-width="10" />
+  <circle cx="400" cy="420" r="118" fill="#ff3b1f" />
+  <rect x="230" y="360" width="340" height="26" fill="#0c0c0e" />
+  <rect x="230" y="410" width="340" height="26" fill="#0c0c0e" />
+  <rect x="230" y="460" width="340" height="26" fill="#f5f2ea" />
+  <text
+    x="400"
+    y="620"
+    fill="#0c0c0e"
+    font-family="Arial, Helvetica, sans-serif"
+    font-size="26"
+    font-weight="700"
+    letter-spacing="8"
+    text-anchor="middle"
+  >SERIE 01</text>
+</svg>
