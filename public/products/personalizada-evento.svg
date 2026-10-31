@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Camiseta negra con área de estampado delimitada para un evento">
+  <rect width="800" height="1000" fill="#e6e1d4" />
+  <path d="M300 130 C350 168 450 168 500 130 L640 175 L710 265 L625 350 L590 315 L590 900 L210 900 L210 315 L175 350 L90 265 L160 175 Z" fill="#0c0c0e" />
+  <path d="M300 130 C350 168 450 168 500 130" fill="none" stroke="#2a2a2f" stroke-width="10" />
+  <rect x="285" y="300" width="230" height="280" fill="none" stroke="#f5f2ea" stroke-width="4" stroke-dasharray="14 10" />
+  <text x="400" y="450" fill="#f5f2ea" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" letter-spacing="6" text-anchor="middle">EVENTO</text>
+</svg>

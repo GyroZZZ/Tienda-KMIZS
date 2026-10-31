@@ -28,8 +28,9 @@ const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Costos",
         body: [
-          "El costo del envío se calcula según la ciudad y el peso del paquete, y se muestra antes de confirmar la compra.",
-          "Los pedidos por volumen pueden acordar una tarifa de envío única con el equipo de KMIZS.",
+          "La primera y la segunda compra de cada cliente pagan tarifa plana: $15.900 en ciudades principales y $18.900 en zonas extendidas.",
+          "A partir de la tercera compra, el envío es gratis a cualquier destino nacional. El beneficio se aplica automáticamente al validar el historial con el mismo correo o teléfono.",
+          "Los pedidos personalizados de 6 unidades o más tienen envío gratis desde la primera compra.",
         ],
       },
       {

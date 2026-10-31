@@ -154,7 +154,10 @@ function ProductDetails({ product }: { product: Product }) {
             </span>
           </summary>
           <div className="mt-3 space-y-2 text-sm leading-relaxed text-ink/70">
-            <p>Enviamos a toda Colombia en 2 a 5 días hábiles después del despacho.</p>
+            <p>
+              Enviamos a toda Colombia en 2 a 5 días hábiles después del despacho. La primera y la
+              segunda compra pagan tarifa plana; desde la tercera, el envío es gratis.
+            </p>
             <p>
               Cambios de talla dentro de los 5 días siguientes a la entrega, sin uso y con la
               etiqueta puesta.

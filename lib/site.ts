@@ -18,6 +18,13 @@ export const site = {
  * Año del build. Se evalúa una sola vez al compilar, así que es estable
  * durante el prerenderizado (Cache Components no permite `new Date()` en render).
  */
+export const shipping = {
+  /** A partir de esta compra del mismo cliente el envío es gratis. */
+  freeFromOrder: 3,
+  standardRate: 15900,
+  extendedRate: 18900,
+} as const;
+
 export const currentYear = new Date().getFullYear();
 
 /**
