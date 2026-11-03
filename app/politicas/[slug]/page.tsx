@@ -15,22 +15,20 @@ const policies: Record<PolicySlug, Policy> = {
     title: "Envíos y entregas",
     updatedAt: "30 de octubre de 2026",
     intro:
-      "Despachamos a toda Colombia desde nuestras instalaciones en el país, con transportadoras aliadas y número de guía para seguir el pedido.",
+      "La disponibilidad, el costo y el plazo se confirman para cada destino con la transportadora antes de cobrar o despachar el pedido.",
     sections: [
       {
         heading: "Tiempos",
         body: [
-          "Los pedidos se despachan entre 24 y 48 horas hábiles después de confirmar el pago.",
-          "La entrega tarda entre 2 y 5 días hábiles en ciudades principales y hasta 7 días hábiles en zonas rurales.",
-          "Los pedidos personalizados se producen sobre pedido: cuentan con 8 a 12 días hábiles adicionales antes del despacho.",
+          "El tiempo estimado de entrega se informa antes del pago y depende del municipio y de la cobertura confirmada por la transportadora.",
+          "Los productos personalizados se producen sobre pedido. El tiempo de producción indicado en su ficha se suma al tiempo de transporte.",
         ],
       },
       {
         heading: "Costos",
         body: [
-          "La primera y la segunda compra de cada cliente pagan tarifa plana: $15.900 en ciudades principales y $18.900 en zonas extendidas.",
-          "A partir de la tercera compra, el envío es gratis a cualquier destino nacional. El beneficio se aplica automáticamente al validar el historial con el mismo correo o teléfono.",
-          "Los pedidos personalizados de 6 unidades o más tienen envío gratis desde la primera compra.",
+          "La tarifa se cotiza según la zona de cobertura y se muestra antes de cualquier pago. Los valores publicados en documentos internos son estimaciones, no una tarifa confirmada.",
+          "No se aplica un envío gratis automático mientras no estén confirmadas las condiciones comerciales con la transportadora.",
         ],
       },
       {
@@ -89,7 +87,7 @@ const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Pedidos",
         body: [
-          "Un pedido se considera confirmado cuando recibes el correo de confirmación con el número de orden.",
+          "Al enviar el formulario registramos la solicitud y el equipo la recibe por correo. El pedido queda confirmado con el cliente después de validar disponibilidad, envío y forma de pago por WhatsApp o con el estado aprobado de la pasarela.",
           "El pago contraentrega está sujeto a disponibilidad de la transportadora en la zona.",
         ],
       },
@@ -114,6 +112,13 @@ const policies: Record<PolicySlug, Policy> = {
           "Datos de contacto y envío: nombre, correo, teléfono, dirección, ciudad y departamento.",
           "Información del pedido: productos, tallas, valores y estado del pago.",
           "Datos de navegación anónimos para medir el uso del sitio.",
+        ],
+      },
+      {
+        heading: "Con quién compartimos los datos",
+        body: [
+          "Compartimos los datos necesarios del pedido con Resend para enviar el registro al equipo y con Mercado Pago cuando eliges pagar por su pasarela.",
+          "Si continúas por WhatsApp, los datos que decidas enviar se tramitan mediante ese servicio. No almacenamos números completos de tarjeta.",
         ],
       },
       {

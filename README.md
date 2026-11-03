@@ -118,6 +118,14 @@ Copiar `.env.example` a `.env.local` y completar los valores. Ese archivo no se 
 `NEXT_PUBLIC_SITE_URL` es opcional: en Vercel se detecta el dominio del proyecto
 automáticamente y en local se usa `http://localhost:3000`.
 
+Para registrar pedidos, configura `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con una dirección remitente verificada en Resend. Los pedidos de contraentrega y transferencia se envían a `hola@kmizs.co` y se confirman manualmente por WhatsApp.
+
+El checkout digital usa Mercado Pago Checkout Pro. Configura `MERCADO_PAGO_ACCESS_TOKEN` con el token `TEST-...` y `MERCADO_PAGO_WEBHOOK_SECRET` en Vercel Preview para pruebas. El token solo se lee en funciones del servidor; los estados del pago se verifican con Mercado Pago y el webhook firmado envía una actualización al correo del equipo.
+
+Las tarifas, los plazos y los municipios por zona aún están pendientes de confirmación con la transportadora. Mantén `SHIPPING_RATES_CONFIRMED=false`; cuando estén confirmados, carga tarifas, plazos y las listas `SHIPPING_MAIN_MUNICIPALITIES` y `SHIPPING_EXTENDED_MUNICIPALITIES` en formato `Municipio|Departamento, ...`. Luego activa `SHIPPING_RATES_CONFIRMED=true`. El servidor determina la zona a partir de la dirección (no confía en un total enviado por el navegador). Sin cobertura confirmada, el checkout registra pedidos por correo/WhatsApp, pero no permite cobrar en línea.
+
+En el checkout, el municipio se elige de una lista dependiente del departamento. El catálogo local de Colombia está en `lib/colombian-locations.json`; su fuente y licencia MIT se incluyen allí y en `lib/colombian-locations.LICENSE`.
+
 ## Despliegue en Vercel
 
 1. Importar el repositorio desde Vercel; el framework se detecta como Next.js.
@@ -127,13 +135,13 @@ automáticamente y en local se usa `http://localhost:3000`.
 
 ## Estado del proyecto
 
-| Sprint | Alcance                                                       | Estado     |
-| ------ | ------------------------------------------------------------- | ---------- |
-| 1      | Base en código, identidad de marca y despliegue en Vercel     | Completado |
-| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | En curso   |
-| 3      | Carrito, checkout, Mercado Pago y envíos                      | Pendiente  |
-| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente  |
-| 5      | Lanzamiento, KPIs y documentación                             | Pendiente  |
+| Sprint | Alcance                                                       | Estado                                                       |
+| ------ | ------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1      | Base en código, identidad de marca y despliegue en Vercel     | Completado                                                   |
+| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | En curso                                                     |
+| 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos | Implementado; requiere credenciales y confirmación de envíos |
+| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente                                                    |
+| 5      | Lanzamiento, KPIs y documentación                             | Pendiente                                                    |
 
 ## Equipo
 

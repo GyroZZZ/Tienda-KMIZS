@@ -10,6 +10,8 @@ import {
   productTypeLabels,
   type Product,
 } from "@/lib/products";
+import { AddToCart } from "@/components/cart/AddToCart";
+import { getShippingOptions } from "@/lib/shipping";
 
 export function generateStaticParams() {
   return getAllProducts().map((product) => ({ slug: product.slug }));
@@ -36,9 +38,13 @@ export async function generateMetadata({
   };
 }
 
-function ProductDetails({ product }: { product: Product }) {
-  const totalStock = product.sizes.reduce((total, item) => total + item.stock, 0);
-
+function ProductDetails({
+  product,
+  shippingOptions,
+}: {
+  product: Product;
+  shippingOptions: ReturnType<typeof getShippingOptions>;
+}) {
   return (
     <div>
       <p className="text-[11px] font-medium tracking-[0.24em] text-ink/50 uppercase">
@@ -59,74 +65,14 @@ function ProductDetails({ product }: { product: Product }) {
 
       <p className="mt-5 text-base leading-relaxed text-ink/75">{product.description}</p>
 
-      <div className="mt-7">
-        <h2 className="text-sm font-semibold tracking-[0.14em] text-ink/60 uppercase">Tallas</h2>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {product.sizes.map((item) => {
-            const available = item.stock > 0;
-            return (
-              <li key={item.size}>
-                <span
-                  aria-disabled={!available}
-                  className={`flex size-11 items-center justify-center border text-sm font-semibold ${
-                    available ? "border-ink/25 text-ink" : "border-ink/10 text-ink/30 line-through"
-                  }`}
-                >
-                  {item.size}
-                  <span className="sr-only">{available ? ` disponible` : " agotada"}</span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="mt-2 text-xs text-ink/50">
-          {totalStock > 0 ? `${totalStock} unidades disponibles` : "Sin stock por ahora"}
-        </p>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-sm font-semibold tracking-[0.14em] text-ink/60 uppercase">Colores</h2>
-        <ul className="mt-3 flex flex-wrap gap-3">
-          {product.colors.map((color) => (
-            <li key={color.name} className="flex items-center gap-2 text-sm text-ink/75">
-              <span
-                aria-hidden="true"
-                className="size-5 rounded-full border border-ink/20"
-                style={{ backgroundColor: color.hex }}
-              />
-              {color.name}
-            </li>
-          ))}
-        </ul>
-      </div>
-
       {product.minQuantity ? (
         <p className="mt-6 border border-ink/15 bg-bone-dim/60 px-4 py-3 text-sm text-ink/75">
-          Pedido mínimo: <strong>{product.minQuantity} unidades</strong>. Entrega en 8 a 12 días
-          hábiles.
+          Pedido mínimo: <strong>{product.minQuantity} unidades</strong>. Consulta el tiempo de
+          producción indicado en la descripción del producto.
         </p>
       ) : null}
 
-      <div className="mt-8">
-        <button
-          type="button"
-          disabled
-          className="w-full cursor-not-allowed bg-ink px-7 py-4 text-sm font-semibold tracking-[0.12em] text-bone uppercase opacity-60 sm:w-auto"
-        >
-          Agregar al carrito
-        </button>
-        <p className="mt-3 text-sm leading-relaxed text-ink/60">
-          El carrito y el pago en línea se habilitan en la siguiente entrega del proyecto. Mientras
-          tanto,{" "}
-          <Link
-            href="/contacto"
-            className="underline decoration-accent decoration-2 underline-offset-4"
-          >
-            escríbenos
-          </Link>{" "}
-          y reservamos tu talla.
-        </p>
-      </div>
+      <AddToCart product={product} />
 
       <div className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
         <details className="group py-4">
@@ -155,8 +101,18 @@ function ProductDetails({ product }: { product: Product }) {
           </summary>
           <div className="mt-3 space-y-2 text-sm leading-relaxed text-ink/70">
             <p>
-              Enviamos a toda Colombia en 2 a 5 días hábiles después del despacho. La primera y la
-              segunda compra pagan tarifa plana; desde la tercera, el envío es gratis.
+              {shippingOptions.confirmed
+                ? `Envío: ${shippingOptions.zones
+                    .map(
+                      (zone) =>
+                        `${zone.label}, ${zone.eta} (${new Intl.NumberFormat("es-CO", {
+                          style: "currency",
+                          currency: "COP",
+                          maximumFractionDigits: 0,
+                        }).format(zone.rate)})`,
+                    )
+                    .join("; ")}.`
+                : "El costo y el tiempo de envío están pendientes de confirmación con la transportadora. Te los informaremos antes de pagar."}
             </p>
             <p>
               Cambios de talla dentro de los 5 días siguientes a la entrega, sin uso y con la
@@ -172,6 +128,7 @@ function ProductDetails({ product }: { product: Product }) {
 export default async function ProductPage({ params }: PageProps<"/productos/[slug]">) {
   const { slug } = await params;
   const product = getProductBySlug(slug);
+  const shippingOptions = getShippingOptions();
 
   if (!product) {
     notFound();
@@ -204,7 +161,7 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
           />
         </div>
 
-        <ProductDetails product={product} />
+        <ProductDetails product={product} shippingOptions={shippingOptions} />
       </div>
     </div>
   );

@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { CheckoutForm } from "@/components/checkout/CheckoutForm";
+import { getMercadoPagoTestToken } from "@/lib/payments";
+import { getShippingOptions } from "@/lib/shipping";
 
 export const metadata: Metadata = {
   title: "Finalizar compra",
@@ -7,54 +10,26 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const steps = [
-  {
-    title: "Datos de envío",
-    detail: "Nombre, teléfono, correo y dirección con ciudad y departamento.",
-  },
-  {
-    title: "Método de pago",
-    detail: "Mercado Pago en modo de prueba (tarjeta, PSE, Nequi) o pago contraentrega.",
-  },
-  {
-    title: "Confirmación",
-    detail: "Recibes el resumen del pedido por correo y coordinamos la entrega.",
-  },
-];
-
 export default function CheckoutPage() {
+  const shippingOptions = getShippingOptions();
+  const onlinePaymentsAvailable =
+    Boolean(getMercadoPagoTestToken()) &&
+    Boolean(process.env.MERCADO_PAGO_WEBHOOK_SECRET) &&
+    Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) &&
+    shippingOptions.confirmed;
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 md:py-20">
       <h1 className="text-4xl tracking-tight sm:text-5xl">Finalizar compra</h1>
       <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">
-        El checkout entra en funcionamiento en el Sprint 3, junto con el carrito y la pasarela de
-        pagos. Así va a funcionar:
+        Revisa tus productos, comparte tus datos de entrega y elige cómo pagar. Si el envío todavía
+        no está confirmado, te informaremos el costo y el plazo antes de cobrar o despachar.
       </p>
 
-      <ol className="mt-10 grid gap-4 sm:grid-cols-3">
-        {steps.map((step, index) => (
-          <li key={step.title} className="border border-ink/15 p-6">
-            <span className="font-display text-xs tracking-[0.2em] text-accent">0{index + 1}</span>
-            <p className="mt-3 font-display text-xl tracking-tight">{step.title}</p>
-            <p className="mt-2 text-sm leading-relaxed text-ink/65">{step.detail}</p>
-          </li>
-        ))}
-      </ol>
-
-      <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-        <Link
-          href="/productos"
-          className="inline-flex items-center justify-center bg-ink px-6 py-3 text-sm font-semibold tracking-[0.12em] text-bone uppercase transition-colors hover:bg-accent"
-        >
-          Volver al catálogo
-        </Link>
-        <Link
-          href="/contacto"
-          className="inline-flex items-center justify-center border border-ink/25 px-6 py-3 text-sm font-semibold tracking-[0.12em] uppercase transition-colors hover:border-ink"
-        >
-          Comprar por WhatsApp
-        </Link>
-      </div>
+      <CheckoutForm
+        shippingOptions={shippingOptions}
+        onlinePaymentsAvailable={onlinePaymentsAvailable}
+      />
     </div>
   );
 }

@@ -39,7 +39,7 @@ export default function HomePage() {
 
             <p className="mt-6 max-w-md text-base leading-relaxed text-bone/75">
               Básicas para todos los días, gráficas para destacar y personalizadas para tu equipo.
-              Diseñadas e impresas acá, con envíos a todo el país.
+              Diseñadas e impresas acá; consulta cobertura y envío para tu ciudad.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
