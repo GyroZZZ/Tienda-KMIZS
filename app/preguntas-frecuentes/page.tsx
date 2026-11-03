@@ -10,12 +10,12 @@ const faqs = [
   {
     question: "¿Cuánto tarda el envío?",
     answer:
-      "Despachamos en 24 a 48 horas hábiles después de confirmar el pedido. La entrega tarda entre 2 y 5 días hábiles según la ciudad. En zonas rurales puede tomar un día más.",
+      "El plazo y el costo se confirman con la transportadora para tu ciudad y se muestran antes de cobrar o despachar el pedido.",
   },
   {
     question: "¿Puedo pagar contraentrega?",
     answer:
-      "Sí. El pago contraentrega está disponible en las principales ciudades del país. También aceptamos pagos en línea con Mercado Pago: tarjeta, PSE y Nequi.",
+      "Puedes elegir contraentrega o transferencia y confirmar la disponibilidad por WhatsApp. Mercado Pago en modo de prueba se habilita cuando se configuren sus credenciales y se confirmen las tarifas de envío.",
   },
   {
     question: "¿Cómo elijo mi talla?",

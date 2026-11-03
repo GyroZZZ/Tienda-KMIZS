@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import { useCart } from "@/components/cart/CartProvider";
 import { mainNav, site } from "@/lib/site";
 
 function isActive(pathname: string, href: string) {
@@ -14,11 +15,12 @@ function isActive(pathname: string, href: string) {
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { itemCount } = useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-bone/90 backdrop-blur">
       <div className="bg-ink px-4 py-1.5 text-center text-[11px] font-medium tracking-[0.18em] text-bone/90 uppercase">
-        Envío gratis desde tu 3.ª compra · Pago contraentrega
+        Costos de envío se confirman antes del pago · Pedidos por WhatsApp
       </div>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
@@ -69,6 +71,10 @@ export function Header() {
               <path d="M9 7a3 3 0 0 1 6 0" />
             </svg>
             <span className="hidden sm:inline">Carrito</span>
+            <span className="flex min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[11px] text-bone">
+              <span className="sr-only">{itemCount} productos en el carrito: </span>
+              {itemCount}
+            </span>
           </Link>
 
           <button

@@ -16,8 +16,9 @@ const channels = [
   },
   {
     title: "WhatsApp",
-    value: "Próximamente",
-    detail: "El número de atención se publica con el lanzamiento.",
+    value: site.whatsappDisplay,
+    detail: "Confirma aquí tu pedido, disponibilidad y tarifa de envío.",
+    href: `https://wa.me/${site.whatsapp}`,
   },
   {
     title: "Pedidos por volumen",

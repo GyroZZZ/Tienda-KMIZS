@@ -93,15 +93,15 @@
 
 ---
 
-## 5. Política de envíos
+## 5. Hipótesis de envío (pendiente de confirmar)
 
-| Momento del cliente                 | Tarifa                                                                      |
-| ----------------------------------- | --------------------------------------------------------------------------- |
-| Compra 1 y 2                        | Tarifa plana de $15.900 (ciudades principales) · $18.900 (zonas extendidas) |
-| Compra 3 en adelante                | **Envío gratis**                                                            |
-| Pedido personalizado de 6+ unidades | Envío gratis desde la primera compra                                        |
+| Momento del cliente                 | Tarifa                                                                |
+| ----------------------------------- | --------------------------------------------------------------------- |
+| Compra 1 y 2                        | Estimado: $15.900 (ciudades principales) · $18.900 (zonas extendidas) |
+| Compra 3 en adelante                | Beneficio propuesto; no habilitado                                    |
+| Pedido personalizado de 6+ unidades | Beneficio propuesto; no habilitado                                    |
 
-El envío gratis se aplica automáticamente al validar el historial del cliente con el mismo correo o teléfono. La provisión del 10% en el costo unitario cubre ese beneficio sin afectar el margen.
+Estos valores son hipótesis académicas, no tarifas confirmadas por una transportadora. No mostrarlos como precio final ni habilitar el cobro en línea hasta confirmar cobertura, tarifas y tiempos por zona. El checkout los solicita mediante las variables de entorno de Vercel.
 
 ---
 
