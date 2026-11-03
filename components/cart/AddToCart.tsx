@@ -17,6 +17,7 @@ export function AddToCart({ product }: { product: Product }) {
   const canOrder = product.sizes.some(
     (item) => item.size === size && item.stock >= (product.minQuantity ?? 1),
   );
+  const totalStock = product.sizes.reduce((total, item) => total + item.stock, 0);
 
   function handleAdd() {
     if (!size) return;
@@ -50,23 +51,24 @@ export function AddToCart({ product }: { product: Product }) {
           </select>
         </label>
 
-        {product.colors.length > 1 ? (
-          <label className="text-sm font-semibold">
-            Color
-            <select
-              value={color}
-              onChange={(event) => setColor(event.target.value)}
-              className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
-            >
-              {product.colors.map((item) => (
-                <option key={item.name} value={item.name}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
+        <label className="text-sm font-semibold">
+          Color
+          <select
+            value={color}
+            onChange={(event) => setColor(event.target.value)}
+            className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
+          >
+            {product.colors.map((item) => (
+              <option key={item.name} value={item.name}>
+                {item.name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
+      <p className="mt-2 text-xs text-ink/50">
+        {totalStock > 0 ? `${totalStock} unidades disponibles` : "Sin stock por ahora"}
+      </p>
 
       <button
         type="button"

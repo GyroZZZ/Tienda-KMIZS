@@ -124,6 +124,8 @@ El checkout digital usa Mercado Pago Checkout Pro. Configura `MERCADO_PAGO_ACCES
 
 Las tarifas, los plazos y los municipios por zona aún están pendientes de confirmación con la transportadora. Mantén `SHIPPING_RATES_CONFIRMED=false`; cuando estén confirmados, carga tarifas, plazos y las listas `SHIPPING_MAIN_MUNICIPALITIES` y `SHIPPING_EXTENDED_MUNICIPALITIES` en formato `Municipio|Departamento, ...`. Luego activa `SHIPPING_RATES_CONFIRMED=true`. El servidor determina la zona a partir de la dirección (no confía en un total enviado por el navegador). Sin cobertura confirmada, el checkout registra pedidos por correo/WhatsApp, pero no permite cobrar en línea.
 
+En el checkout, el municipio se elige de una lista dependiente del departamento. El catálogo local de Colombia está en `lib/colombian-locations.json`; su fuente y licencia MIT se incluyen allí y en `lib/colombian-locations.LICENSE`.
+
 ## Despliegue en Vercel
 
 1. Importar el repositorio desde Vercel; el framework se detecta como Next.js.

@@ -45,8 +45,6 @@ function ProductDetails({
   product: Product;
   shippingOptions: ReturnType<typeof getShippingOptions>;
 }) {
-  const totalStock = product.sizes.reduce((total, item) => total + item.stock, 0);
-
   return (
     <div>
       <p className="text-[11px] font-medium tracking-[0.24em] text-ink/50 uppercase">
@@ -66,47 +64,6 @@ function ProductDetails({
       </p>
 
       <p className="mt-5 text-base leading-relaxed text-ink/75">{product.description}</p>
-
-      <div className="mt-7">
-        <h2 className="text-sm font-semibold tracking-[0.14em] text-ink/60 uppercase">Tallas</h2>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {product.sizes.map((item) => {
-            const available = item.stock > 0;
-            return (
-              <li key={item.size}>
-                <span
-                  aria-disabled={!available}
-                  className={`flex size-11 items-center justify-center border text-sm font-semibold ${
-                    available ? "border-ink/25 text-ink" : "border-ink/10 text-ink/30 line-through"
-                  }`}
-                >
-                  {item.size}
-                  <span className="sr-only">{available ? ` disponible` : " agotada"}</span>
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-        <p className="mt-2 text-xs text-ink/50">
-          {totalStock > 0 ? `${totalStock} unidades disponibles` : "Sin stock por ahora"}
-        </p>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-sm font-semibold tracking-[0.14em] text-ink/60 uppercase">Colores</h2>
-        <ul className="mt-3 flex flex-wrap gap-3">
-          {product.colors.map((color) => (
-            <li key={color.name} className="flex items-center gap-2 text-sm text-ink/75">
-              <span
-                aria-hidden="true"
-                className="size-5 rounded-full border border-ink/20"
-                style={{ backgroundColor: color.hex }}
-              />
-              {color.name}
-            </li>
-          ))}
-        </ul>
-      </div>
 
       {product.minQuantity ? (
         <p className="mt-6 border border-ink/15 bg-bone-dim/60 px-4 py-3 text-sm text-ink/75">

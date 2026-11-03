@@ -5,6 +5,7 @@ import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 
 import { useCart } from "@/components/cart/CartProvider";
+import colombianLocations from "@/lib/colombian-locations.json";
 import { formatPrice, getProductBySlug } from "@/lib/products";
 import type { ShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
@@ -67,6 +68,9 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
     [items],
   );
   const subtotal = lines.reduce((total, item) => total + item.total, 0);
+  const municipalities =
+    colombianLocations.departments.find((location) => location.name === department)
+      ?.municipalities ?? [];
   const selectedZone = getShippingZoneForAddress(shippingOptions, city, department);
   const estimatedTotal = subtotal + (selectedZone?.rate ?? 0);
 
@@ -230,28 +234,44 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
               />
             </label>
             <label className="text-sm font-semibold">
+              Departamento
+              <select
+                name="department"
+                required
+                value={department}
+                onChange={(event) => {
+                  setDepartment(event.target.value);
+                  setCity("");
+                }}
+                className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
+              >
+                <option value="">Selecciona un departamento</option>
+                {colombianLocations.departments.map((location) => (
+                  <option key={location.name} value={location.name}>
+                    {location.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-sm font-semibold">
               Ciudad o municipio
-              <input
+              <select
                 name="city"
                 required
-                autoComplete="address-level2"
-                maxLength={80}
                 value={city}
                 onChange={(event) => setCity(event.target.value)}
                 className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
-              />
-            </label>
-            <label className="text-sm font-semibold">
-              Departamento
-              <input
-                name="department"
-                required
-                autoComplete="address-level1"
-                maxLength={80}
-                value={department}
-                onChange={(event) => setDepartment(event.target.value)}
-                className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
-              />
+                disabled={!department}
+              >
+                <option value="">
+                  {department ? "Selecciona un municipio" : "Primero selecciona un departamento"}
+                </option>
+                {municipalities.map((municipality) => (
+                  <option key={municipality} value={municipality}>
+                    {municipality}
+                  </option>
+                ))}
+              </select>
             </label>
             <label className="text-sm font-semibold sm:col-span-2">
               Indicaciones adicionales <span className="font-normal text-ink/50">(opcional)</span>
@@ -271,13 +291,15 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             <p className="border border-ink/15 bg-bone-dim/40 p-4 text-sm leading-relaxed text-ink/70">
               {selectedZone
                 ? `Zona: ${selectedZone.label}. Tarifa ${formatPrice(selectedZone.rate)} · ${selectedZone.eta} días hábiles.`
-                : "Ingresa ciudad y departamento para cotizar. Si la cobertura no está configurada, el equipo confirmará tarifa y plazo por WhatsApp antes de cualquier pago."}
+                : city && department
+                  ? `No encontramos cobertura configurada para ${city}, ${department}. El equipo confirmará la tarifa y el plazo por WhatsApp antes de cualquier pago.`
+                  : "Selecciona un municipio y departamento para consultar la cobertura y tarifa de envío."}
             </p>
           ) : (
             <p className="border border-ink/15 bg-bone-dim/40 p-4 text-sm leading-relaxed text-ink/70">
-              La tarifa y el tiempo para tu ciudad aún no están confirmados con la transportadora.
-              Registraremos el pedido y te confirmaremos ambos por WhatsApp antes de cualquier pago
-              o despacho.
+              {city && department
+                ? `La tarifa y el tiempo para ${city}, ${department} aún no están confirmados con la transportadora. Registraremos el pedido y te confirmaremos ambos por WhatsApp antes de cualquier pago o despacho.`
+                : "La tarifa y el tiempo para tu ciudad aún no están confirmados con la transportadora. Registraremos el pedido y te confirmaremos ambos por WhatsApp antes de cualquier pago o despacho."}
             </p>
           )}
         </fieldset>
@@ -311,20 +333,51 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                   </span>
                   {option.id === "bank_transfer" ? (
                     <span
-                      className="mt-3 flex flex-wrap items-center gap-2"
+                      className="mt-3 grid max-w-md grid-cols-2 gap-2"
                       aria-label="Medios de pago"
                     >
-                      <span className="rounded border border-ink/10 bg-white px-2 py-1 font-bold text-fuchsia-700">
-                        Nequi
+                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
+                        <span
+                          aria-hidden="true"
+                          className="grid size-7 place-items-center rounded-lg bg-[#4b168c] text-sm font-black text-white"
+                        >
+                          N
+                        </span>
+                        <span className="text-base font-extrabold tracking-tight text-[#4b168c]">
+                          nequi
+                        </span>
                       </span>
-                      <span className="rounded border border-ink/10 bg-white px-2 py-1 font-bold text-rose-700">
-                        DaviPlata
+                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
+                        <span
+                          aria-hidden="true"
+                          className="grid size-7 place-items-center rounded-full bg-[#e3212b] text-sm font-black text-white"
+                        >
+                          D
+                        </span>
+                        <span className="text-sm font-extrabold tracking-tight text-[#d91f2b]">
+                          DaviPlata
+                        </span>
                       </span>
-                      <span className="rounded border border-ink/10 bg-white px-2 py-1 font-bold text-red-700">
-                        Bancolombia
+                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 28 28"
+                          className="size-7 shrink-0"
+                          fill="none"
+                        >
+                          <path d="M5 8.5 14 4l9 4.5-9 4.5L5 8.5Z" fill="#F7C600" />
+                          <path d="M5 8.5v10L14 23V13L5 8.5Z" fill="#D52B1E" />
+                          <path d="m23 8.5-9 4.5v10l9-4.5v-10Z" fill="#B71C1C" />
+                        </svg>
+                        <span className="text-[11px] leading-tight font-extrabold tracking-tight text-[#c62828] sm:text-xs">
+                          Bancolombia
+                        </span>
                       </span>
-                      <span className="rounded border border-ink/10 bg-white px-2 py-1 font-bold text-ink/55">
-                        Addi · próximamente
+                      <span className="flex min-h-12 items-center justify-between gap-2 border border-dashed border-ink/20 bg-white px-3 opacity-60">
+                        <span className="text-lg font-black tracking-[-0.08em] text-ink">addi</span>
+                        <span className="text-[9px] leading-tight font-semibold tracking-wide text-ink/60 uppercase">
+                          Próximamente
+                        </span>
                       </span>
                     </span>
                   ) : null}
@@ -425,7 +478,7 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             </div>
           ) : (
             <div className="flex justify-between gap-3 text-ink/65">
-              <span>Envío</span>
+              <span>Envío{city && department ? ` · ${city}, ${department}` : ""}</span>
               <span>{selectedZone ? formatPrice(selectedZone.rate) : "Por confirmar"}</span>
             </div>
           )}
