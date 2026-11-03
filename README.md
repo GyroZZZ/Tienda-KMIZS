@@ -29,6 +29,39 @@ npm run dev
 
 La tienda queda en <http://localhost:3000>.
 
+### Si acabas de entrar al equipo
+
+Primera vez en el proyecto, desde cero:
+
+```bash
+git clone https://github.com/GyroZZZ/Tienda-KMIZS.git
+cd Tienda-KMIZS
+npm install
+npm run dev
+```
+
+Antes de tocar nada, configura tu identidad. Si no lo haces, tus commits quedan a nombre de otra persona:
+
+```bash
+git config --global user.name "Tu Nombre"
+git config --global user.email "tu-correo@ejemplo.com"
+```
+
+Comprueba que quedó bien con `git config --global --list`.
+
+## Dónde está cada cosa
+
+| Ruta               | Contenido                                                   |
+| ------------------ | ----------------------------------------------------------- |
+| `app/`             | Rutas y páginas (App Router). Una carpeta por ruta.         |
+| `components/`      | Componentes reutilizables: layout, producto, UI.            |
+| `data/products.ts` | Catálogo. Es el archivo que más se toca.                    |
+| `lib/`             | Tipos, utilidades y configuración del sitio.                |
+| `public/`          | Imágenes y assets estáticos.                                |
+| `docs/`            | Documentos del proyecto: catálogo, costos y retrospectivas. |
+
+Para cambiar un precio, una talla o un texto de producto **no se toca el HTML**: se edita `data/products.ts` y el sitio se actualiza solo.
+
 ## Scripts
 
 | Comando          | Qué hace                           |
@@ -62,8 +95,21 @@ main ────●────────────●───────
 1. Una rama por tarjeta del Sprint, creada desde `main` actualizado.
 2. Commits en **Conventional Commits**: `feat:`, `fix:`, `docs:`, `chore:`, `test:`.
 3. Cada push a una rama genera un **Preview Deployment** en Vercel.
-4. Para integrar: abrir pull request, que **otro integrante** lo revise y apruebe, y solo entonces hacer merge a `main`.
+4. Para integrar: abrir pull request. Una revisión de otro integrante es lo ideal; si nadie revisa en **24 horas**, el autor puede fusionar dejando constancia en el comentario del PR.
 5. Nunca se suben claves ni archivos `.env`. Las variables van en Vercel → Settings → Environment Variables.
+
+### Ciclo de trabajo
+
+```bash
+git switch main && git pull          # partir de lo último
+git switch -c feat/e2-guia-tallas    # rama nueva por tarjeta
+# ... trabajar ...
+npm run lint && npm run typecheck    # antes de subir
+git add -A && git commit -m "feat(tallas): agregar medidas en centimetros"
+git push -u origin feat/e2-guia-tallas
+```
+
+El push imprime un enlace al preview de Vercel. Se comparte ese enlace en el grupo para mostrar el avance **sin fusionar nada**.
 
 ## Variables de entorno
 
@@ -81,13 +127,13 @@ automáticamente y en local se usa `http://localhost:3000`.
 
 ## Estado del proyecto
 
-| Sprint | Alcance                                                       | Estado    |
-| ------ | ------------------------------------------------------------- | --------- |
-| 1      | Base en código, identidad de marca y despliegue en Vercel     | En curso  |
-| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | Pendiente |
-| 3      | Carrito, checkout, Mercado Pago y envíos                      | Pendiente |
-| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente |
-| 5      | Lanzamiento, KPIs y documentación                             | Pendiente |
+| Sprint | Alcance                                                       | Estado     |
+| ------ | ------------------------------------------------------------- | ---------- |
+| 1      | Base en código, identidad de marca y despliegue en Vercel     | Completado |
+| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | En curso   |
+| 3      | Carrito, checkout, Mercado Pago y envíos                      | Pendiente  |
+| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente  |
+| 5      | Lanzamiento, KPIs y documentación                             | Pendiente  |
 
 ## Equipo
 
