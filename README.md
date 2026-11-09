@@ -138,7 +138,7 @@ En el checkout, el municipio se elige de una lista dependiente del departamento.
 | Sprint | Alcance                                                       | Estado                                                       |
 | ------ | ------------------------------------------------------------- | ------------------------------------------------------------ |
 | 1      | Base en código, identidad de marca y despliegue en Vercel     | Completado                                                   |
-| 2      | Catálogo con fotos reales, políticas y confirmación de pedido | En curso                                                     |
+| 2      | Catálogo con mockups de producto, fichas y guía de tallas     | Completado; las fotos reales llegan con la primera muestra    |
 | 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos | Implementado; requiere credenciales y confirmación de envíos |
 | 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente                                                    |
 | 5      | Lanzamiento, KPIs y documentación                             | Pendiente                                                    |

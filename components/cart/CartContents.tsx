@@ -73,8 +73,7 @@ export function CartContents() {
                     src={product.image.src}
                     alt={product.image.alt}
                     fill
-                    sizes="112px"
-                    unoptimized
+                    sizes="(min-width: 640px) 112px, 88px"
                     className="object-cover"
                   />
                 </Link>

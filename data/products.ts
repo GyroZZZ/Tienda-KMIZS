@@ -16,6 +16,7 @@ export const products: Product[] = [
     slug: "basica-tinta",
     name: "Básica Tinta",
     type: "basica",
+    fit: "regular",
     price: 79900,
     summary: "La camiseta de todos los días: algodón pesado y corte recto.",
     description:
@@ -23,7 +24,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/basica-tinta.svg",
+      src: "/products/basica-tinta.webp",
       alt: "Camiseta negra de corte recto con el logotipo de KMIZS en el pecho",
     },
     colors: [
@@ -42,6 +43,7 @@ export const products: Product[] = [
     slug: "basica-hueso",
     name: "Básica Hueso",
     type: "basica",
+    fit: "regular",
     price: 79900,
     summary: "La misma base de 240 g en el tono hueso que pidió la encuesta.",
     description:
@@ -49,7 +51,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/basica-hueso.svg",
+      src: "/products/basica-hueso.webp",
       alt: "Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
@@ -65,6 +67,7 @@ export const products: Product[] = [
     slug: "oversize-tinta",
     name: "Básica Oversize Tinta",
     type: "basica",
+    fit: "oversize",
     price: 89900,
     summary: "Corte amplio y hombro caído en algodón de 260 g.",
     description:
@@ -72,7 +75,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 260 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/oversize-tinta.svg",
+      src: "/products/oversize-tinta.webp",
       alt: "Camiseta oversize negra con logotipo pequeño en el pecho",
     },
     colors: [{ name: "Tinta", hex: "#0c0c0e" }],
@@ -87,6 +90,7 @@ export const products: Product[] = [
     slug: "oversize-hueso",
     name: "Básica Oversize Hueso",
     type: "basica",
+    fit: "oversize",
     price: 89900,
     summary: "Corte amplio en hueso, la combinación que más pidieron.",
     description:
@@ -94,7 +98,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 260 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/oversize-hueso.svg",
+      src: "/products/oversize-hueso.webp",
       alt: "Camiseta oversize color hueso con logotipo pequeño en el pecho",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
@@ -109,6 +113,7 @@ export const products: Product[] = [
     slug: "grafica-ruido",
     name: "Gráfica Ruido",
     type: "grafica",
+    fit: "regular",
     price: 94900,
     summary: "Diseño propio impreso en serie corta, con tinta de base agua.",
     description:
@@ -116,8 +121,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a base de agua",
     care: cuidadoBase,
     image: {
-      src: "/products/grafica-ruido.svg",
-      alt: "Camiseta color hueso con gráfica geométrica en bermellón",
+      src: "/products/grafica-ruido.webp",
+      alt: "Camiseta color hueso con gráfica geométrica de bloques en tinta y bermellón",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
     sizes: [
@@ -132,6 +137,7 @@ export const products: Product[] = [
     slug: "grafica-serie-01",
     name: "Gráfica Serie 01",
     type: "grafica",
+    fit: "regular",
     price: 94900,
     summary: "El número de la cápsula, impreso en grande al frente.",
     description:
@@ -139,8 +145,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a base de agua",
     care: cuidadoBase,
     image: {
-      src: "/products/grafica-serie-01.svg",
-      alt: "Camiseta color hueso con el número 01 impreso en grande",
+      src: "/products/grafica-serie-01.webp",
+      alt: "Camiseta color hueso con el número 01 en grande y una barra bermellón",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
     sizes: [
@@ -154,6 +160,7 @@ export const products: Product[] = [
     slug: "grafica-bogota",
     name: "Gráfica Bogotá",
     type: "grafica",
+    fit: "regular",
     price: 99900,
     summary: "La silueta de la ciudad en bermellón sobre algodón negro.",
     description:
@@ -161,8 +168,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a base de agua",
     care: cuidadoBase,
     image: {
-      src: "/products/grafica-bogota.svg",
-      alt: "Camiseta negra con gráfica de silueta urbana en bermellón",
+      src: "/products/grafica-bogota.webp",
+      alt: "Camiseta negra con silueta urbana de Bogotá en hueso y bermellón",
     },
     colors: [{ name: "Tinta", hex: "#0c0c0e" }],
     sizes: [
@@ -176,6 +183,7 @@ export const products: Product[] = [
     slug: "grafica-linea",
     name: "Gráfica Línea",
     type: "grafica",
+    fit: "regular",
     price: 94900,
     summary: "Minimalismo de líneas finas para quien no grita con la camiseta.",
     description:
@@ -183,8 +191,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a base de agua",
     care: cuidadoBase,
     image: {
-      src: "/products/grafica-linea.svg",
-      alt: "Camiseta color hueso con gráfica de líneas finas horizontales",
+      src: "/products/grafica-linea.webp",
+      alt: "Camiseta color hueso con cinco líneas finas, una de ellas en bermellón",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
     sizes: [
@@ -198,6 +206,7 @@ export const products: Product[] = [
     slug: "personalizada-equipo",
     name: "Personalizada Equipo",
     type: "personalizada",
+    fit: "regular",
     price: 89900,
     summary: "Tu equipo con estampado a una tinta. Mínimo 6 unidades.",
     description:
@@ -205,8 +214,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a una tinta",
     care: cuidadoBase,
     image: {
-      src: "/products/personalizada-equipo.svg",
-      alt: "Camiseta color hueso con un área de estampado delimitada para personalizar",
+      src: "/products/personalizada-equipo.webp",
+      alt: "Camiseta color hueso con escudo bermellón y el número 01, diseño de muestra personalizable",
     },
     colors: [
       { name: "Tinta", hex: "#0c0c0e" },
@@ -225,6 +234,7 @@ export const products: Product[] = [
     slug: "personalizada-evento",
     name: "Personalizada Evento",
     type: "personalizada",
+    fit: "regular",
     price: 84900,
     summary: "Para eventos y celebraciones desde 12 unidades, con envío gratis.",
     description:
@@ -232,8 +242,8 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m² · Estampado a una tinta",
     care: cuidadoBase,
     image: {
-      src: "/products/personalizada-evento.svg",
-      alt: "Camiseta negra con área de estampado delimitada para un evento",
+      src: "/products/personalizada-evento.webp",
+      alt: "Camiseta negra con el año 2026 y confeti geométrico, diseño de muestra para eventos",
     },
     colors: [
       { name: "Tinta", hex: "#0c0c0e" },

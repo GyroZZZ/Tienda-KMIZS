@@ -10,6 +10,13 @@ export const productTypeLabels: Record<ProductType, string> = {
 
 export type Size = "S" | "M" | "L" | "XL";
 
+export type Fit = "regular" | "oversize";
+
+export const fitLabels: Record<Fit, string> = {
+  regular: "Corte recto",
+  oversize: "Corte oversize",
+};
+
 export interface ProductColor {
   name: string;
   hex: string;
@@ -24,6 +31,8 @@ export interface Product {
   slug: string;
   name: string;
   type: ProductType;
+  /** Corte de la prenda; define qué tabla de medidas se muestra. */
+  fit: Fit;
   /** Precio unitario en pesos colombianos. */
   price: number;
   /** Precio anterior, solo si está en promoción. */

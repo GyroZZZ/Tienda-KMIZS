@@ -447,7 +447,6 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                   alt=""
                   fill
                   sizes="56px"
-                  unoptimized
                   className="object-cover"
                 />
               </div>
