@@ -45,7 +45,9 @@ export function AddToCart({ product }: { product: Product }) {
                 disabled={item.stock < (product.minQuantity ?? 1)}
               >
                 {item.size}
-                {item.stock < (product.minQuantity ?? 1) ? " — cantidad mínima no disponible" : ""}
+                {item.stock < (product.minQuantity ?? 1)
+                  ? ` — mínimo ${product.minQuantity} para esta talla`
+                  : ` · ${item.stock} ${product.type === "personalizada" ? "de capacidad" : "disponibles"}`}
               </option>
             ))}
           </select>
@@ -67,7 +69,11 @@ export function AddToCart({ product }: { product: Product }) {
         </label>
       </div>
       <p className="mt-2 text-xs text-ink/50">
-        {totalStock > 0 ? `${totalStock} unidades disponibles` : "Sin stock por ahora"}
+        {totalStock === 0
+          ? "Sin stock por ahora"
+          : product.type === "personalizada"
+            ? `${totalStock} unidades de capacidad de producción`
+            : `${totalStock} unidades disponibles en total`}
       </p>
 
       <button

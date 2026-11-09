@@ -11,6 +11,7 @@ import {
   type Product,
 } from "@/lib/products";
 import { AddToCart } from "@/components/cart/AddToCart";
+import { SizeAvailability } from "@/components/product/SizeAvailability";
 import { getShippingOptions } from "@/lib/shipping";
 
 export function generateStaticParams() {
@@ -73,6 +74,8 @@ function ProductDetails({
       ) : null}
 
       <AddToCart product={product} />
+
+      <SizeAvailability product={product} />
 
       <div className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
         <details className="group py-4">
@@ -154,9 +157,8 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
             src={product.image.src}
             alt={product.image.alt}
             fill
-            priority
+            preload
             sizes="(min-width: 768px) 50vw, 100vw"
-            unoptimized
             className="object-cover"
           />
         </div>
