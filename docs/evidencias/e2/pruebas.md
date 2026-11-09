@@ -67,3 +67,22 @@ todas.
   la primera muestra física.
 - El stock de las referencias personalizadas representa capacidad de producción, no inventario
   físico; la ficha y el selector lo indican.
+
+## 7. Verificación en producción
+
+**URL:** `https://tienda-kmizs.vercel.app`
+**Despliegue:** merge del PR #3 en `main` (commit `56ef259`), build de Vercel exitoso.
+**Fecha de verificación:** 9 de noviembre de 2026.
+
+| Página | Estado | Contenido comprobado | Evidencia |
+| --- | --- | --- | --- |
+| `/productos` | 200 | Grilla con las imágenes WebP definitivas | — |
+| `/productos/basica-tinta` | 200 | Medidas por talla, corte recto, aviso de referencia del proveedor | `10-prod-ficha-movil.png`, `12-prod-ficha-escritorio.png` |
+| `/productos/oversize-tinta` | 200 | Medidas por talla y corte oversize | — |
+| `/productos/personalizada-equipo` | 200 | Aviso de capacidad de producción por talla | — |
+| `/guia-de-tallas` | 200 | Tablas de corte recto y oversize, cómo medirte | `11-prod-guia-movil.png` |
+| `/_next/image?url=%2Fproducts%2Fbasica-tinta.webp&w=750&q=75` | 200 | `image/jpeg`, 17.9 KB servidos por el optimizador | — |
+
+En producción, la ficha y la guía mantienen `scrollWidth === 390` en móvil (sin desbordamiento
+horizontal) y cargan las imágenes sin errores. La primera captura móvil reportó una imagen aún
+decodificando; una segunda pasada, ya con la caché caliente, dio `0` imágenes rotas.
