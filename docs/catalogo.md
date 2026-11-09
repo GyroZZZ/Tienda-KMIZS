@@ -151,4 +151,75 @@ Distribución por referencia: 60% básicas, 30% gráficas, 10% personalizables.
 - [x] Tres niveles de precio con margen ≥ 55%
 - [x] Decisiones respaldadas con la encuesta
 - [ ] Confirmar precios con cotización formal antes de comprar inventario
-- [ ] Actualizar `data/products.ts` con el catálogo definitivo
+- [x] Actualizar `data/products.ts` con el catálogo definitivo
+
+---
+
+## 10. Imágenes de producto
+
+### Estrategia (7 nov 2026)
+
+No hay camisetas físicas ni presupuesto para una sesión fotográfica, así que las 10 imágenes
+del catálogo son **mockups generados con IA** y no fotografías del producto real. Se eligió esta
+opción para poder cerrar la tarjeta antes del 9 de noviembre y para que el catálogo deje de
+mostrar ilustraciones SVG.
+
+- **Base:** cuatro fotografías de mockup (tinta y hueso, en corte recto y oversize) generadas con
+  un prompt de estudio común: prenda extendida, fondo greige cálido, luz suave y márgenes amplios.
+- **Estampados:** se componen después con vectores propios (wordmark, gráficas y datos de muestra)
+  usando `sharp`, de modo que el texto y el logotipo salgan nítidos y no deformados por el modelo.
+- **Formato final:** WebP de 1600 × 2000 px (4:5), calidad 82. Cada archivo pesa entre 25 y 38 KB.
+- **Limitación:** son imágenes de referencia. Cuando exista la primera muestra física se reemplazan
+  por fotografía real sin cambiar rutas ni fichas.
+
+### Manifiesto
+
+| Referencia            | Archivo                             | Texto alternativo                                                                  |
+| --------------------- | ----------------------------------- | ---------------------------------------------------------------------------------- |
+| Básica Tinta          | `/products/basica-tinta.webp`        | Camiseta negra de corte recto con el logotipo de KMIZS en el pecho                  |
+| Básica Hueso          | `/products/basica-hueso.webp`        | Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho            |
+| Básica Oversize Tinta | `/products/oversize-tinta.webp`      | Camiseta oversize negra con logotipo pequeño en el pecho                            |
+| Básica Oversize Hueso | `/products/oversize-hueso.webp`      | Camiseta oversize color hueso con logotipo pequeño en el pecho                      |
+| Gráfica Ruido         | `/products/grafica-ruido.webp`       | Camiseta color hueso con gráfica geométrica de bloques en tinta y bermellón         |
+| Gráfica Serie 01      | `/products/grafica-serie-01.webp`    | Camiseta color hueso con el número 01 en grande y una barra bermellón               |
+| Gráfica Bogotá        | `/products/grafica-bogota.webp`      | Camiseta negra con silueta urbana de Bogotá en hueso y bermellón                    |
+| Gráfica Línea         | `/products/grafica-linea.webp`       | Camiseta color hueso con cinco líneas finas, una de ellas en bermellón              |
+| Personalizada Equipo  | `/products/personalizada-equipo.webp`| Camiseta color hueso con escudo bermellón y el número 01, diseño de muestra         |
+| Personalizada Evento  | `/products/personalizada-evento.webp`| Camiseta negra con el año 2026 y confeti geométrico, diseño de muestra para eventos  |
+
+### Optimización
+
+- Todas las imágenes se sirven con `next/image` (sin `unoptimized`), con `sizes` ajustado a la
+  grilla real y `preload` solo en la imagen principal de la ficha.
+- El listado usa `sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"`.
+- La ficha usa `sizes="(min-width: 768px) 50vw, 100vw"`. Next 16 solo permite la calidad 75
+  por defecto; el WebP de origen ya viene a calidad 82, así que no se pierde detalle visible.
+
+---
+
+## 11. Medidas y guía de tallas
+
+Las medidas viven en `lib/size-guide.ts` y se muestran en dos lugares: la ficha de cada producto
+(stock y medidas por talla) y `/guia-de-tallas` (tabla completa por corte).
+
+| Talla | Recto: pecho / largo / manga | Oversize: pecho / largo / manga |
+| ----- | ---------------------------- | ------------------------------- |
+| S     | 50 / 69 / 20 cm              | 57 / 71 / 23 cm                 |
+| M     | 53 / 71 / 21 cm              | 60 / 73 / 24 cm                 |
+| L     | 56 / 74 / 22 cm              | 63 / 76 / 25 cm                 |
+| XL    | 59 / 76 / 23 cm              | 66 / 78 / 26 cm                 |
+
+**Fuente:** tabla de referencia del proveedor de confección, tomada sobre la prenda extendida en
+plano. **Pendiente:** validar contra la primera muestra física y corregir la tabla si hay
+diferencias. Las prendas son unisex.
+
+---
+
+## 12. Stock por talla
+
+- El stock de las referencias no personalizadas es inventario físico estimado y se muestra por
+  talla en la ficha (`Disponible`, `Últimas N`, `Agotada`).
+- En las referencias personalizadas, las 20 unidades por talla representan **capacidad de
+  producción**, no inventario físico. La ficha y el selector de talla lo indican explícitamente.
+- El total del catálogo no personalizado es de 121 unidades; el mínimo de compra de las
+  personalizadas (6 y 12 unidades) se valida por talla en el selector.

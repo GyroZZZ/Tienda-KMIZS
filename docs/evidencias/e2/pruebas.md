@@ -1,0 +1,69 @@
+# Evidencia · [E2] Catálogo, fichas y guía de tallas
+
+**Fecha:** 8 de noviembre de 2026
+**Entorno:** Next.js 16.4.3 · Node 26 · Windows 11
+**Servidor:** `npm run dev` en `http://localhost:3000`
+
+## 1. Comandos de verificación
+
+| Comando | Resultado |
+| --- | --- |
+| `npm run typecheck` | Sin errores |
+| `npm run lint` | Sin errores ni advertencias |
+| `npm run build` | Compila y genera las 30 rutas estáticas |
+| `GET /productos` | 200 |
+| `GET /productos/[slug]` (10 referencias) | 200 |
+| `GET /guia-de-tallas` | 200 |
+| `GET /carrito` | 200 |
+| `GET /checkout` | 200 |
+| `GET /_next/image?...` (10 imágenes) | 200 |
+
+## 2. Imágenes
+
+- 10 archivos WebP de 1600 × 2000 px (4:5) en `public/products/`.
+- Peso por archivo: entre 25 y 38 KB.
+- Ya no quedan SVG de ejemplo en `public/products/`.
+- Todas se sirven con el optimizador de Next (`/_next/image`), sin `unoptimized`.
+
+## 3. QA móvil (390 × 844)
+
+Se recorrieron las 10 fichas, el catálogo, la guía, el carrito y el checkout con emulación de
+dispositivo real (CDP `Emulation.setDeviceMetricsOverride`).
+
+| Página | Desbordamiento horizontal | Imágenes rotas | Evidencia |
+| --- | --- | --- | --- |
+| `/productos` | No | 0 de 10 | `01-movil-catalogo.png` |
+| `/productos/basica-tinta` | No | 0 | `02-movil-ficha-recto.png` |
+| `/productos/oversize-hueso` | No | 0 | `03-movil-ficha-oversize.png` |
+| `/productos/personalizada-evento` | No | 0 | `04-movil-ficha-personalizada.png` |
+| `/guia-de-tallas` | No | — | `05-movil-guia-tallas.png` |
+| `/carrito` (con 2 referencias) | No | 0 | `06-movil-carrito.png` |
+| `/checkout` (con 2 referencias) | No | 0 | `07-movil-checkout.png` |
+
+Las 10 fichas se verificaron una por una: `scrollWidth === 390` y `0` imágenes sin cargar en
+todas.
+
+## 4. QA escritorio (1440 × 900)
+
+- `/productos`: grilla de 3 columnas, imágenes y precios alineados.
+- `/productos/basica-tinta`: imagen a la izquierda, ficha a la derecha, sección de tallas en 4
+  columnas. Ver `08-escritorio-ficha.png`.
+
+## 5. Accesibilidad revisada
+
+- Cada imagen conserva texto alternativo descriptivo y ajustado al diseño final.
+- La sección de tallas tiene `h2` propio y la guía enlazada con texto visible.
+- El estado de cada talla se comunica con texto (`Disponible`, `Últimas N`, `Agotada`), no solo
+  con color.
+- Medidas en una lista de definiciones (`dl`), legible por lector de pantalla.
+- Tablas de la guía con `caption`, `scope="col"` y `scope="row"`.
+- Enlaces y botones mantienen áreas táctiles de al menos 44 px.
+
+## 6. Limitaciones registradas
+
+- Las 10 imágenes son **mockups generados con IA**, no fotografías del producto físico. Se
+  reemplazan cuando exista la primera muestra real.
+- Las medidas provienen de la tabla de referencia del proveedor y están pendientes de validar con
+  la primera muestra física.
+- El stock de las referencias personalizadas representa capacidad de producción, no inventario
+  físico; la ficha y el selector lo indican.
