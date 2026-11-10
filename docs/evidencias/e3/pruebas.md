@@ -50,6 +50,7 @@ prueba: solo se interceptó `fetch` en el navegador para verificar el resumen y 
 | `03-movil-checkout-2-prendas.png`    | Checkout con envío gratis, total igual al subtotal             |
 | `04-movil-carrito-personalizada.png` | Pedido personalizado con envío gratis y motivo específico      |
 | `05-movil-gracias-envio-gratis.png`  | Página de gracias con “Envío gratis · Gratis” y próximos pasos |
+| `06-prod-carrito-2-prendas.png`      | Producción: dos prendas con envío “Gratis”                     |
 
 ---
 
@@ -78,7 +79,8 @@ prueba: solo se interceptó `fetch` en el navegador para verificar el resumen y 
 
 ## 6. Limitaciones y pendientes
 
-- **Producción:** el cambio queda visible cuando se despliegue el merge en Vercel.
+- **Producción:** verificado el 10 de noviembre de 2026 tras el merge (commit `1bc50b1`): el carrito
+  con 2 prendas muestra “Gratis” y la política de envíos contiene la regla nueva.
 - **Resend:** sin credenciales, el pedido real sigue devolviendo 503 en local. Es la misma
   limitación documentada en E4 y se resuelve en la subtarea 3 del sprint.
 - **Tarifas de una sola prenda:** siguen siendo de referencia hasta confirmar con la transportadora.
