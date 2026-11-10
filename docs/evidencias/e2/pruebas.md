@@ -100,3 +100,6 @@ personalizadas conservan su estampado propio.
   la entrada anterior (`minimumCacheTTL` de 4 h).
 - QA local a 390 px y 1440 px: las 10 imágenes cargan, sin desbordamiento. Evidencia:
   `13-logo-punto-catalogo.png`.
+- Verificado en producción tras el merge del PR #5 (commit `c3ab71e`): las cuatro fichas y el
+  catálogo sirven `-v2.webp` por `/_next/image` (200, 17–21 KB) y ya no queda ninguna referencia
+  a los archivos anteriores. Evidencia: `14-prod-logo-punto.png`.
