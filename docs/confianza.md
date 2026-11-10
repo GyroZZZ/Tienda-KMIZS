@@ -94,6 +94,8 @@ WhatsApp.
 - QA escritorio a 1440 px: página de gracias centrada y legible.
 - Flujo del formulario probado con una respuesta simulada del API: guarda el resumen, vacía el
   carrito y navega a la página de gracias.
+- Verificado en producción tras el merge del PR #7 (commit `786e149`): ficha, checkout, página de
+  gracias, políticas y FAQ responden 200 con el contenido nuevo.
 - Evidencia completa en `docs/evidencias/e4/pruebas.md`.
 
 ## 7. Cómo verificarlo

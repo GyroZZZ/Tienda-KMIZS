@@ -99,10 +99,20 @@ departamento, líneas (producto, color, talla, cantidad, total), subtotal, enví
 
 ## 9. Verificación del preview y producción
 
-**PR:** #7
+**PR:** #7 · **Merge:** `786e149` (9 de noviembre de 2026)
 **Preview:** `https://tienda-kmizs-git-feat-e4-confianza-dream-team-509f.vercel.app`
-**Estado del deployment:** Ready (Vercel, 9 de noviembre de 2026).
+(Ready; protegido por la autenticación de Vercel)
+**Producción:** `https://tienda-kmizs.vercel.app`
 
-El preview está protegido por la autenticación de Vercel, así que la verificación visual se hizo en
-local y la comprobación del deployment se apoya en el estado Ready y en el build de producción. La
-verificación en producción se completa después del merge.
+| Ruta                               | HTTP | Contenido comprobado                      | Evidencia                         |
+| ---------------------------------- | ---- | ----------------------------------------- | --------------------------------- |
+| `/productos/basica-tinta`          | 200  | Bloque “Compra con confianza”             | `09-prod-ficha-confianza.png`     |
+| `/checkout`                        | 200  | Bloque “Compra con confianza”             | —                                 |
+| `/checkout/gracias?pedido=KM-PROD` | 200  | Respaldo genérico con número de pedido    | `10-prod-gracias-sin-resumen.png` |
+| `/politicas/cambios`               | 200  | Retracto, garantía legal y personalizados | `11-prod-politica-cambios.png`    |
+| `/politicas/terminos`              | 200  | Reversión del pago y ley aplicable        | —                                 |
+| `/politicas/privacidad`            | 200  | Ley 1581 de 2012 y derechos               | —                                 |
+| `/preguntas-frecuentes`            | 200  | Envío gratis, tallas y retracto           | —                                 |
+
+La página de gracias se renderiza en el cliente después de leer `sessionStorage`; por eso el
+respaldo se verificó en el navegador sobre producción y no solo con el HTML del servidor.
