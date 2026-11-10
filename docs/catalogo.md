@@ -168,6 +168,9 @@ mostrar ilustraciones SVG.
   un prompt de estudio común: prenda extendida, fondo greige cálido, luz suave y márgenes amplios.
 - **Estampados:** se componen después con vectores propios (wordmark, gráficas y datos de muestra)
   usando `sharp`, de modo que el texto y el logotipo salgan nítidos y no deformados por el modelo.
+- **Punto de marca:** en las cuatro referencias con wordmark, el logotipo lleva el punto cuadrado
+  naranja (`#ff3b1f`) del sitio, alineado a la línea base. Los archivos usan el sufijo `-v2` porque
+  el optimizador de Next cachea por URL (`minimumCacheTTL` de 4 h) y no hay forma de invalidarlo.
 - **Formato final:** WebP de 1600 × 2000 px (4:5), calidad 82. Cada archivo pesa entre 25 y 38 KB.
 - **Limitación:** son imágenes de referencia. Cuando exista la primera muestra física se reemplazan
   por fotografía real sin cambiar rutas ni fichas.
@@ -176,10 +179,10 @@ mostrar ilustraciones SVG.
 
 | Referencia            | Archivo                             | Texto alternativo                                                                  |
 | --------------------- | ----------------------------------- | ---------------------------------------------------------------------------------- |
-| Básica Tinta          | `/products/basica-tinta.webp`        | Camiseta negra de corte recto con el logotipo de KMIZS en el pecho                  |
-| Básica Hueso          | `/products/basica-hueso.webp`        | Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho            |
-| Básica Oversize Tinta | `/products/oversize-tinta.webp`      | Camiseta oversize negra con logotipo pequeño en el pecho                            |
-| Básica Oversize Hueso | `/products/oversize-hueso.webp`      | Camiseta oversize color hueso con logotipo pequeño en el pecho                      |
+| Básica Tinta          | `/products/basica-tinta-v2.webp`     | Camiseta negra de corte recto con el logotipo de KMIZS en el pecho                  |
+| Básica Hueso          | `/products/basica-hueso-v2.webp`     | Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho            |
+| Básica Oversize Tinta | `/products/oversize-tinta-v2.webp`   | Camiseta oversize negra con logotipo pequeño en el pecho                            |
+| Básica Oversize Hueso | `/products/oversize-hueso-v2.webp`   | Camiseta oversize color hueso con logotipo pequeño en el pecho                      |
 | Gráfica Ruido         | `/products/grafica-ruido.webp`       | Camiseta color hueso con gráfica geométrica de bloques en tinta y bermellón         |
 | Gráfica Serie 01      | `/products/grafica-serie-01.webp`    | Camiseta color hueso con el número 01 en grande y una barra bermellón               |
 | Gráfica Bogotá        | `/products/grafica-bogota.webp`      | Camiseta negra con silueta urbana de Bogotá en hueso y bermellón                    |

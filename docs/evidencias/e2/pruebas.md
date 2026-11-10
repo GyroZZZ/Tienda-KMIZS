@@ -86,3 +86,17 @@ todas.
 En producción, la ficha y la guía mantienen `scrollWidth === 390` en móvil (sin desbordamiento
 horizontal) y cargan las imágenes sin errores. La primera captura móvil reportó una imagen aún
 decodificando; una segunda pasada, ya con la caché caliente, dio `0` imágenes rotas.
+
+## 8. Punto de marca en el wordmark
+
+Se añadió el punto cuadrado naranja (`#ff3b1f`) al wordmark de las cuatro referencias que lo llevan
+impreso: `basica-tinta`, `basica-hueso`, `oversize-tinta` y `oversize-hueso`. Las gráficas y las
+personalizadas conservan su estampado propio.
+
+- El cuadro mide 34 % de la altura de las letras, va alineado a la línea base y separado de la S
+  por el ancho de un trazo, igual que el punto del logotipo en el header.
+- Se compone con `sharp` sobre el WebP de 1600 × 2000 y se reexporta a calidad 82 (25–32 KB).
+- Los archivos pasan a `-v2` porque el optimizador de Next cachea por URL y no permite invalidar
+  la entrada anterior (`minimumCacheTTL` de 4 h).
+- QA local a 390 px y 1440 px: las 10 imágenes cargan, sin desbordamiento. Evidencia:
+  `13-logo-punto-catalogo.png`.
