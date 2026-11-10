@@ -33,24 +33,26 @@ El contenido se redactó con base en:
 - **Ley 1581 de 2012 (protección de datos personales)**, con el **Decreto 1377 de 2013**,
   compilado en el **Decreto 1074 de 2015**.
 
-| Decisión                             | Valor adoptado                                                                                         |
-| ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| Identificación del vendedor          | “KMIZS · proyecto académico”, sin NIT ni sociedad constituida                                          |
-| Canales de atención                  | `hola@kmizs.co` y WhatsApp +57 310 389 8707                                                            |
-| Cambio de talla                      | 5 días hábiles desde la entrega                                                                        |
-| Derecho de retracto                  | 5 días hábiles desde la entrega (art. 47, Ley 1480)                                                    |
-| Reembolso                            | Hasta 30 días calendario después de la solicitud                                                       |
-| Garantía legal                       | Un año para productos nuevos; cubre defectos de confección y estampado                                 |
-| Productos personalizados             | Sin retracto ni cambio de talla (parágrafo del art. 47), con garantía legal por defectos               |
-| Envío gratis                         | Desde la tercera compra, validado manualmente por WhatsApp                                             |
-| Envío de regreso por cambio de talla | Lo paga el cliente; KMIZS asume el reenvío una vez por pedido                                          |
-| Envío de regreso por retracto        | Lo paga el cliente, salvo que la ley disponga lo contrario                                             |
-| Datos                                | Autorización expresa en el checkout; el correo solo se usa para el pedido salvo autorización adicional |
+| Decisión                             | Valor adoptado                                                                                              |
+| ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Identificación del vendedor          | “KMIZS · proyecto académico”, sin NIT ni sociedad constituida                                               |
+| Canales de atención                  | `hola@kmizs.co` y WhatsApp +57 310 389 8707                                                                 |
+| Cambio de talla                      | 5 días hábiles desde la entrega                                                                             |
+| Derecho de retracto                  | 5 días hábiles desde la entrega (art. 47, Ley 1480)                                                         |
+| Reembolso                            | Hasta 30 días calendario después de la solicitud                                                            |
+| Garantía legal                       | Un año para productos nuevos; cubre defectos de confección y estampado                                      |
+| Productos personalizados             | Sin retracto ni cambio de talla (parágrafo del art. 47), con garantía legal por defectos                    |
+| Envío gratis                         | Automático desde 2 prendas (mismo o distintos modelos) y en pedidos personalizados, de eventos y de equipos |
+| Envío de regreso por cambio de talla | Lo paga el cliente; KMIZS asume el reenvío una vez por pedido                                               |
+| Envío de regreso por retracto        | Lo paga el cliente, salvo que la ley disponga lo contrario                                                  |
+| Datos                                | Autorización expresa en el checkout; el correo solo se usa para el pedido salvo autorización adicional      |
 
-### Por qué el envío gratis es manual
+### Cómo funciona el envío gratis
 
-El sitio no tiene cuentas ni historial de pedidos, así que no puede verificar la tercera compra por
-sí solo. La política lo declara como beneficio validado por WhatsApp y no como una regla automática.
+La regla es automática y se calcula en un módulo compartido (`lib/free-shipping.ts`) que usan el
+carrito, el checkout y el servidor. No depende de cuentas ni de historial de pedidos: basta con que
+el pedido sume 2 prendas o incluya un producto personalizado. El sitio no necesita verificar compras
+anteriores, así que el beneficio deja de ser manual y no requiere validación por WhatsApp.
 
 ### Por qué los personalizados no tienen retracto
 
@@ -80,7 +82,8 @@ WhatsApp.
   pendiente para cuando exista un dominio verificado.
 - **Correo publicado:** `hola@kmizs.co` se mantiene como canal oficial aunque el dominio no resuelva.
   Es una decisión de alcance académico: no se comprará dominio ni se constituirá empresa.
-- **Sin historial de pedidos:** el envío gratis y la validación de la tercera compra son manuales.
+- **Sin historial de pedidos:** el comprobante vive en el navegador. El envío gratis ya no depende
+  del historial porque se calcula por unidades del pedido actual.
 - **Tarifas de envío:** siguen pendientes de confirmación con la transportadora
   (`SHIPPING_RATES_CONFIRMED=false`). El checkout no cobra en línea hasta confirmarlas.
 - **Revisión legal:** el texto se redactó con base en las leyes citadas, pero **no sustituye la

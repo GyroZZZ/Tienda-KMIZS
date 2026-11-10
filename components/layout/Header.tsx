@@ -20,7 +20,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-ink/10 bg-bone/90 backdrop-blur">
       <div className="bg-ink px-4 py-1.5 text-center text-[11px] font-medium tracking-[0.18em] text-bone/90 uppercase">
-        Costos de envío se confirman antes del pago · Pedidos por WhatsApp
+        Envío gratis desde 2 prendas · Pedidos por WhatsApp
       </div>
 
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">

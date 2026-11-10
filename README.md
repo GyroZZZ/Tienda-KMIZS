@@ -135,13 +135,13 @@ En el checkout, el municipio se elige de una lista dependiente del departamento.
 
 ## Estado del proyecto
 
-| Sprint | Alcance                                                                   | Estado                                                                    |
-| ------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| 1      | Base en código, identidad de marca y despliegue en Vercel                 | Completado                                                                |
-| 2      | Catálogo, fichas, guía de tallas, políticas, FAQ y confirmación de pedido | Completado; el correo al cliente queda pendiente de un dominio verificado |
-| 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos             | En curso (10–16 nov); ver [`docs/sprint-3.md`](docs/sprint-3.md)          |
-| 4      | Analítica, SEO, WhatsApp y QA                                             | Pendiente                                                                 |
-| 5      | Lanzamiento, KPIs y documentación                                         | Pendiente                                                                 |
+| Sprint | Alcance                                                                   | Estado                                                                                      |
+| ------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| 1      | Base en código, identidad de marca y despliegue en Vercel                 | Completado                                                                                  |
+| 2      | Catálogo, fichas, guía de tallas, políticas, FAQ y confirmación de pedido | Completado; el correo al cliente queda pendiente de un dominio verificado                   |
+| 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos             | En curso (10–16 nov); envío gratis implementado, ver [`docs/sprint-3.md`](docs/sprint-3.md) |
+| 4      | Analítica, SEO, WhatsApp y QA                                             | Pendiente                                                                                   |
+| 5      | Lanzamiento, KPIs y documentación                                         | Pendiente                                                                                   |
 
 La base legal, las decisiones y las limitaciones del contenido de confianza están en
 [`docs/confianza.md`](docs/confianza.md). La evidencia de pruebas, en

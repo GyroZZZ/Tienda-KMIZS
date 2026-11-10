@@ -20,7 +20,8 @@ const signalsByContext: Record<TrustSignalsProps["context"], Signal[]> = {
     },
     {
       title: "Envío sin sorpresas",
-      detail: "El costo y el plazo se confirman antes de pagar o despachar.",
+      detail:
+        "Gratis desde 2 prendas o en pedidos personalizados. Para una sola prenda, el costo se confirma antes de pagar.",
     },
     {
       title: "Cambios y retracto",
@@ -34,11 +35,12 @@ const signalsByContext: Record<TrustSignalsProps["context"], Signal[]> = {
   checkout: [
     {
       title: "Contraentrega",
-      detail: "Confirmamos cobertura, tarifa y plazo por WhatsApp antes de cobrar.",
+      detail: "Confirmamos cobertura, tarifa (si aplica) y plazo por WhatsApp antes de cobrar.",
     },
     {
       title: "Envío transparente",
-      detail: "No cobramos el envío sin confirmarlo contigo.",
+      detail:
+        "Gratis desde 2 prendas o en pedidos de equipo. Si es una sola, la tarifa se confirma antes de pagar.",
     },
     {
       title: "Datos protegidos",

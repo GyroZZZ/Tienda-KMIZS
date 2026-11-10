@@ -44,6 +44,14 @@ el envío figura "por confirmar" en `/checkout`.
 | Cuenta de Mercado Pago | Se crea una cuenta de prueba desde cero                                     | Hay que completar el registro, crear la aplicación y generar credenciales `TEST-` |
 | Tarifas de envío       | Tarifas de referencia por zona, marcadas como pendientes de cotización real | Permiten probar el flujo completo; la política y el checkout deben decirlo        |
 | Correo de pedidos      | Buzón real del equipo mediante `ORDER_NOTIFY_EMAIL`                         | `hola@kmizs.co` sigue publicado, pero no recibe pedidos                           |
+| Envío gratis           | Automático desde 2 prendas o en pedidos personalizados                      | Reemplaza el beneficio manual de la 3.ª compra; el margen se recalcula aparte     |
+
+### Regla de envío gratis (10 de noviembre)
+
+La regla quedó implementada en `lib/free-shipping.ts` y aplicada en carrito, checkout, API, correo,
+WhatsApp y página de gracias. Un pedido de una sola prenda sigue pagando la tarifa de su zona. La
+evidencia está en `docs/evidencias/e3/pruebas.md` y el impacto en la provisión de envío está
+documentado en `docs/catalogo.md` (margen estimado 46–54% según mezcla, pendiente de decisión).
 
 ### Tarifas de referencia propuestas
 

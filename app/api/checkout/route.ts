@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 
 import { formatPrice, getProductBySlug, type Product, type Size } from "@/lib/products";
+import { qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { sendOrderEmail } from "@/lib/order-email";
 import { getMercadoPagoTestToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
@@ -92,7 +93,7 @@ function orderEmailHtml({
     <h2>Productos</h2><ul>${lineRows}</ul>
     <p><strong>Pago:</strong> ${methodLabels[paymentMethod]}</p>
     <p><strong>Subtotal:</strong> ${formatPrice(subtotal)}<br>
-    <strong>Envío:</strong> ${shipping === null ? "Pendiente de cotización" : `${formatPrice(shipping)} (${escapeHtml(shippingZone ?? "")})`}<br>
+    <strong>Envío:</strong> ${shipping === null ? "Pendiente de cotización" : shipping === 0 ? "Gratis" : `${formatPrice(shipping)} (${escapeHtml(shippingZone ?? "")})`}<br>
     <strong>Total:</strong> ${total === null ? "Pendiente de cotización de envío" : formatPrice(total)}</p>
     ${paymentUrl ? `<p><a href="${escapeHtml(paymentUrl)}">Abrir enlace de pago</a></p>` : ""}
     <p>KMIZS · ${escapeHtml(site.email)}</p>`;
@@ -127,13 +128,17 @@ async function createPaymentPreference({
         currency_id: "COP",
         unit_price: line.product.price,
       })),
-      {
-        id: "envio",
-        title: "Envío",
-        quantity: 1,
-        currency_id: "COP",
-        unit_price: shippingRate,
-      },
+      ...(shippingRate > 0
+        ? [
+            {
+              id: "envio",
+              title: "Envío",
+              quantity: 1,
+              currency_id: "COP",
+              unit_price: shippingRate,
+            },
+          ]
+        : []),
     ],
     payer: {
       name: customer.name,
@@ -202,6 +207,8 @@ function buildWhatsAppUrl(
   const summary = lines
     .map((line) => `- ${line.product.name} (${line.color}, talla ${line.size}) x${line.quantity}`)
     .join("\n");
+  const shippingText =
+    shipping === null ? "por cotizar" : shipping === 0 ? "gratis" : formatPrice(shipping);
   const message = [
     `Hola, quiero confirmar el pedido ${orderId}.`,
     `Nombre: ${customer.name}`,
@@ -209,9 +216,11 @@ function buildWhatsAppUrl(
     `Pago elegido: ${paymentMethod === "cash_on_delivery" ? "contraentrega" : "transferencia o billetera"}`,
     summary,
     `Subtotal: ${formatPrice(subtotal)}`,
-    `Envío${zoneLabel ? ` (${zoneLabel})` : ""}: ${shipping === null ? "por cotizar" : formatPrice(shipping)}`,
+    `Envío${zoneLabel && shipping !== 0 ? ` (${zoneLabel})` : ""}: ${shippingText}`,
     `Total: ${total === null ? "pendiente de cotizar el envío" : formatPrice(total)}`,
-    "Por favor confirmen disponibilidad contraentrega (si aplica), tarifa y tiempo de envío antes del pago.",
+    shipping === 0
+      ? "Por favor confirmen disponibilidad contraentrega (si aplica) y el tiempo de envío antes del pago."
+      : "Por favor confirmen disponibilidad contraentrega (si aplica), tarifa y tiempo de envío antes del pago.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -330,8 +339,15 @@ export async function POST(request: Request) {
   }
 
   const subtotal = lines.reduce((total, line) => total + line.total, 0);
-  const shippingRate = zone?.rate ?? null;
+  const freeShipping = qualifiesForFreeShipping(
+    lines.map((line) => ({
+      quantity: line.quantity,
+      isCustom: line.product.type === "personalizada",
+    })),
+  );
+  const shippingRate = freeShipping ? 0 : (zone?.rate ?? null);
   const total = shippingRate === null ? null : subtotal + shippingRate;
+  const shippingZoneLabel = freeShipping ? "Envío gratis" : (zone?.label ?? null);
   const orderId = `KM-${randomUUID().toUpperCase()}`;
   if (
     paymentMethod === "mercado_pago" &&
@@ -369,7 +385,7 @@ export async function POST(request: Request) {
           lines,
           paymentMethod,
           shipping: shippingRate,
-          shippingZone: zone?.label ?? null,
+          shippingZone: shippingZoneLabel,
           orderStatus: "Pedido registrado; preparando pago en sandbox",
           subtotal,
           total,
@@ -410,7 +426,7 @@ export async function POST(request: Request) {
         lines,
         paymentMethod,
         shipping: shippingRate,
-        shippingZone: zone?.label ?? null,
+        shippingZone: shippingZoneLabel,
         orderStatus:
           shippingRate === null
             ? "Pendiente de cotizar envío y confirmar por WhatsApp"
@@ -435,7 +451,7 @@ export async function POST(request: Request) {
     subtotal,
     shippingRate,
     total,
-    zone?.label ?? null,
+    shippingZoneLabel,
   );
   return Response.json({ orderId, whatsappUrl });
 }

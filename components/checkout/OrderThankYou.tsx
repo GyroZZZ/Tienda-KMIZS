@@ -20,14 +20,20 @@ const subscribeToSession = () => () => {};
 
 function nextSteps(snapshot: OrderSnapshot | null): string {
   if (!snapshot) {
-    return "Escríbenos por WhatsApp con tu número de pedido para confirmar disponibilidad, tarifa y plazo de envío antes de pagar o despachar.";
+    return "Escríbenos por WhatsApp con tu número de pedido para confirmar disponibilidad y plazo de envío antes de pagar o despachar.";
   }
+
+  const freeShipping = snapshot.shipping === 0;
 
   switch (snapshot.paymentMethod) {
     case "cash_on_delivery":
-      return "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio, la tarifa y el plazo del envío antes de despachar. No pagas nada hasta recibir.";
+      return freeShipping
+        ? "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio y el plazo del envío antes de despachar. El envío es gratis y no pagas nada hasta recibir."
+        : "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio, la tarifa y el plazo del envío antes de despachar. No pagas nada hasta recibir.";
     case "bank_transfer":
-      return "Confirma el pedido por WhatsApp. Después de cotizar el envío te compartimos los datos de Nequi, DaviPlata o Bancolombia y el valor exacto a transferir.";
+      return freeShipping
+        ? "Confirma el pedido por WhatsApp. El envío es gratis; te compartimos los datos de Nequi, DaviPlata o Bancolombia y el valor exacto a transferir."
+        : "Confirma el pedido por WhatsApp. Después de cotizar el envío te compartimos los datos de Nequi, DaviPlata o Bancolombia y el valor exacto a transferir.";
     case "mercado_pago":
       return "El pago digital se procesa en Mercado Pago. Cuando se confirme, el equipo prepara el pedido y te contacta para coordinar la entrega.";
     default:
@@ -158,9 +164,17 @@ export function OrderThankYou() {
               <dd>{formatPrice(snapshot.subtotal)}</dd>
             </div>
             <div className="flex justify-between gap-3">
-              <dt>Envío{snapshot.shippingZone ? ` · ${snapshot.shippingZone}` : ""}</dt>
+              <dt>
+                {snapshot.shipping === 0
+                  ? "Envío gratis"
+                  : `Envío${snapshot.shippingZone ? ` · ${snapshot.shippingZone}` : ""}`}
+              </dt>
               <dd>
-                {snapshot.shipping === null ? "Por confirmar" : formatPrice(snapshot.shipping)}
+                {snapshot.shipping === null
+                  ? "Por confirmar"
+                  : snapshot.shipping === 0
+                    ? "Gratis"
+                    : formatPrice(snapshot.shipping)}
               </dd>
             </div>
             <div className="flex justify-between gap-3 border-t border-ink/15 pt-2 text-base">

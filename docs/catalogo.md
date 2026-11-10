@@ -30,7 +30,7 @@
 | Talla más frecuente               | M **38%** · L **31%** · S **19%** · XL **12%**                                                          | Inventario concentrado en M y L                                     |
 | Color preferido                   | Negro **44%** · Hueso **31%** · Otros **25%**                                                           | Dos colores base por referencia                                     |
 | Método de pago preferido          | Contraentrega **62%** · Pago en línea **38%**                                                           | Contraentrega como opción principal, Mercado Pago como alternativa  |
-| ¿Volvería a comprar?              | Sí **71%** · No **18%** · No sabe **11%**                                                               | Justifica el envío gratis desde la 3.ª compra                       |
+| ¿Volvería a comprar?              | Sí **71%** · No **18%** · No sabe **11%**                                                               | Base para incentivar pedidos de 2+ prendas con envío gratis         |
 
 **Conclusión usada para el catálogo:** el cliente busca una camiseta de diseño propio con tela gruesa y precio entre $60.000 y $100.000. Eso permite competir por producto y no por descuento, y sostener un margen del 55% sin salir del rango que la gente declaró.
 
@@ -63,14 +63,32 @@
 
 ## 4. Estructura de costos
 
-| Paso                      | Fórmula                        | Qué incluye                                               |
-| ------------------------- | ------------------------------ | --------------------------------------------------------- |
-| Costo de producción       | `prenda + estampado + empaque` | Camiseta lista para vender                                |
-| Costo con merma           | `producción × 1,05`            | 5% de prendas dañadas o mal estampadas                    |
-| Costo variable de venta   | `con merma × 7,15%`            | Mercado Pago (3,49% + IVA) y reserva de devoluciones (3%) |
-| Provisión de envío gratis | `$15.900 × 10%`                | Clientes que llegan a la 3.ª compra                       |
-| **Costo total unitario**  | suma de los anteriores         | Base del precio                                           |
-| Precio de venta           | `costo total ÷ (1 − 0,55)`     | Margen sobre el precio, no sobre el costo                 |
+| Paso                      | Fórmula                               | Qué incluye                                               |
+| ------------------------- | ------------------------------------- | --------------------------------------------------------- |
+| Costo de producción       | `prenda + estampado + empaque`        | Camiseta lista para vender                                |
+| Costo con merma           | `producción × 1,05`                   | 5% de prendas dañadas o mal estampadas                    |
+| Costo variable de venta   | `con merma × 7,15%`                   | Mercado Pago (3,49% + IVA) y reserva de devoluciones (3%) |
+| Provisión de envío gratis | `tarifa de zona ÷ prendas del pedido` | Pedidos de 2+ prendas y personalizados (regla automática) |
+| **Costo total unitario**  | suma de los anteriores                | Base del precio                                           |
+| Precio de venta           | `costo total ÷ (1 − 0,55)`            | Margen sobre el precio, no sobre el costo                 |
+
+> **Provisión pendiente de recalcular (10 nov 2026).** La provisión anterior (`$15.900 × 10%` =
+> $1.590 por prenda) financiaba solo el envío gratis de la 3.ª compra. Con la regla nueva, el envío
+> gratis aplica a casi todos los pedidos de 2+ prendas y a todos los personalizados, así que la
+> reserva por prenda sube según la mezcla:
+>
+> | Escenario de pedido gratis   | Envío por pedido | Provisión por prenda |
+> | ---------------------------- | ---------------- | -------------------- |
+> | 2 prendas, ciudad principal  | $15.900          | $7.950               |
+> | 2 prendas, zona extendida    | $18.900          | $9.450               |
+> | Personalizado de 6 unidades  | $15.900          | $2.650               |
+> | Personalizado de 12 unidades | $15.900          | $1.325               |
+>
+> Impacto sobre Básica Tinta ($79.900, costo base $33.752 sin provisión): el margen pasa de 55,8% a
+> **47,8%** con $7.950 de provisión y a **45,9%** con $9.450. Los pedidos de una sola prenda no
+> necesitan provisión porque el cliente paga el envío. **Decisión pendiente:** aceptar el margen
+> menor, ajustar precios o negociar tarifas con la transportadora. No se cambian precios sin esa
+> decisión.
 
 ### Costeo por referencia
 
@@ -93,15 +111,20 @@
 
 ---
 
-## 5. Hipótesis de envío (pendiente de confirmar)
+## 5. Regla de envío (implementada, tarifas de referencia)
 
-| Momento del cliente                 | Tarifa                                                                |
-| ----------------------------------- | --------------------------------------------------------------------- |
-| Compra 1 y 2                        | Estimado: $15.900 (ciudades principales) · $18.900 (zonas extendidas) |
-| Compra 3 en adelante                | Beneficio propuesto; no habilitado                                    |
-| Pedido personalizado de 6+ unidades | Beneficio propuesto; no habilitado                                    |
+| Condición del pedido                        | Envío                                                            |
+| ------------------------------------------- | ---------------------------------------------------------------- |
+| 2 o más prendas (mismo o distintos modelos) | Gratis                                                           |
+| Pedido personalizado, de evento o de equipo | Gratis                                                           |
+| 1 sola prenda, ciudad principal             | Referencia $15.900, pendiente de confirmar con la transportadora |
+| 1 sola prenda, zona extendida               | Referencia $18.900, pendiente de confirmar con la transportadora |
 
-Estos valores son hipótesis académicas, no tarifas confirmadas por una transportadora. No mostrarlos como precio final ni habilitar el cobro en línea hasta confirmar cobertura, tarifas y tiempos por zona. El checkout los solicita mediante las variables de entorno de Vercel.
+La regla vive en `lib/free-shipping.ts` y la aplican el carrito, el checkout, la API, los correos y
+la página de gracias. Los valores son hipótesis académicas, no tarifas confirmadas por una
+transportadora. El checkout solo muestra la tarifa de una sola prenda cuando
+`SHIPPING_RATES_CONFIRMED=true`; mientras esté en `false`, la cotiza por WhatsApp antes de cobrar.
+El envío gratis no depende de esa variable: se aplica igual en producción.
 
 ---
 
@@ -133,14 +156,15 @@ Distribución por referencia: 60% básicas, 30% gráficas, 10% personalizables.
 
 ## 8. Decisiones registradas
 
-| Fecha       | Decisión                                                           | Motivo                                                                  |
-| ----------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| 30 oct 2026 | Tres niveles de precio: esencial, diseño y personalizada           | Coincide con la mezcla que arrojó la encuesta (46/38/16)                |
-| 30 oct 2026 | Margen del 55% calculado sobre el precio de venta                  | Evita confundir margen con markup y permite comparar con la competencia |
-| 30 oct 2026 | Reserva del 3% para devoluciones en el costo                       | El cambio de talla es frecuente en camisetas                            |
-| 30 oct 2026 | Provisión del 10% de pedidos para el envío gratis de la 3.ª compra | El beneficio se financia con el margen, no con una pérdida              |
-| 30 oct 2026 | Precio de entrada en $79.900                                       | El 75% de los encuestados acepta pagar hasta $100.000                   |
-| 30 oct 2026 | Inventario concentrado en tallas M y L                             | Representan el 69% de la demanda declarada                              |
+| Fecha       | Decisión                                                            | Motivo                                                                                                                                                |
+| ----------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 30 oct 2026 | Tres niveles de precio: esencial, diseño y personalizada            | Coincide con la mezcla que arrojó la encuesta (46/38/16)                                                                                              |
+| 30 oct 2026 | Margen del 55% calculado sobre el precio de venta                   | Evita confundir margen con markup y permite comparar con la competencia                                                                               |
+| 30 oct 2026 | Reserva del 3% para devoluciones en el costo                        | El cambio de talla es frecuente en camisetas                                                                                                          |
+| 30 oct 2026 | Provisión del 10% de pedidos para el envío gratis de la 3.ª compra  | El beneficio se financia con el margen, no con una pérdida (reemplazada el 10 nov 2026)                                                               |
+| 30 oct 2026 | Precio de entrada en $79.900                                        | El 75% de los encuestados acepta pagar hasta $100.000                                                                                                 |
+| 30 oct 2026 | Inventario concentrado en tallas M y L                              | Representan el 69% de la demanda declarada                                                                                                            |
+| 10 nov 2026 | Envío gratis automático desde 2 prendas y en pedidos personalizados | Reemplaza el beneficio manual de la 3.ª compra; la provisión de $1.590 por prenda queda pendiente de recalcular (margen estimado 46–54% según mezcla) |
 
 ---
 
@@ -177,18 +201,18 @@ mostrar ilustraciones SVG.
 
 ### Manifiesto
 
-| Referencia            | Archivo                             | Texto alternativo                                                                  |
-| --------------------- | ----------------------------------- | ---------------------------------------------------------------------------------- |
-| Básica Tinta          | `/products/basica-tinta-v2.webp`     | Camiseta negra de corte recto con el logotipo de KMIZS en el pecho                  |
-| Básica Hueso          | `/products/basica-hueso-v2.webp`     | Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho            |
-| Básica Oversize Tinta | `/products/oversize-tinta-v2.webp`   | Camiseta oversize negra con logotipo pequeño en el pecho                            |
-| Básica Oversize Hueso | `/products/oversize-hueso-v2.webp`   | Camiseta oversize color hueso con logotipo pequeño en el pecho                      |
-| Gráfica Ruido         | `/products/grafica-ruido.webp`       | Camiseta color hueso con gráfica geométrica de bloques en tinta y bermellón         |
-| Gráfica Serie 01      | `/products/grafica-serie-01.webp`    | Camiseta color hueso con el número 01 en grande y una barra bermellón               |
-| Gráfica Bogotá        | `/products/grafica-bogota.webp`      | Camiseta negra con silueta urbana de Bogotá en hueso y bermellón                    |
-| Gráfica Línea         | `/products/grafica-linea.webp`       | Camiseta color hueso con cinco líneas finas, una de ellas en bermellón              |
-| Personalizada Equipo  | `/products/personalizada-equipo.webp`| Camiseta color hueso con escudo bermellón y el número 01, diseño de muestra         |
-| Personalizada Evento  | `/products/personalizada-evento.webp`| Camiseta negra con el año 2026 y confeti geométrico, diseño de muestra para eventos  |
+| Referencia            | Archivo                               | Texto alternativo                                                                   |
+| --------------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| Básica Tinta          | `/products/basica-tinta-v2.webp`      | Camiseta negra de corte recto con el logotipo de KMIZS en el pecho                  |
+| Básica Hueso          | `/products/basica-hueso-v2.webp`      | Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho            |
+| Básica Oversize Tinta | `/products/oversize-tinta-v2.webp`    | Camiseta oversize negra con logotipo pequeño en el pecho                            |
+| Básica Oversize Hueso | `/products/oversize-hueso-v2.webp`    | Camiseta oversize color hueso con logotipo pequeño en el pecho                      |
+| Gráfica Ruido         | `/products/grafica-ruido.webp`        | Camiseta color hueso con gráfica geométrica de bloques en tinta y bermellón         |
+| Gráfica Serie 01      | `/products/grafica-serie-01.webp`     | Camiseta color hueso con el número 01 en grande y una barra bermellón               |
+| Gráfica Bogotá        | `/products/grafica-bogota.webp`       | Camiseta negra con silueta urbana de Bogotá en hueso y bermellón                    |
+| Gráfica Línea         | `/products/grafica-linea.webp`        | Camiseta color hueso con cinco líneas finas, una de ellas en bermellón              |
+| Personalizada Equipo  | `/products/personalizada-equipo.webp` | Camiseta color hueso con escudo bermellón y el número 01, diseño de muestra         |
+| Personalizada Evento  | `/products/personalizada-evento.webp` | Camiseta negra con el año 2026 y confeti geométrico, diseño de muestra para eventos |
 
 ### Optimización
 
