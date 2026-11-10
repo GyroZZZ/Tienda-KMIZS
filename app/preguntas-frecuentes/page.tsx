@@ -39,12 +39,12 @@ const faqGroups = [
       {
         question: "¿Cuánto cuesta el envío?",
         answer:
-          "Depende del municipio. Cuando las tarifas están confirmadas, el costo se muestra en el checkout antes de pagar. Mientras sigan pendientes con la transportadora, registramos el pedido y te cotizamos por WhatsApp antes de cualquier cobro.",
+          "El envío es gratis desde 2 prendas, sin importar si son del mismo modelo o de modelos distintos, y en todos los pedidos personalizados, de eventos y de equipos. Si compras una sola prenda, la tarifa depende del municipio y se muestra en el checkout antes de pagar cuando está confirmada.",
       },
       {
         question: "¿Cuándo me sale gratis el envío?",
         answer:
-          "Desde la tercera compra del mismo cliente. Es un beneficio manual: escríbenos por WhatsApp con tu número de pedido y validamos tu historial antes de cobrar. No es acumulable con otras promociones.",
+          "Siempre que el pedido sume 2 o más prendas, aunque sean de modelos distintos, y en cualquier pedido personalizado, de evento o de equipo. La regla se aplica automáticamente en el carrito y en el checkout: no necesitas escribirnos ni pedir el beneficio.",
       },
       {
         question: "¿Hacen envíos a todo el país?",

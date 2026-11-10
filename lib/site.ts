@@ -7,7 +7,7 @@ export const site = {
   name: "KMIZS",
   tagline: "Camisetas que se leen como se pronuncian",
   description:
-    "Camisetas básicas, gráficas y personalizadas diseñadas e impresas en Colombia. Consulta cobertura y costos de envío antes de pagar.",
+    "Camisetas básicas, gráficas y personalizadas diseñadas e impresas en Colombia. Envío gratis desde 2 prendas y en pedidos personalizados.",
   url: "https://tienda-kmizs.vercel.app",
   locale: "es_CO",
   city: "Colombia",

@@ -23,8 +23,9 @@ export default function CheckoutPage() {
     <div className="mx-auto max-w-4xl px-4 py-14 sm:px-6 md:py-20">
       <h1 className="text-4xl tracking-tight sm:text-5xl">Finalizar compra</h1>
       <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/70">
-        Revisa tus productos, comparte tus datos de entrega y elige cómo pagar. Si el envío todavía
-        no está confirmado, te informaremos el costo y el plazo antes de cobrar o despachar.
+        Revisa tus productos, comparte tus datos de entrega y elige cómo pagar. El envío es gratis
+        desde 2 prendas y en pedidos personalizados; si es una sola, te informamos el costo y el
+        plazo antes de cobrar o despachar.
       </p>
 
       <TrustSignals context="checkout" />

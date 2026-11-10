@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useCart } from "@/components/cart/CartProvider";
+import { freeShippingReason, qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { formatPrice, getProductBySlug } from "@/lib/products";
 import type { Size } from "@/lib/products";
 
@@ -43,6 +44,13 @@ export function CartContents() {
     const product = getProductBySlug(item.slug);
     return total + (product?.price ?? 0) * item.quantity;
   }, 0);
+
+  const shippingLines = items.flatMap((item) => {
+    const product = getProductBySlug(item.slug);
+    return product ? [{ quantity: item.quantity, isCustom: product.type === "personalizada" }] : [];
+  });
+  const freeShipping = qualifiesForFreeShipping(shippingLines);
+  const shippingNote = freeShippingReason(shippingLines);
 
   return (
     <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_19rem]">
@@ -171,15 +179,22 @@ export function CartContents() {
       <aside className="h-fit border border-ink/15 bg-bone-dim/40 p-5 sm:p-6">
         <h2 className="text-xl tracking-tight">Resumen</h2>
         <div className="mt-5 flex justify-between gap-4 text-sm">
-          <span>Subtotal ({items.reduce((count, item) => count + item.quantity, 0)} prendas)</span>
+          <span>
+            Subtotal ({items.reduce((count, item) => count + item.quantity, 0)}{" "}
+            {items.reduce((count, item) => count + item.quantity, 0) === 1 ? "prenda" : "prendas"})
+          </span>
           <span className="font-semibold">{formatPrice(subtotal)}</span>
         </div>
         <div className="mt-3 flex justify-between gap-4 text-sm text-ink/65">
           <span>Envío</span>
-          <span>Por confirmar</span>
+          <span className={freeShipping ? "font-semibold text-ink" : undefined}>
+            {freeShipping ? "Gratis" : "Por confirmar"}
+          </span>
         </div>
         <p className="mt-4 text-xs leading-relaxed text-ink/60">
-          Te confirmaremos tarifa y plazo antes de cobrar o despachar el pedido.
+          {freeShipping
+            ? `${shippingNote} El plazo de entrega se confirma según tu municipio.`
+            : "Te confirmaremos tarifa y plazo antes de cobrar o despachar el pedido."}
         </p>
         <Link
           href="/checkout"

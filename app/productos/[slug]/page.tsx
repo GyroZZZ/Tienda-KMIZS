@@ -107,8 +107,12 @@ function ProductDetails({
           </summary>
           <div className="mt-3 space-y-2 text-sm leading-relaxed text-ink/70">
             <p>
+              Envío gratis desde 2 prendas, del mismo modelo o de modelos distintos, y en todos los
+              pedidos personalizados, de eventos y de equipos.
+            </p>
+            <p>
               {shippingOptions.confirmed
-                ? `Envío: ${shippingOptions.zones
+                ? `Para una sola prenda, envío: ${shippingOptions.zones
                     .map(
                       (zone) =>
                         `${zone.label}, ${zone.eta} (${new Intl.NumberFormat("es-CO", {
@@ -118,7 +122,7 @@ function ProductDetails({
                         }).format(zone.rate)})`,
                     )
                     .join("; ")}.`
-                : "El costo y el tiempo de envío están pendientes de confirmación con la transportadora. Te los informaremos antes de pagar."}
+                : "Para una sola prenda, el costo y el tiempo de envío están pendientes de confirmación con la transportadora. Te los informaremos antes de pagar."}
             </p>
             <p>
               Cambios de talla dentro de los 5 días siguientes a la entrega, sin uso y con la

@@ -7,6 +7,7 @@ import { FormEvent, useMemo, useState } from "react";
 
 import { useCart } from "@/components/cart/CartProvider";
 import colombianLocations from "@/lib/colombian-locations.json";
+import { freeShippingReason, qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { saveOrderSnapshot } from "@/lib/order-snapshot";
 import { formatPrice, getProductBySlug } from "@/lib/products";
 import type { ShippingOptions } from "@/lib/shipping";
@@ -67,11 +68,17 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
     [items],
   );
   const subtotal = lines.reduce((total, item) => total + item.total, 0);
+  const shippingLines = lines.map((line) => ({
+    quantity: line.quantity,
+    isCustom: line.product.type === "personalizada",
+  }));
+  const freeShipping = qualifiesForFreeShipping(shippingLines);
+  const freeShippingNote = freeShippingReason(shippingLines);
   const municipalities =
     colombianLocations.departments.find((location) => location.name === department)
       ?.municipalities ?? [];
   const selectedZone = getShippingZoneForAddress(shippingOptions, city, department);
-  const estimatedTotal = subtotal + (selectedZone?.rate ?? 0);
+  const estimatedTotal = subtotal + (freeShipping ? 0 : (selectedZone?.rate ?? 0));
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -137,9 +144,9 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
           total: line.total,
         })),
         subtotal,
-        shipping: selectedZone?.rate ?? null,
-        shippingZone: selectedZone?.label ?? null,
-        total: selectedZone ? subtotal + selectedZone.rate : null,
+        shipping: freeShipping ? 0 : (selectedZone?.rate ?? null),
+        shippingZone: freeShipping ? "Envío gratis" : (selectedZone?.label ?? null),
+        total: freeShipping ? subtotal : selectedZone ? subtotal + selectedZone.rate : null,
       };
       saveOrderSnapshot(snapshot);
 
@@ -293,7 +300,15 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
 
         <fieldset className="space-y-3">
           <legend className="text-xl tracking-tight">Envío</legend>
-          {shippingOptions.confirmed ? (
+          {freeShipping ? (
+            <p className="border border-ink/15 bg-bone-dim/40 p-4 text-sm leading-relaxed text-ink/70">
+              {freeShippingNote} El plazo de entrega se confirma según tu municipio antes de
+              despachar.
+              {city && department && !selectedZone
+                ? ` Aún no tenemos cobertura confirmada para ${city}, ${department}: el equipo la valida por WhatsApp antes de despachar.`
+                : ""}
+            </p>
+          ) : shippingOptions.confirmed ? (
             <p className="border border-ink/15 bg-bone-dim/40 p-4 text-sm leading-relaxed text-ink/70">
               {selectedZone
                 ? `Zona: ${selectedZone.label}. Tarifa ${formatPrice(selectedZone.rate)} · ${selectedZone.eta} días hábiles.`
@@ -316,6 +331,10 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             const unavailable =
               option.id === "mercado_pago" &&
               (!shippingOptions.confirmed || !onlinePaymentsAvailable || !selectedZone);
+            const description =
+              option.id === "bank_transfer" && freeShipping
+                ? "Te enviaremos los datos para pagar por WhatsApp; el envío ya está incluido."
+                : option.description;
             return (
               <label
                 key={option.id}
@@ -335,7 +354,7 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                 <span className="text-sm">
                   <strong>{option.title}</strong>
                   <span className="mt-1 block text-xs leading-relaxed text-ink/60">
-                    {option.description}
+                    {description}
                   </span>
                   {option.id === "bank_transfer" ? (
                     <span
@@ -471,7 +490,17 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             <span>Subtotal</span>
             <strong>{formatPrice(subtotal)}</strong>
           </div>
-          {shippingOptions.confirmed ? (
+          {freeShipping ? (
+            <div className="flex justify-between gap-3">
+              <span>
+                Envío
+                <span className="block text-xs text-ink/55">
+                  {freeShippingNote?.replace(/\.$/, "")}
+                </span>
+              </span>
+              <strong>Gratis</strong>
+            </div>
+          ) : shippingOptions.confirmed ? (
             <div className="flex justify-between gap-3">
               <span>
                 Envío{selectedZone ? ` · ${selectedZone.label}` : ""}
@@ -489,13 +518,23 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
           )}
           <div className="flex justify-between gap-3 border-t border-ink/15 pt-3 text-base">
             <strong>
-              {shippingOptions.confirmed && selectedZone ? "Total" : "Subtotal de productos"}
+              {freeShipping || (shippingOptions.confirmed && selectedZone)
+                ? "Total"
+                : "Subtotal de productos"}
             </strong>
             <strong>
-              {formatPrice(shippingOptions.confirmed && selectedZone ? estimatedTotal : subtotal)}
+              {formatPrice(
+                freeShipping || (shippingOptions.confirmed && selectedZone)
+                  ? estimatedTotal
+                  : subtotal,
+              )}
             </strong>
           </div>
-          {!shippingOptions.confirmed || !selectedZone ? (
+          {freeShipping ? (
+            <p className="text-xs leading-relaxed text-ink/55">
+              El envío es gratis. El plazo de entrega se confirma según tu municipio.
+            </p>
+          ) : !shippingOptions.confirmed || !selectedZone ? (
             <p className="text-xs leading-relaxed text-ink/55">
               Este no es el total final. El envío se cotiza y comunica antes de pagar.
             </p>

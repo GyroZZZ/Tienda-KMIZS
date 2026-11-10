@@ -24,9 +24,9 @@ export interface Policy {
 export const policies: Record<PolicySlug, Policy> = {
   envios: {
     title: "Envíos y entregas",
-    updatedAt: "9 de noviembre de 2026",
+    updatedAt: "10 de noviembre de 2026",
     intro:
-      "Despachamos desde Colombia. La tarifa y el plazo dependen del municipio y te los confirmamos antes de cobrar o despachar el pedido.",
+      "Despachamos desde Colombia. El envío es gratis desde 2 prendas y en pedidos personalizados; para una sola prenda, la tarifa y el plazo dependen del municipio y te los confirmamos antes de cobrar o despachar.",
     sections: [
       {
         heading: "Cobertura",
@@ -38,8 +38,9 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Tarifas",
         body: [
-          "La tarifa se calcula por zona y se muestra en el checkout antes de pagar cuando las condiciones con la transportadora están confirmadas.",
-          "Mientras esas condiciones estén pendientes, el pedido se registra y la tarifa se cotiza por WhatsApp antes de cualquier pago. No cobramos un valor de envío sin confirmarlo contigo.",
+          "El envío es gratis cuando el pedido suma 2 o más prendas, sin importar si son del mismo modelo o de modelos distintos, y en todos los pedidos personalizados, de eventos y de equipos.",
+          "Para un pedido de una sola prenda, la tarifa se calcula por zona y se muestra en el checkout antes de pagar cuando las condiciones con la transportadora están confirmadas.",
+          "Mientras esas condiciones estén pendientes, el pedido se registra y la tarifa de una sola prenda se cotiza por WhatsApp antes de cualquier pago. No cobramos un valor de envío sin confirmarlo contigo.",
         ],
       },
       {
@@ -53,8 +54,9 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Envío gratis",
         body: [
-          "A partir de la tercera compra del mismo cliente, el envío es gratis dentro de la cobertura confirmada.",
-          "Es un beneficio que se aplica de forma manual: escríbenos por WhatsApp con tu número de pedido y validamos tu historial antes de cobrar. No es acumulable con otras promociones ni aplica a pedidos ya despachados.",
+          "El envío es gratis cuando el pedido suma 2 o más prendas en total, sin importar si son del mismo modelo o de modelos distintos, y en todos los pedidos personalizados, de eventos y de equipos.",
+          "La regla se aplica automáticamente en el carrito y en el checkout: el pedido muestra “Gratis” antes de pagar y el total no incluye un cobro de envío. No requiere solicitud ni validación por WhatsApp.",
+          "Un pedido de una sola prenda paga la tarifa de su zona cuando las condiciones con la transportadora están confirmadas.",
         ],
       },
       {
