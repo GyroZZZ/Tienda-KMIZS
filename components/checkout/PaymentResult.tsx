@@ -10,6 +10,7 @@ import { site } from "@/lib/site";
 interface PaymentStatus {
   status?: string;
   statusDetail?: string;
+  orderId?: string;
   error?: string;
 }
 
@@ -82,7 +83,20 @@ export function PaymentResult() {
       {status?.statusDetail ? (
         <p className="mt-3 text-xs text-ink/55">Detalle: {status.statusDetail}</p>
       ) : null}
+      {status?.orderId ? (
+        <p className="mt-3 text-sm text-ink/70">
+          Pedido <strong className="font-semibold break-all text-ink">{status.orderId}</strong>
+        </p>
+      ) : null}
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        {status?.orderId && (isApproved || isPending) ? (
+          <Link
+            href={`/checkout/gracias?pedido=${encodeURIComponent(status.orderId)}`}
+            className="inline-flex min-h-11 items-center justify-center bg-ink px-6 py-3 text-sm font-semibold tracking-[0.12em] text-bone uppercase hover:bg-accent"
+          >
+            Ver resumen del pedido
+          </Link>
+        ) : null}
         <Link
           href="/productos"
           className="inline-flex min-h-11 items-center justify-center bg-ink px-6 py-3 text-sm font-semibold tracking-[0.12em] text-bone uppercase hover:bg-accent"

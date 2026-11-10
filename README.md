@@ -51,14 +51,14 @@ Comprueba que quedó bien con `git config --global --list`.
 
 ## Dónde está cada cosa
 
-| Ruta               | Contenido                                                   |
-| ------------------ | ----------------------------------------------------------- |
-| `app/`             | Rutas y páginas (App Router). Una carpeta por ruta.         |
-| `components/`      | Componentes reutilizables: layout, producto, UI.            |
-| `data/products.ts` | Catálogo. Es el archivo que más se toca.                    |
-| `lib/`             | Tipos, utilidades y configuración del sitio.                |
-| `public/`          | Imágenes y assets estáticos.                                |
-| `docs/`            | Documentos del proyecto: catálogo, costos y retrospectivas. |
+| Ruta               | Contenido                                                          |
+| ------------------ | ------------------------------------------------------------------ |
+| `app/`             | Rutas y páginas (App Router). Una carpeta por ruta.                |
+| `components/`      | Componentes reutilizables: layout, producto, UI.                   |
+| `data/products.ts` | Catálogo. Es el archivo que más se toca.                           |
+| `lib/`             | Tipos, utilidades y configuración del sitio.                       |
+| `public/`          | Imágenes y assets estáticos.                                       |
+| `docs/`            | Documentos del proyecto: catálogo, costos, confianza y evidencias. |
 
 Para cambiar un precio, una talla o un texto de producto **no se toca el HTML**: se edita `data/products.ts` y el sitio se actualiza solo.
 
@@ -135,13 +135,17 @@ En el checkout, el municipio se elige de una lista dependiente del departamento.
 
 ## Estado del proyecto
 
-| Sprint | Alcance                                                       | Estado                                                       |
-| ------ | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| 1      | Base en código, identidad de marca y despliegue en Vercel     | Completado                                                   |
-| 2      | Catálogo con mockups de producto, fichas y guía de tallas     | Completado; las fotos reales llegan con la primera muestra    |
-| 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos | Implementado; requiere credenciales y confirmación de envíos |
-| 4      | Analítica, SEO, WhatsApp y QA                                 | Pendiente                                                    |
-| 5      | Lanzamiento, KPIs y documentación                             | Pendiente                                                    |
+| Sprint | Alcance                                                                   | Estado                                                                    |
+| ------ | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| 1      | Base en código, identidad de marca y despliegue en Vercel                 | Completado                                                                |
+| 2      | Catálogo, fichas, guía de tallas, políticas, FAQ y confirmación de pedido | Completado; el correo al cliente queda pendiente de un dominio verificado |
+| 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos             | Implementado; requiere credenciales y confirmación de envíos              |
+| 4      | Analítica, SEO, WhatsApp y QA                                             | Pendiente                                                                 |
+| 5      | Lanzamiento, KPIs y documentación                                         | Pendiente                                                                 |
+
+La base legal, las decisiones y las limitaciones del contenido de confianza están en
+[`docs/confianza.md`](docs/confianza.md). La evidencia de pruebas, en
+[`docs/evidencias/e4/pruebas.md`](docs/evidencias/e4/pruebas.md).
 
 ## Equipo
 

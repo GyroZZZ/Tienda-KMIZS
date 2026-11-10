@@ -1,146 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
-type PolicySlug = "envios" | "cambios" | "terminos" | "privacidad";
-
-interface Policy {
-  title: string;
-  updatedAt: string;
-  intro: string;
-  sections: { heading: string; body: string[] }[];
-}
-
-const policies: Record<PolicySlug, Policy> = {
-  envios: {
-    title: "Envíos y entregas",
-    updatedAt: "30 de octubre de 2026",
-    intro:
-      "La disponibilidad, el costo y el plazo se confirman para cada destino con la transportadora antes de cobrar o despachar el pedido.",
-    sections: [
-      {
-        heading: "Tiempos",
-        body: [
-          "El tiempo estimado de entrega se informa antes del pago y depende del municipio y de la cobertura confirmada por la transportadora.",
-          "Los productos personalizados se producen sobre pedido. El tiempo de producción indicado en su ficha se suma al tiempo de transporte.",
-        ],
-      },
-      {
-        heading: "Costos",
-        body: [
-          "La tarifa se cotiza según la zona de cobertura y se muestra antes de cualquier pago. Los valores publicados en documentos internos son estimaciones, no una tarifa confirmada.",
-          "No se aplica un envío gratis automático mientras no estén confirmadas las condiciones comerciales con la transportadora.",
-        ],
-      },
-      {
-        heading: "Seguimiento",
-        body: [
-          "Cuando el pedido sale, enviamos el número de guía al correo registrado.",
-          "Si la transportadora no logra entregar tras dos intentos, el paquete vuelve a bodega y te contactamos para reprogramar.",
-        ],
-      },
-    ],
-  },
-  cambios: {
-    title: "Cambios y devoluciones",
-    updatedAt: "30 de octubre de 2026",
-    intro:
-      "Queremos que la camiseta te quede bien. Si no es así, puedes solicitar un cambio dentro de los plazos que se describen a continuación.",
-    sections: [
-      {
-        heading: "Cambio de talla",
-        body: [
-          "Tienes 5 días calendario después de la entrega para solicitar un cambio de talla.",
-          "La prenda debe estar sin uso, sin lavar, sin olores y con la etiqueta original puesta.",
-          "El envío de regreso corre por cuenta del cliente; el nuevo envío lo asume KMIZS una vez por pedido.",
-        ],
-      },
-      {
-        heading: "Producto defectuoso",
-        body: [
-          "Si la prenda llega con un defecto de confección o de estampado, escríbenos dentro de los 5 días siguientes a la entrega con fotos del producto.",
-          "En ese caso cubrimos ambos envíos y reemplazamos la prenda o devolvemos el dinero.",
-        ],
-      },
-      {
-        heading: "Productos personalizados",
-        body: [
-          "Los pedidos personalizados no tienen cambio por talla, porque se producen con el diseño aprobado por el cliente.",
-          "Sí cubrimos defectos de producción o diferencias frente al diseño aprobado.",
-        ],
-      },
-    ],
-  },
-  terminos: {
-    title: "Términos y condiciones",
-    updatedAt: "30 de octubre de 2026",
-    intro:
-      "Al comprar en KMIZS aceptas las condiciones de uso de la tienda, descritas a continuación.",
-    sections: [
-      {
-        heading: "Productos y precios",
-        body: [
-          "Los precios se expresan en pesos colombianos (COP) e incluyen IVA cuando aplica.",
-          "Las fotografías son de referencia; pueden existir variaciones leves de tono entre lotes de tela.",
-          "Nos reservamos el derecho de corregir errores evidentes de precio o de inventario y de cancelar el pedido, devolviendo el dinero pagado.",
-        ],
-      },
-      {
-        heading: "Pedidos",
-        body: [
-          "Al enviar el formulario registramos la solicitud y el equipo la recibe por correo. El pedido queda confirmado con el cliente después de validar disponibilidad, envío y forma de pago por WhatsApp o con el estado aprobado de la pasarela.",
-          "El pago contraentrega está sujeto a disponibilidad de la transportadora en la zona.",
-        ],
-      },
-      {
-        heading: "Propiedad intelectual",
-        body: [
-          "Los diseños, el nombre KMIZS y los materiales de la tienda son de propiedad de sus autores.",
-          "Al enviar un diseño para personalización, declaras tener los derechos para reproducirlo y autorizas su uso únicamente para producir tu pedido.",
-        ],
-      },
-    ],
-  },
-  privacidad: {
-    title: "Tratamiento de datos personales",
-    updatedAt: "30 de octubre de 2026",
-    intro:
-      "Tratamos tus datos personales conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013 de Colombia.",
-    sections: [
-      {
-        heading: "Qué datos recolectamos",
-        body: [
-          "Datos de contacto y envío: nombre, correo, teléfono, dirección, ciudad y departamento.",
-          "Información del pedido: productos, tallas, valores y estado del pago.",
-          "Datos de navegación anónimos para medir el uso del sitio.",
-        ],
-      },
-      {
-        heading: "Con quién compartimos los datos",
-        body: [
-          "Compartimos los datos necesarios del pedido con Resend para enviar el registro al equipo y con Mercado Pago cuando eliges pagar por su pasarela.",
-          "Si continúas por WhatsApp, los datos que decidas enviar se tramitan mediante ese servicio. No almacenamos números completos de tarjeta.",
-        ],
-      },
-      {
-        heading: "Para qué los usamos",
-        body: [
-          "Procesar y entregar tu pedido, y comunicarnos contigo sobre su estado.",
-          "Atender cambios, devoluciones y solicitudes de soporte.",
-          "Enviar novedades y promociones solo si diste tu autorización expresa.",
-        ],
-      },
-      {
-        heading: "Tus derechos",
-        body: [
-          "Puedes conocer, actualizar, rectificar y solicitar la eliminación de tus datos escribiendo a nuestro correo de contacto.",
-          "También puedes revocar la autorización para el envío de comunicaciones comerciales en cualquier momento.",
-        ],
-      },
-    ],
-  },
-};
-
-const policySlugs = Object.keys(policies) as PolicySlug[];
+import { getPolicy, policies, policySlugs } from "@/data/policies";
+import { site } from "@/lib/site";
 
 export function generateStaticParams() {
   return policySlugs.map((slug) => ({ slug }));
@@ -150,7 +13,7 @@ export async function generateMetadata({
   params,
 }: PageProps<"/politicas/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const policy = policies[slug as PolicySlug];
+  const policy = getPolicy(slug);
 
   if (!policy) {
     return { title: "Página no encontrada" };
@@ -164,11 +27,15 @@ export async function generateMetadata({
 
 export default async function PolicyPage({ params }: PageProps<"/politicas/[slug]">) {
   const { slug } = await params;
-  const policy = policies[slug as PolicySlug];
+  const policy = getPolicy(slug);
 
   if (!policy) {
     notFound();
   }
+
+  const otherPolicies = policySlugs
+    .filter((entry) => entry !== slug)
+    .map((entry) => ({ slug: entry, title: policies[entry].title }));
 
   return (
     <article className="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20">
@@ -190,6 +57,47 @@ export default async function PolicyPage({ params }: PageProps<"/politicas/[slug
           </section>
         ))}
       </div>
+
+      <div className="mt-12 border border-ink/15 bg-bone-dim/40 p-5 text-sm leading-relaxed text-ink/70">
+        <p className="font-semibold text-ink">¿Necesitas ayuda con tu pedido?</p>
+        <p className="mt-2">
+          Escríbenos a{" "}
+          <a
+            href={`mailto:${site.email}`}
+            className="underline decoration-accent decoration-2 underline-offset-4"
+          >
+            {site.email}
+          </a>{" "}
+          o al WhatsApp{" "}
+          <a
+            href={`https://wa.me/${site.whatsapp}`}
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-accent decoration-2 underline-offset-4"
+          >
+            {site.whatsappDisplay}
+          </a>
+          . Atendemos de lunes a viernes, 9:00 a 18:00 (hora Colombia).
+        </p>
+      </div>
+
+      <nav aria-label="Otras políticas" className="mt-10 border-t border-ink/10 pt-6">
+        <h2 className="text-[11px] font-semibold tracking-[0.18em] text-ink/50 uppercase">
+          Otras políticas
+        </h2>
+        <ul className="mt-3 space-y-2 text-sm">
+          {otherPolicies.map((entry) => (
+            <li key={entry.slug}>
+              <Link
+                href={`/politicas/${entry.slug}`}
+                className="underline decoration-accent decoration-2 underline-offset-4 hover:text-accent"
+              >
+                {entry.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </article>
   );
 }
