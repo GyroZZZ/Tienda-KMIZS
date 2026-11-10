@@ -24,7 +24,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/basica-tinta.webp",
+      src: "/products/basica-tinta-v2.webp",
       alt: "Camiseta negra de corte recto con el logotipo de KMIZS en el pecho",
     },
     colors: [
@@ -51,7 +51,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 240 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/basica-hueso.webp",
+      src: "/products/basica-hueso-v2.webp",
       alt: "Camiseta color hueso de corte recto con el logotipo de KMIZS en el pecho",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
@@ -75,7 +75,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 260 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/oversize-tinta.webp",
+      src: "/products/oversize-tinta-v2.webp",
       alt: "Camiseta oversize negra con logotipo pequeño en el pecho",
     },
     colors: [{ name: "Tinta", hex: "#0c0c0e" }],
@@ -98,7 +98,7 @@ export const products: Product[] = [
     composition: "100% algodón peinado · 260 g/m²",
     care: cuidadoBase,
     image: {
-      src: "/products/oversize-hueso.webp",
+      src: "/products/oversize-hueso-v2.webp",
       alt: "Camiseta oversize color hueso con logotipo pequeño en el pecho",
     },
     colors: [{ name: "Hueso", hex: "#f5f2ea" }],
