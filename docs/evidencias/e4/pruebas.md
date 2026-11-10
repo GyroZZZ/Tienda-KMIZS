@@ -97,6 +97,12 @@ departamento, líneas (producto, color, talla, cantidad, total), subtotal, enví
 - Las tarifas de envío siguen pendientes de confirmación con la transportadora.
 - El texto legal debe revisarlo el docente o un abogado antes de un lanzamiento real.
 
-## 9. Verificación en producción
+## 9. Verificación del preview y producción
 
-Pendiente de completar después del merge del PR y del despliegue en Vercel.
+**PR:** #7
+**Preview:** `https://tienda-kmizs-git-feat-e4-confianza-dream-team-509f.vercel.app`
+**Estado del deployment:** Ready (Vercel, 9 de noviembre de 2026).
+
+El preview está protegido por la autenticación de Vercel, así que la verificación visual se hizo en
+local y la comprobación del deployment se apoya en el estado Ready y en el build de producción. La
+verificación en producción se completa después del merge.
