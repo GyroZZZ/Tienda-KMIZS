@@ -54,5 +54,6 @@ export async function GET(request: Request) {
   return Response.json({
     status: payment.status,
     statusDetail: typeof payment.status_detail === "string" ? payment.status_detail : "",
+    orderId: payment.external_reference,
   });
 }

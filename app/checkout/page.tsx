@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
+import { TrustSignals } from "@/components/trust/TrustSignals";
 import { getMercadoPagoTestToken } from "@/lib/payments";
 import { getShippingOptions } from "@/lib/shipping";
 
@@ -25,6 +26,8 @@ export default function CheckoutPage() {
         Revisa tus productos, comparte tus datos de entrega y elige cómo pagar. Si el envío todavía
         no está confirmado, te informaremos el costo y el plazo antes de cobrar o despachar.
       </p>
+
+      <TrustSignals context="checkout" />
 
       <CheckoutForm
         shippingOptions={shippingOptions}

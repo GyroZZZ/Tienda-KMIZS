@@ -2,14 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
 
 import { useCart } from "@/components/cart/CartProvider";
 import colombianLocations from "@/lib/colombian-locations.json";
+import { saveOrderSnapshot } from "@/lib/order-snapshot";
 import { formatPrice, getProductBySlug } from "@/lib/products";
 import type { ShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
-import { site } from "@/lib/site";
 
 type PaymentMethod = "mercado_pago" | "cash_on_delivery" | "bank_transfer";
 
@@ -48,16 +49,14 @@ const paymentOptions: {
 ];
 
 export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: CheckoutFormProps) {
+  const router = useRouter();
   const { items, ready, clearCart } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash_on_delivery");
   const [city, setCity] = useState("");
   const [department, setDepartment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState("");
-  const [registeredOrder, setRegisteredOrder] = useState<{
-    id: string;
-    whatsappUrl: string;
-  } | null>(null);
 
   const lines = useMemo(
     () =>
@@ -120,6 +119,30 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
         return;
       }
 
+      const snapshot = {
+        id: result.orderId,
+        createdAt: new Date().toISOString(),
+        paymentMethod,
+        paymentLabel: paymentOptions.find((option) => option.id === paymentMethod)?.title ?? "Pago",
+        whatsappUrl: result.whatsappUrl ?? null,
+        customerName: String(formData.get("name") ?? "").trim(),
+        email: String(formData.get("email") ?? "").trim(),
+        city,
+        department,
+        lines: lines.map((line) => ({
+          name: line.product.name,
+          color: line.color,
+          size: line.size,
+          quantity: line.quantity,
+          total: line.total,
+        })),
+        subtotal,
+        shipping: selectedZone?.rate ?? null,
+        shippingZone: selectedZone?.label ?? null,
+        total: selectedZone ? subtotal + selectedZone.rate : null,
+      };
+      saveOrderSnapshot(snapshot);
+
       if (paymentMethod === "mercado_pago") {
         if (!result.paymentUrl) {
           setError("No recibimos el enlace de pago. No se realizó ningún cobro.");
@@ -129,13 +152,9 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
         return;
       }
 
-      if (!result.whatsappUrl) {
-        setError("El pedido se registró, pero faltó el enlace para confirmarlo por WhatsApp.");
-        return;
-      }
-
+      setRedirecting(true);
       clearCart();
-      setRegisteredOrder({ id: result.orderId, whatsappUrl: result.whatsappUrl });
+      router.push(`/checkout/gracias?pedido=${encodeURIComponent(result.orderId)}`);
     } catch (requestError) {
       console.error("No se pudo enviar el pedido.", requestError);
       setError("No pudimos conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.");
@@ -144,27 +163,14 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
     }
   }
 
-  if (registeredOrder) {
+  if (redirecting) {
     return (
       <section className="mt-8 border border-ink/15 bg-bone-dim/40 p-6 sm:p-9" aria-live="polite">
         <p className="text-[11px] font-semibold tracking-[0.2em] text-accent uppercase">
           Pedido registrado
         </p>
-        <h2 className="mt-2 text-3xl tracking-tight">Pedido {registeredOrder.id}</h2>
-        <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink/70">
-          Enviamos el detalle al equipo. Abre WhatsApp y envía el mensaje para confirmar
-          disponibilidad, tarifa y plazo del envío antes de pagar o despachar.
-        </p>
-        <a
-          href={registeredOrder.whatsappUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex min-h-12 items-center justify-center bg-ink px-6 py-3 text-center text-sm font-semibold tracking-[0.12em] text-bone uppercase transition-colors hover:bg-accent"
-        >
-          Confirmar por WhatsApp
-        </a>
-        <p className="mt-3 text-xs text-ink/55">
-          Si no se abre WhatsApp, escríbenos al {site.whatsappDisplay}.
+        <p className="mt-3 text-sm leading-relaxed text-ink/70">
+          Abriendo el resumen de tu pedido…
         </p>
       </section>
     );

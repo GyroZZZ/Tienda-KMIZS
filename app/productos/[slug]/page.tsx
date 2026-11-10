@@ -12,6 +12,7 @@ import {
 } from "@/lib/products";
 import { AddToCart } from "@/components/cart/AddToCart";
 import { SizeAvailability } from "@/components/product/SizeAvailability";
+import { TrustSignals } from "@/components/trust/TrustSignals";
 import { getShippingOptions } from "@/lib/shipping";
 
 export function generateStaticParams() {
@@ -76,6 +77,8 @@ function ProductDetails({
       <AddToCart product={product} />
 
       <SizeAvailability product={product} />
+
+      <TrustSignals context="product" />
 
       <div className="mt-8 divide-y divide-ink/10 border-y border-ink/10">
         <details className="group py-4">
