@@ -1,9 +1,10 @@
 /**
  * Contenido de las páginas legales.
  *
- * Redactado con base en la Ley 1480 de 2011 (Estatuto del Consumidor) y la
- * Ley 1581 de 2012 con el Decreto 1377 de 2013 (compilado en el Decreto 1074
- * de 2015). Es un proyecto académico: no sustituye la revisión de un abogado.
+ * Redactado con base en la Ley 1480 de 2011 (Estatuto del Consumidor),
+ * modificada por la Ley 2439 de 2024, y la Ley 1581 de 2012 con el
+ * Decreto 1377 de 2013 (compilado en el Decreto 1074 de 2015). Es un
+ * proyecto académico: no sustituye la revisión de un abogado.
  * Ver docs/confianza.md.
  */
 
@@ -79,7 +80,7 @@ export const policies: Record<PolicySlug, Policy> = {
 
   cambios: {
     title: "Cambios y devoluciones",
-    updatedAt: "9 de noviembre de 2026",
+    updatedAt: "14 de noviembre de 2026",
     intro:
       "Queremos que la camiseta te quede bien. Si no es así, o si llega con un problema, escríbenos dentro de los plazos de esta política.",
     sections: [
@@ -102,10 +103,10 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Derecho de retracto",
         body: [
-          "En las compras a distancia tienes derecho de retracto dentro de los 5 días hábiles siguientes a la entrega, conforme al artículo 47 de la Ley 1480 de 2011.",
+          "En las compras a distancia tienes derecho de retracto dentro de los 5 días hábiles siguientes a la entrega, conforme al artículo 47 de la Ley 1480 de 2011, modificado por la Ley 2439 de 2024.",
           "Para ejercerlo, escríbenos a hola@kmizs.co o por WhatsApp con tu número de pedido y los datos de contacto. Te enviamos las instrucciones para devolver la prenda.",
           "La prenda debe estar en las mismas condiciones en que la recibiste: sin uso, sin lavar y con la etiqueta. El costo del envío de regreso corre por cuenta del cliente, salvo que la ley disponga lo contrario.",
-          "Una vez recibida y verificada la prenda, devolvemos el dinero dentro de los 30 días calendario siguientes a la solicitud, por el mismo medio de pago utilizado.",
+          "Devolvemos el dinero en un plazo máximo de 15 días calendario contados desde que ejerces el retracto, siempre que nos hayas dado los datos completos para la devolución y hayas devuelto la prenda. El reembolso se hace por el medio de pago que prefieras.",
         ],
       },
       {
@@ -118,7 +119,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Reembolsos",
         body: [
-          "Los reembolsos se hacen por el mismo medio de pago de la compra. Los tiempos de abono dependen del banco o de la pasarela y pueden tardar algunos días hábiles adicionales.",
+          "Los reembolsos se hacen por el medio de pago que elijas; si no indicas otro, usamos el mismo de la compra (artículo 5 de la Ley 2439 de 2024).",
           "No se reembolsan los costos de envío, salvo que la devolución se deba a un error nuestro o a un producto defectuoso.",
         ],
       },
@@ -134,7 +135,7 @@ export const policies: Record<PolicySlug, Policy> = {
 
   terminos: {
     title: "Términos y condiciones",
-    updatedAt: "9 de noviembre de 2026",
+    updatedAt: "14 de noviembre de 2026",
     intro:
       "Estas condiciones regulan el uso de la tienda y la compra de productos. Al confirmar un pedido las aceptas.",
     sections: [
@@ -178,7 +179,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Derecho de retracto",
         body: [
-          "Tienes derecho de retracto en las compras a distancia dentro de los 5 días hábiles siguientes a la entrega (artículo 47 de la Ley 1480 de 2011).",
+          "Tienes derecho de retracto en las compras a distancia dentro de los 5 días hábiles siguientes a la entrega (artículo 47 de la Ley 1480 de 2011, modificado por la Ley 2439 de 2024). El dinero se devuelve en un máximo de 15 días calendario.",
           "El procedimiento, las condiciones de la prenda y los plazos de reembolso están en la política de cambios y devoluciones.",
         ],
       },

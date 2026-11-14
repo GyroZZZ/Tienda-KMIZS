@@ -41,6 +41,14 @@ export function Footer() {
           <p>
             © {currentYear} {site.name}. Todos los derechos reservados.
           </p>
+          <a
+            href="https://www.sic.gov.co"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-medium text-bone/80 underline underline-offset-4 transition-colors hover:text-accent"
+          >
+            Superintendencia de Industria y Comercio (SIC)
+          </a>
           <p>Proyecto académico · Comercio electrónico</p>
         </div>
       </div>

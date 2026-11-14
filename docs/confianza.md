@@ -28,6 +28,8 @@ pasa si algo sale mal y cómo se tratan sus datos, antes de dejar sus datos en e
 
 El contenido se redactó con base en:
 
+- **Ley 2439 de 2024:** modifica la Ley 1480 para comercio electrónico; fija en 15 días calendario el
+  plazo máximo para devolver el dinero del retracto y permite elegir el medio de reembolso.
 - **Ley 1480 de 2011 (Estatuto del Consumidor):** artículos 7 a 11 (garantía legal), artículo 47
   (derecho de retracto en compras a distancia) y artículo 51 (reversión del pago).
 - **Ley 1581 de 2012 (protección de datos personales)**, con el **Decreto 1377 de 2013**,
@@ -39,7 +41,7 @@ El contenido se redactó con base en:
 | Canales de atención                  | `hola@kmizs.co` y WhatsApp +57 310 389 8707                                                                 |
 | Cambio de talla                      | 5 días hábiles desde la entrega                                                                             |
 | Derecho de retracto                  | 5 días hábiles desde la entrega (art. 47, Ley 1480)                                                         |
-| Reembolso                            | Hasta 30 días calendario después de la solicitud                                                            |
+| Reembolso                            | Hasta 15 días calendario desde el retracto (Ley 2439 de 2024)                                               |
 | Garantía legal                       | Un año para productos nuevos; cubre defectos de confección y estampado                                      |
 | Productos personalizados             | Sin retracto ni cambio de talla (parágrafo del art. 47), con garantía legal por defectos                    |
 | Envío gratis                         | Automático desde 2 prendas (mismo o distintos modelos) y en pedidos personalizados, de eventos y de equipos |
@@ -110,3 +112,11 @@ WhatsApp.
 5. Abrir la página con otro número de pedido: debe aparecer el respaldo genérico.
 6. Revisar `/politicas/envios`, `/politicas/cambios`, `/politicas/terminos` y
    `/politicas/privacidad`.
+
+## 8. Ajustes del 14 de noviembre de 2026
+
+- Reembolso por retracto corregido de 30 a **15 días calendario** (Ley 2439 de 2024; la Corte
+  Constitucional, en la Sentencia C-192 de 2026, aplicó ese plazo a todas las modalidades del art. 47).
+- El reembolso se hace por el medio de pago que prefiera el cliente.
+- Enlace visible a la Superintendencia de Industria y Comercio en el pie de página de todo el sitio,
+  como exige el Estatuto del Consumidor para el comercio electrónico.
