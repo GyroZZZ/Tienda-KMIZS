@@ -119,4 +119,9 @@ WhatsApp.
   Constitucional, en la Sentencia C-192 de 2026, aplicó ese plazo a todas las modalidades del art. 47).
 - El reembolso se hace por el medio de pago que prefiera el cliente.
 - Enlace visible a la Superintendencia de Industria y Comercio en el pie de página de todo el sitio,
-  como exige el Estatuto del Consumidor para el comercio electrónico.
+  como exige el Estatuto del Consumidor para el comercio electrónico (parágrafo del art. 50 de la
+  Ley 1480 de 2011, modificada por la Ley 2439 de 2024).
+
+**Pendiente de confirmar con el docente:** si en el retracto se deben devolver también los costos de
+envío originales. La política hoy dice que no se reembolsan, salvo error nuestro o producto
+defectuoso, y el art. 47 solo pone en cabeza del consumidor los costos de la devolución.

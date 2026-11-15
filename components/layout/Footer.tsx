@@ -45,7 +45,7 @@ export function Footer() {
             href="https://www.sic.gov.co"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm font-medium text-bone/80 underline underline-offset-4 transition-colors hover:text-accent"
+            className="text-xs font-medium text-bone/80 underline underline-offset-4 transition-colors hover:text-accent"
           >
             Superintendencia de Industria y Comercio (SIC)
           </a>
