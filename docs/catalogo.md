@@ -9,12 +9,12 @@
 
 ## 1. Entregables
 
-| #   | Entregable                                                                                       | Estado |
-| --- | ------------------------------------------------------------------------------------------------ | ------ |
-| 1   | 10 referencias con tipo, tallas, colores y proveedor + alterno                                   | ✅     |
-| 2   | Costo unitario por referencia (prenda, estampado, empaque, pasarela, devoluciones, envío gratis) | ✅     |
-| 3   | Tres niveles de precio con margen ≥ 55%                                                          | ✅     |
-| 4   | Decisiones respaldadas en la encuesta aplicada                                                   | ✅     |
+| #   | Entregable                                                                         | Estado |
+| --- | ---------------------------------------------------------------------------------- | ------ |
+| 1   | 10 referencias con tipo, tallas, colores y proveedor + alterno                     | ✅     |
+| 2   | Costo unitario por referencia (prenda, estampado, empaque, pasarela, devoluciones) | ✅     |
+| 3   | Tres niveles de precio con margen ≥ 55%                                            | ✅     |
+| 4   | Decisiones respaldadas en la encuesta aplicada                                     | ✅     |
 
 ---
 
@@ -53,57 +53,59 @@
 
 **Personalizada por volumen:**
 
-| Cantidad | Precio unitario | Margen |
-| -------- | --------------- | ------ |
-| 6 – 11   | $89.900         | 55,3%  |
-| 12 – 24  | $84.900         | 57,6%  |
-| 25 +     | $79.900         | 57,9%  |
+| Cantidad | Costo unitario | Precio unitario | Margen |
+| -------- | -------------- | --------------- | ------ |
+| 6 – 11   | $38.590        | $89.900         | 57,1%  |
+| 12 – 24  | $34.408        | $84.900         | 59,5%  |
+| 25 +     | $32.048        | $79.900         | 59,9%  |
+
+Los escalones de 12–24 y 25+ suponen el descuento por volumen del ejercicio ($30.582 y $28.486 de
+producción por prenda) y siguen pendientes de cotización formal con el proveedor. Ningún escalón
+incluye provisión de envío gratis.
 
 ---
 
 ## 4. Estructura de costos
 
-| Paso                      | Fórmula                               | Qué incluye                                               |
-| ------------------------- | ------------------------------------- | --------------------------------------------------------- |
-| Costo de producción       | `prenda + estampado + empaque`        | Camiseta lista para vender                                |
-| Costo con merma           | `producción × 1,05`                   | 5% de prendas dañadas o mal estampadas                    |
-| Costo variable de venta   | `con merma × 7,15%`                   | Mercado Pago (3,49% + IVA) y reserva de devoluciones (3%) |
-| Provisión de envío gratis | `tarifa de zona ÷ prendas del pedido` | Pedidos de 2+ prendas y personalizados (regla automática) |
-| **Costo total unitario**  | suma de los anteriores                | Base del precio                                           |
-| Precio de venta           | `costo total ÷ (1 − 0,55)`            | Margen sobre el precio, no sobre el costo                 |
+| Paso                     | Fórmula                        | Qué incluye                                               |
+| ------------------------ | ------------------------------ | --------------------------------------------------------- |
+| Costo de producción      | `prenda + estampado + empaque` | Camiseta lista para vender                                |
+| Costo con merma          | `producción × 1,05`            | 5% de prendas dañadas o mal estampadas                    |
+| Costo variable de venta  | `con merma × 7,15%`            | Mercado Pago (3,49% + IVA) y reserva de devoluciones (3%) |
+| **Costo total unitario** | suma de los anteriores         | Base del precio                                           |
+| Precio de venta          | `costo total ÷ (1 − 0,55)`     | Margen sobre el precio, no sobre el costo                 |
 
-> **Provisión pendiente de recalcular (10 nov 2026).** La provisión anterior (`$15.900 × 10%` =
-> $1.590 por prenda) financiaba solo el envío gratis de la 3.ª compra. Con la regla nueva, el envío
-> gratis aplica a casi todos los pedidos de 2+ prendas y a todos los personalizados, así que la
-> reserva por prenda sube según la mezcla:
+> **Provisión de envío gratis: eliminada (15 nov 2026).** El envío gratis desde 2 prendas y en
+> pedidos personalizados no se provisiona por prenda. Se reconoce como costo del pedido cuando
+> ocurre y se financia con el margen. Los precios de venta no cambian y el margen unitario sube a
+> 57,1–59,5% porque el costo total ya no carga la reserva de $1.590.
 >
-> | Escenario de pedido gratis   | Envío por pedido | Provisión por prenda |
-> | ---------------------------- | ---------------- | -------------------- |
-> | 2 prendas, ciudad principal  | $15.900          | $7.950               |
-> | 2 prendas, zona extendida    | $18.900          | $9.450               |
-> | Personalizado de 6 unidades  | $15.900          | $2.650               |
-> | Personalizado de 12 unidades | $15.900          | $1.325               |
+> Costo real del envío gratis en pedidos con las tarifas de referencia:
 >
-> Impacto sobre Básica Tinta ($79.900, costo base $33.752 sin provisión): el margen pasa de 55,8% a
-> **47,8%** con $7.950 de provisión y a **45,9%** con $9.450. Los pedidos de una sola prenda no
-> necesitan provisión porque el cliente paga el envío. **Decisión pendiente:** aceptar el margen
-> menor, ajustar precios o negociar tarifas con la transportadora. No se cambian precios sin esa
-> decisión.
+> | Pedido                                       | Envío asumido | Margen del pedido |
+> | -------------------------------------------- | ------------- | ----------------- |
+> | 2 × Básica Tinta, área metropolitana         | $12.900       | 49,7%             |
+> | 2 × Básica Tinta, ciudades principales       | $18.900       | 45,9%             |
+> | 6 × Personalizada Equipo, área metropolitana | $12.900       | 54,7%             |
+>
+> **Decisión aceptada el 15 de noviembre de 2026:** se asume ese margen menor por pedido a cambio
+> de subir el ticket promedio. La cotización formal de la transportadora puede mejorar las cifras,
+> pero ya no hay una decisión pendiente sobre la provisión.
 
 ### Costeo por referencia
 
 | Referencia            | Prenda  | Estampado | Empaque | Costo total | Precio  | Margen    |
 | --------------------- | ------- | --------- | ------- | ----------- | ------- | --------- |
-| Básica Tinta          | $23.000 | $5.500    | $1.500  | $35.342     | $79.900 | **55,8%** |
-| Básica Hueso          | $23.000 | $5.500    | $1.500  | $35.342     | $79.900 | **55,8%** |
-| Básica Oversize Tinta | $27.000 | $5.500    | $1.800  | $40.180     | $89.900 | **55,3%** |
-| Básica Oversize Hueso | $27.000 | $5.500    | $1.800  | $40.180     | $89.900 | **55,3%** |
-| Gráfica Ruido         | $24.000 | $9.500    | $1.800  | $41.305     | $94.900 | **56,5%** |
-| Gráfica Serie 01      | $24.000 | $9.500    | $1.800  | $41.305     | $94.900 | **56,5%** |
-| Gráfica Bogotá        | $24.000 | $11.000   | $1.800  | $42.993     | $99.900 | **57,0%** |
-| Gráfica Línea         | $24.000 | $9.500    | $1.800  | $41.305     | $94.900 | **56,5%** |
-| Personalizada Equipo  | $24.000 | $8.500    | $1.800  | $40.180     | $89.900 | **55,3%** |
-| Personalizada Evento  | $21.000 | $8.000    | $1.600  | $36.017     | $84.900 | **57,6%** |
+| Básica Tinta          | $23.000 | $5.500    | $1.500  | $33.752     | $79.900 | **57,8%** |
+| Básica Hueso          | $23.000 | $5.500    | $1.500  | $33.752     | $79.900 | **57,8%** |
+| Básica Oversize Tinta | $27.000 | $5.500    | $1.800  | $38.590     | $89.900 | **57,1%** |
+| Básica Oversize Hueso | $27.000 | $5.500    | $1.800  | $38.590     | $89.900 | **57,1%** |
+| Gráfica Ruido         | $24.000 | $9.500    | $1.800  | $39.715     | $94.900 | **58,1%** |
+| Gráfica Serie 01      | $24.000 | $9.500    | $1.800  | $39.715     | $94.900 | **58,1%** |
+| Gráfica Bogotá        | $24.000 | $11.000   | $1.800  | $41.403     | $99.900 | **58,6%** |
+| Gráfica Línea         | $24.000 | $9.500    | $1.800  | $39.715     | $94.900 | **58,1%** |
+| Personalizada Equipo  | $24.000 | $8.500    | $1.800  | $38.590     | $89.900 | **57,1%** |
+| Personalizada Evento  | $21.000 | $8.000    | $1.600  | $34.427     | $84.900 | **59,5%** |
 
 **Niveles de precio:** Esencial $79.900–$89.900 · Diseño $94.900–$99.900 · Personalizada $84.900–$89.900.
 
@@ -124,7 +126,8 @@ La regla vive en `lib/free-shipping.ts` y la aplican el carrito, el checkout, la
 la página de gracias. Los valores son hipótesis académicas, no tarifas confirmadas por una
 transportadora. El checkout solo muestra la tarifa de una sola prenda cuando
 `SHIPPING_RATES_CONFIRMED=true`; mientras esté en `false`, la cotiza por WhatsApp antes de cobrar.
-El envío gratis no depende de esa variable: se aplica igual en producción.
+El envío gratis no depende de esa variable: se aplica igual en producción. Su costo no se
+provisiona por prenda: se reconoce por pedido y se financia con el margen (ver la sección 4).
 
 ---
 
@@ -156,22 +159,23 @@ Distribución por referencia: 60% básicas, 30% gráficas, 10% personalizables.
 
 ## 8. Decisiones registradas
 
-| Fecha       | Decisión                                                            | Motivo                                                                                                                                                |
-| ----------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 30 oct 2026 | Tres niveles de precio: esencial, diseño y personalizada            | Coincide con la mezcla que arrojó la encuesta (46/38/16)                                                                                              |
-| 30 oct 2026 | Margen del 55% calculado sobre el precio de venta                   | Evita confundir margen con markup y permite comparar con la competencia                                                                               |
-| 30 oct 2026 | Reserva del 3% para devoluciones en el costo                        | El cambio de talla es frecuente en camisetas                                                                                                          |
-| 30 oct 2026 | Provisión del 10% de pedidos para el envío gratis de la 3.ª compra  | El beneficio se financia con el margen, no con una pérdida (reemplazada el 10 nov 2026)                                                               |
-| 30 oct 2026 | Precio de entrada en $79.900                                        | El 75% de los encuestados acepta pagar hasta $100.000                                                                                                 |
-| 30 oct 2026 | Inventario concentrado en tallas M y L                              | Representan el 69% de la demanda declarada                                                                                                            |
-| 10 nov 2026 | Envío gratis automático desde 2 prendas y en pedidos personalizados | Reemplaza el beneficio manual de la 3.ª compra; la provisión de $1.590 por prenda queda pendiente de recalcular (margen estimado 46–54% según mezcla) |
+| Fecha       | Decisión                                                            | Motivo                                                                                                                              |
+| ----------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| 30 oct 2026 | Tres niveles de precio: esencial, diseño y personalizada            | Coincide con la mezcla que arrojó la encuesta (46/38/16)                                                                            |
+| 30 oct 2026 | Margen del 55% calculado sobre el precio de venta                   | Evita confundir margen con markup y permite comparar con la competencia                                                             |
+| 30 oct 2026 | Reserva del 3% para devoluciones en el costo                        | El cambio de talla es frecuente en camisetas                                                                                        |
+| 30 oct 2026 | Provisión del 10% de pedidos para el envío gratis de la 3.ª compra  | El beneficio se financia con el margen, no con una pérdida (eliminada el 15 nov 2026)                                               |
+| 30 oct 2026 | Precio de entrada en $79.900                                        | El 75% de los encuestados acepta pagar hasta $100.000                                                                               |
+| 30 oct 2026 | Inventario concentrado en tallas M y L                              | Representan el 69% de la demanda declarada                                                                                          |
+| 10 nov 2026 | Envío gratis automático desde 2 prendas y en pedidos personalizados | Reemplaza el beneficio manual de la 3.ª compra y sube el ticket promedio                                                            |
+| 15 nov 2026 | Se elimina la provisión de envío gratis del costo unitario          | El envío gratis se reconoce por pedido y se financia con el margen; margen unitario 57,1–59,5% y pedidos de 2 prendas en 45,9–49,7% |
 
 ---
 
 ## 9. Cierre de la tarjeta
 
 - [x] 10 referencias definidas con tallas, colores y proveedor alterno
-- [x] Costo unitario calculado con las seis variables
+- [x] Costo unitario calculado con las cinco variables (sin provisión de envío)
 - [x] Tres niveles de precio con margen ≥ 55%
 - [x] Decisiones respaldadas con la encuesta
 - [ ] Confirmar precios con cotización formal antes de comprar inventario

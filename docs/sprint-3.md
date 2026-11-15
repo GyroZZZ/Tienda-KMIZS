@@ -39,19 +39,23 @@ el envío figura "por confirmar" en `/checkout`.
 
 ## 3. Decisiones tomadas en la planificación
 
-| Tema                   | Decisión                                                                    | Consecuencia                                                                      |
-| ---------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| Cuenta de Mercado Pago | Se crea una cuenta de prueba desde cero                                     | Hay que completar el registro, crear la aplicación y generar credenciales `TEST-` |
-| Tarifas de envío       | Tarifas de referencia por zona, marcadas como pendientes de cotización real | Permiten probar el flujo completo; la política y el checkout deben decirlo        |
-| Correo de pedidos      | Buzón real del equipo mediante `ORDER_NOTIFY_EMAIL`                         | `hola@kmizs.co` sigue publicado, pero no recibe pedidos                           |
-| Envío gratis           | Automático desde 2 prendas o en pedidos personalizados                      | Reemplaza el beneficio manual de la 3.ª compra; el margen se recalcula aparte     |
+| Tema                   | Decisión                                                                    | Consecuencia                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Cuenta de Mercado Pago | Cuenta real con credenciales de la pestaña "Prueba"                         | Mercado Pago genera las credenciales al crear la aplicación; la cuenta de comprador solo se usa para pagar |
+| Tarifas de envío       | Tarifas de referencia por zona, marcadas como pendientes de cotización real | Permiten probar el flujo completo; la política y el checkout deben decirlo                                 |
+| Correo de pedidos      | Buzón real del equipo mediante `ORDER_NOTIFY_EMAIL`                         | `hola@kmizs.co` sigue publicado, pero no recibe pedidos                                                    |
+| Envío gratis           | Automático desde 2 prendas o en pedidos personalizados                      | Reemplaza el beneficio manual de la 3.ª compra; sin provisión, el margen por pedido queda en 45,9–49,7%    |
 
 ### Regla de envío gratis (10 de noviembre)
 
 La regla quedó implementada en `lib/free-shipping.ts` y aplicada en carrito, checkout, API, correo,
 WhatsApp y página de gracias. Un pedido de una sola prenda sigue pagando la tarifa de su zona. La
-evidencia está en `docs/evidencias/e3/pruebas.md` y el impacto en la provisión de envío está
-documentado en `docs/catalogo.md` (margen estimado 46–54% según mezcla, pendiente de decisión).
+evidencia está en `docs/evidencias/e3/pruebas.md`.
+
+**Provisión eliminada (15 de noviembre).** El envío gratis no se provisiona por prenda: se reconoce
+como costo del pedido y se financia con el margen. Los precios no cambian; el margen unitario sube a
+57,1–59,5% y los pedidos de 2 prendas quedan en 45,9–49,7% según la zona. El detalle está en
+`docs/catalogo.md`.
 
 ### Tarifas de referencia propuestas
 
@@ -78,6 +82,28 @@ bloqueado para esas direcciones, que es el comportamiento correcto.
 > **Aviso obligatorio:** estas tarifas son de referencia, no una cotización de la transportadora.
 > Antes de vender de verdad hay que confirmarlas y actualizar `docs/catalogo.md` y la política de
 > envíos.
+
+### Mercado Pago en modo de prueba y buzón de pedidos
+
+El paso a paso completo (aplicación, credenciales de la pestaña "Prueba", cuenta de comprador,
+webhook firmado, tarjetas de prueba y los tres estados) está en
+[`docs/mercado-pago-sandbox.md`](mercado-pago-sandbox.md).
+
+Variables que se cargan en Vercel (Preview y Production mientras se prueba):
+
+```env
+MERCADO_PAGO_ENVIRONMENT=test
+MERCADO_PAGO_ACCESS_TOKEN=TEST-o-APP_USR-de-la-pestana-Prueba
+MERCADO_PAGO_WEBHOOK_SECRET=firma-del-webhook
+RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL=pedidos@dominio-verificado
+ORDER_NOTIFY_EMAIL=kmizs@protonmail.com
+```
+
+La app acepta tokens `TEST-` y `APP_USR-` de la pestaña "Prueba" cuando
+`MERCADO_PAGO_ENVIRONMENT=test`. Con `MERCADO_PAGO_ENVIRONMENT=production` solo acepta `APP_USR-` de
+la pestaña "Producción", de modo que un token de prueba no puede cobrar dinero real. Los pedidos se
+envían a `ORDER_NOTIFY_EMAIL`; si la variable falta, se usa `hola@kmizs.co`.
 
 ---
 
@@ -106,18 +132,18 @@ bloqueado para esas direcciones, que es el comportamiento correcto.
 
 ## 5. Subtareas y entregables
 
-| #   | Subtarea                                                                            | Entregable                                                        | Evidencia                                   |
-| --- | ----------------------------------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------- |
-| 1   | Crear la cuenta de prueba de Mercado Pago, la aplicación y las credenciales `TEST-` | Credenciales cargadas en Vercel                                   | Captura de la app y del checkout habilitado |
-| 2   | Definir y cargar tarifas de referencia por zona                                     | Variables de envío en Vercel                                      | Captura del checkout con tarifa y plazo     |
-| 3   | Configurar `ORDER_NOTIFY_EMAIL` y verificar la entrega con Resend                   | Correo de pedido en el buzón real                                 | Captura del correo recibido                 |
-| 4   | Registro local de pedidos en desarrollo y error explícito en producción             | `lib/order-store.ts` + `.data/` ignorado                          | Prueba local con pedido en archivo          |
-| 5   | Compra sandbox aprobada, rechazada y pendiente                                      | Pagos de prueba en Mercado Pago                                   | Capturas de los tres estados                |
-| 6   | Contraentrega y transferencia                                                       | Pedido registrado + WhatsApp                                      | Captura del correo y del mensaje            |
-| 7   | QA móvil del carrito y checkout                                                     | Lista de casos probados                                           | Capturas 390 px                             |
-| 8   | Actualizar política de envíos y textos del checkout                                 | Contenido coherente con tarifas de referencia                     | Captura de la política                      |
-| 9   | Evidencia y retrospectiva                                                           | `docs/evidencias/e3/pruebas.md`, `docs/retrospectiva-sprint-3.md` | Documentos                                  |
-| 10  | DoD                                                                                 | Tarjeta en `✅ Hecho`                                             | Checklist completo                          |
+| #   | Subtarea                                                                 | Entregable                                                        | Evidencia                                   |
+| --- | ------------------------------------------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------- |
+| 1   | Crear la aplicación de Mercado Pago y obtener las credenciales de prueba | Credenciales cargadas en Vercel                                   | Captura de la app y del checkout habilitado |
+| 2   | Definir y cargar tarifas de referencia por zona                          | Variables de envío en Vercel                                      | Captura del checkout con tarifa y plazo     |
+| 3   | Configurar `ORDER_NOTIFY_EMAIL` y verificar la entrega con Resend        | Correo de pedido en el buzón real                                 | Captura del correo recibido                 |
+| 4   | Registro local de pedidos en desarrollo y error explícito en producción  | `lib/order-store.ts` + `.data/` ignorado                          | Prueba local con pedido en archivo          |
+| 5   | Compra de prueba aprobada, rechazada y pendiente                         | Pagos de prueba en Mercado Pago                                   | Capturas de los tres estados                |
+| 6   | Contraentrega y transferencia                                            | Pedido registrado + WhatsApp                                      | Captura del correo y del mensaje            |
+| 7   | QA móvil del carrito y checkout                                          | Lista de casos probados                                           | Capturas 390 px                             |
+| 8   | Actualizar política de envíos y textos del checkout                      | Contenido coherente con tarifas de referencia                     | Captura de la política                      |
+| 9   | Evidencia y retrospectiva                                                | `docs/evidencias/e3/pruebas.md`, `docs/retrospectiva-sprint-3.md` | Documentos                                  |
+| 10  | DoD                                                                      | Tarjeta en `✅ Hecho`                                             | Checklist completo                          |
 
 ---
 
