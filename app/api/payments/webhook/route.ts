@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { sendOrderEmail } from "@/lib/order-email";
-import { getMercadoPagoTestToken } from "@/lib/payments";
+import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { formatPrice } from "@/lib/products";
 import { site } from "@/lib/site";
@@ -21,7 +21,7 @@ function escapeHtml(value: string): string {
 
 export async function POST(request: Request) {
   const secret = process.env.MERCADO_PAGO_WEBHOOK_SECRET;
-  const accessToken = getMercadoPagoTestToken();
+  const accessToken = getMercadoPagoAccessToken();
   if (!secret || !accessToken) {
     return Response.json({ error: "El webhook de pagos no está configurado." }, { status: 503 });
   }

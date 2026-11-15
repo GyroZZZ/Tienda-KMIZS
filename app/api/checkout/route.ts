@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { formatPrice, getProductBySlug, type Product, type Size } from "@/lib/products";
 import { qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { sendOrderEmail } from "@/lib/order-email";
-import { getMercadoPagoTestToken } from "@/lib/payments";
+import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { getShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
@@ -112,8 +112,9 @@ async function createPaymentPreference({
   shippingRate: number;
   total: number;
 }): Promise<string> {
-  const accessToken = getMercadoPagoTestToken();
-  if (!accessToken) throw new Error("Configura en Vercel un token TEST- de Mercado Pago.");
+  const accessToken = getMercadoPagoAccessToken();
+  if (!accessToken)
+    throw new Error("Configura en Vercel las credenciales de prueba de Mercado Pago.");
   if (!process.env.MERCADO_PAGO_WEBHOOK_SECRET) {
     throw new Error("Configura en Vercel la firma de webhook de Mercado Pago.");
   }
@@ -351,10 +352,13 @@ export async function POST(request: Request) {
   const orderId = `KM-${randomUUID().toUpperCase()}`;
   if (
     paymentMethod === "mercado_pago" &&
-    (!getMercadoPagoTestToken() || !process.env.MERCADO_PAGO_WEBHOOK_SECRET)
+    (!getMercadoPagoAccessToken() || !process.env.MERCADO_PAGO_WEBHOOK_SECRET)
   ) {
     return Response.json(
-      { error: "El pago sandbox requiere el token TEST- y la firma de webhook en Vercel." },
+      {
+        error:
+          "El pago en línea requiere las credenciales de Mercado Pago y la firma de webhook en Vercel.",
+      },
       { status: 503 },
     );
   }
