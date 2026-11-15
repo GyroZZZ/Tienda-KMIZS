@@ -74,7 +74,7 @@ const faqGroups = [
       {
         question: "¿Puedo devolverla y pedir mi dinero?",
         answer:
-          "Sí. En compras a distancia tienes derecho de retracto dentro de los 5 días hábiles siguientes a la entrega (Ley 1480 de 2011). La prenda debe estar sin uso y con la etiqueta; el dinero se devuelve en un máximo de 15 días calendario desde que ejerces el retracto (Ley 2439 de 2024).",
+          "Sí. En compras a distancia tienes derecho de retracto dentro de los 5 días hábiles siguientes a la entrega (Ley 1480 de 2011). La prenda debe estar sin uso y con la etiqueta; el dinero se devuelve en un máximo de 15 días calendario desde que ejerces el retracto y devuelves la prenda con los datos completos para el reembolso (Ley 2439 de 2024).",
       },
       {
         question: "¿Los pedidos personalizados tienen cambio o retracto?",
