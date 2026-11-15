@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { TrustSignals } from "@/components/trust/TrustSignals";
-import { getMercadoPagoTestToken } from "@/lib/payments";
+import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { getShippingOptions } from "@/lib/shipping";
 
 export const metadata: Metadata = {
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default function CheckoutPage() {
   const shippingOptions = getShippingOptions();
   const onlinePaymentsAvailable =
-    Boolean(getMercadoPagoTestToken()) &&
+    Boolean(getMercadoPagoAccessToken()) &&
     Boolean(process.env.MERCADO_PAGO_WEBHOOK_SECRET) &&
     Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL) &&
     shippingOptions.confirmed;

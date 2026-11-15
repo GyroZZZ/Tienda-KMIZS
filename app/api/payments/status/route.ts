@@ -1,4 +1,4 @@
-import { getMercadoPagoTestToken } from "@/lib/payments";
+import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 
 export async function GET(request: Request) {
@@ -7,10 +7,10 @@ export async function GET(request: Request) {
     return Response.json({ error: "Falta un identificador de pago válido." }, { status: 400 });
   }
 
-  const accessToken = getMercadoPagoTestToken();
+  const accessToken = getMercadoPagoAccessToken();
   if (!accessToken) {
     return Response.json(
-      { error: "La verificación requiere un token TEST- de Mercado Pago." },
+      { error: "La verificación requiere credenciales válidas de Mercado Pago." },
       { status: 503 },
     );
   }

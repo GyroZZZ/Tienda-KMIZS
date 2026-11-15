@@ -84,5 +84,6 @@ prueba: solo se interceptó `fetch` en el navegador para verificar el resumen y 
 - **Resend:** sin credenciales, el pedido real sigue devolviendo 503 en local. Es la misma
   limitación documentada en E4 y se resuelve en la subtarea 3 del sprint.
 - **Tarifas de una sola prenda:** siguen siendo de referencia hasta confirmar con la transportadora.
-- **Margen:** la provisión de $1.590 por prenda quedó desactualizada. El impacto estimado
-  (margen 46–54% según mezcla) está documentado en `docs/catalogo.md` y requiere decisión.
+- **Margen:** la provisión de $1.590 por prenda se eliminó el 15 de noviembre de 2026. El envío
+  gratis se reconoce por pedido: margen unitario 57,1–59,5% y pedidos de 2 prendas en 45,9–49,7%.
+  El detalle está en `docs/catalogo.md`.
