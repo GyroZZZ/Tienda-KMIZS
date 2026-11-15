@@ -45,7 +45,7 @@ const paymentOptions: {
   {
     id: "mercado_pago",
     title: "Pago digital · Mercado Pago",
-    description: "Sandbox para pruebas; se habilita al configurar las credenciales y el envío.",
+    description: "Pago digital; se habilita al configurar la pasarela y el envío.",
   },
 ];
 
@@ -412,8 +412,8 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
           })}
           {!onlinePaymentsAvailable ? (
             <p className="text-xs leading-relaxed text-ink/55">
-              El sandbox se activa cuando el equipo configure en Vercel el token TEST- y la firma de
-              Mercado Pago, Resend y las tarifas de envío confirmadas.
+              El pago digital se activa cuando el equipo configure en Vercel las credenciales de
+              Mercado Pago, la firma del webhook, Resend y las tarifas de envío confirmadas.
             </p>
           ) : null}
           {shippingOptions.confirmed && !selectedZone ? (
