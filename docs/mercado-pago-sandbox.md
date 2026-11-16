@@ -1,7 +1,7 @@
 # Mercado Pago en modo de prueba
 
 **Tarjeta:** `[E3] Habilitar compra en móvil: carrito, checkout, pagos y envíos` · **Sprint:** 3
-**Última actualización:** 15 de noviembre de 2026
+**Última actualización:** 16 de noviembre de 2026
 
 Guía para probar el checkout de KMIZS sin mover dinero real. El código ya está en
 `app/api/checkout/route.ts`, `app/api/payments/webhook/route.ts` y `app/api/payments/status/route.ts`;
@@ -24,6 +24,19 @@ credenciales**. Con credenciales de prueba, la pasarela acepta tarjetas de prueb
 **Prefijos de las credenciales:** según el producto, la pestaña "Prueba" entrega `TEST-` (API de
 pagos, Bricks) o `APP_USR-` (Checkout Pro). Ambos son válidos y la app acepta los dos cuando
 `MERCADO_PAGO_ENVIRONMENT=test`. Nunca cambies el prefijo a mano: se copia tal cual.
+
+### Por qué la API de Preferencias
+
+Mercado Pago ofrece dos caminos para Checkout Pro: la **API de Preferencias** (flujo clásico,
+`init_point`) y la **API de Orders** (recomendada para integraciones nuevas, `checkout_url`). KMIZS
+usa Preferencias porque la pasarela la sigue soportando sin fecha de apagado y es la ruta con más
+rodaje en Colombia. La migración a Orders queda anotada como deuda técnica en
+[`docs/sprint-3.md`](sprint-3.md).
+
+Una preferencia creada con credenciales de prueba devuelve `sandbox_init_point`; con credenciales de
+producción devuelve únicamente `init_point`. `lib/payments.ts` elige el enlace según
+`MERCADO_PAGO_ENVIRONMENT`: en `test` usa el sandbox y cae a `init_point`; en `production` ignora
+cualquier enlace `sandbox_*`.
 
 ---
 

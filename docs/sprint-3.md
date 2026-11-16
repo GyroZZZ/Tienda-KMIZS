@@ -105,6 +105,13 @@ La app acepta tokens `TEST-` y `APP_USR-` de la pestaña "Prueba" cuando
 la pestaña "Producción", de modo que un token de prueba no puede cobrar dinero real. Los pedidos se
 envían a `ORDER_NOTIFY_EMAIL`; si la variable falta, se usa `hola@kmizs.co`.
 
+**Camino de integración elegido (16 de noviembre):** API de Preferencias. Mercado Pago la marca como
+"legacy" —soportada, pero sin funcionalidades nuevas— y recomienda la API de Orders para integraciones
+nuevas. Se mantiene Preferencias porque el checkout, el webhook y la consulta de estado ya están
+escritos y probados sobre `/checkout/preferences`, y porque es la ruta con más rodaje en Colombia. La
+migración a Orders (`POST /v1/orders`, `checkout_url`, topic `order`) queda como deuda técnica para
+antes de escalar el volumen de pedidos.
+
 ---
 
 ## 4. Alcance del sprint

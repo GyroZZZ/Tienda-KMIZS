@@ -28,3 +28,27 @@ export function getMercadoPagoAccessToken(): string | null {
 
   return token.startsWith("TEST-") || token.startsWith("APP_USR-") ? token : null;
 }
+
+/**
+ * URL a la que se redirige al comprador a partir de la respuesta de una
+ * preferencia de Checkout Pro.
+ *
+ * Mercado Pago devuelve `sandbox_init_point` solo cuando la preferencia se creó
+ * con credenciales de prueba; `init_point` viene siempre. En `test` preferimos
+ * el sandbox y caemos a `init_point`; en `production` ignoramos cualquier
+ * `sandbox_*` para que un enlace de pruebas nunca llegue a un comprador real.
+ */
+export function getMercadoPagoCheckoutUrl(preference: Record<string, unknown>): string | null {
+  const candidates =
+    getMercadoPagoEnvironment() === "production"
+      ? [preference.init_point]
+      : [preference.sandbox_init_point, preference.init_point];
+
+  for (const candidate of candidates) {
+    if (typeof candidate === "string" && candidate.startsWith("https://")) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
