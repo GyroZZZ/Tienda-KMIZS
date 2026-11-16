@@ -87,3 +87,22 @@ prueba: solo se interceptó `fetch` en el navegador para verificar el resumen y 
 - **Margen:** la provisión de $1.590 por prenda se eliminó el 15 de noviembre de 2026. El envío
   gratis se reconoce por pedido: margen unitario 57,1–59,5% y pedidos de 2 prendas en 45,9–49,7%.
   El detalle está en `docs/catalogo.md`.
+
+---
+
+## 7. Mercado Pago: webhook firmado (16 de noviembre de 2026)
+
+El endpoint `/api/payments/webhook` se validó contra el servidor local con peticiones firmadas a mano,
+sin depender de que Mercado Pago las enviara:
+
+| Caso           | Petición                                                                                     | Respuesta                                        | Lectura                                                                                |
+| -------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Firma válida   | `x-signature: ts=<ts>,v1=<HMAC-SHA256>` con el manifiesto `id:1234567890;request-id:…;ts:…;` | `502` "No pudimos verificar el pago."            | Pasó la validación y siguió a `GET /v1/payments/{id}`, que falla con un ID inexistente |
+| Firma inválida | el mismo manifiesto con `v1` en ceros                                                        | `401` "La firma de la notificación no coincide." | Rechazo correcto                                                                       |
+
+La clave usada es la de la aplicación `KMIZS Tienda` (ID `5353395853534570`). Mercado Pago no muestra
+la clave del entorno de prueba en el panel, solo permite regenerarla; la de producción sí es visible y
+es la que valida la firma, porque el secreto es por aplicación y no por entorno.
+
+**Pendiente:** la compra de punta a punta (aprobada, rechazada y pendiente) sigue pendiente de cargar
+las variables en Vercel y de las credenciales de Resend.
