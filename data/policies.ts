@@ -104,7 +104,7 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Derecho de retracto",
         body: [
           "En las compras a distancia tienes derecho de retracto dentro de los 5 días hábiles siguientes a la entrega, conforme al artículo 47 de la Ley 1480 de 2011, modificado por la Ley 2439 de 2024.",
-          "Para ejercerlo, escríbenos a hola@kmizs.co o por WhatsApp con tu número de pedido y los datos de contacto. Te enviamos las instrucciones para devolver la prenda.",
+          "Para ejercerlo, escríbenos a kmizs@protonmail.com o por WhatsApp con tu número de pedido y los datos de contacto. Te enviamos las instrucciones para devolver la prenda.",
           "La prenda debe estar en las mismas condiciones en que la recibiste: sin uso, sin lavar y con la etiqueta. El costo del envío de regreso corre por cuenta del cliente, salvo que la ley disponga lo contrario.",
           "Devolvemos el dinero en un plazo máximo de 15 días calendario contados desde que ejerces el retracto, siempre que nos hayas dado los datos completos para la devolución y hayas devuelto la prenda. El reembolso se hace por el medio de pago que prefieras.",
         ],
@@ -126,7 +126,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Cómo solicitar un cambio o una devolución",
         body: [
-          "Escríbenos a hola@kmizs.co o al WhatsApp +57 310 389 8707 con: número de pedido, nombre, motivo y, si aplica, fotos del producto.",
+          "Escríbenos a kmizs@protonmail.com o al WhatsApp +57 310 389 8707 con: número de pedido, nombre, motivo y, si aplica, fotos del producto.",
           "Respondemos en un plazo máximo de 2 días hábiles con las instrucciones y la dirección de devolución.",
         ],
       },
@@ -143,7 +143,7 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Identificación del vendedor",
         body: [
           "KMIZS es un proyecto académico de comercio electrónico desarrollado en Colombia. No constituye una empresa constituida ni una sociedad comercial.",
-          "Canal de atención: hola@kmizs.co y WhatsApp +57 310 389 8707. Domicilio: Colombia.",
+          "Canal de atención: kmizs@protonmail.com y WhatsApp +57 310 389 8707. Domicilio: Colombia.",
         ],
       },
       {
@@ -237,7 +237,7 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Responsable del tratamiento",
         body: [
           "KMIZS, proyecto académico de comercio electrónico con domicilio en Colombia.",
-          "Canal de atención y ejercicio de derechos: hola@kmizs.co y WhatsApp +57 310 389 8707.",
+          "Canal de atención y ejercicio de derechos: kmizs@protonmail.com y WhatsApp +57 310 389 8707.",
         ],
       },
       {
@@ -282,7 +282,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Cómo ejercerlos",
         body: [
-          "Escríbenos a hola@kmizs.co o por WhatsApp con tu nombre, el número de pedido si aplica y la solicitud concreta.",
+          "Escríbenos a kmizs@protonmail.com o por WhatsApp con tu nombre, el número de pedido si aplica y la solicitud concreta.",
           "Las consultas se responden en un máximo de 10 días hábiles, prorrogables por 5 más. Los reclamos se responden en un máximo de 15 días hábiles, prorrogables por 8 más, conforme a la Ley 1581 de 2012.",
         ],
       },

@@ -118,7 +118,7 @@ Copiar `.env.example` a `.env.local` y completar los valores. Ese archivo no se 
 `NEXT_PUBLIC_SITE_URL` es opcional: en Vercel se detecta el dominio del proyecto
 automáticamente y en local se usa `http://localhost:3000`.
 
-Para registrar pedidos, configura `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con una dirección remitente verificada en Resend, y `ORDER_NOTIFY_EMAIL` con el buzón interno que recibe los pedidos (`kmizs@protonmail.com`). Admite varias direcciones separadas por coma. Si la variable falta, los pedidos se envían a `hola@kmizs.co`, que sigue siendo el correo publicado del sitio. Los pedidos de contraentrega y transferencia se confirman manualmente por WhatsApp.
+Para registrar pedidos, configura `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con una dirección remitente verificada en Resend, y `ORDER_NOTIFY_EMAIL` con el buzón interno que recibe los pedidos (`kmizs@protonmail.com`). Admite varias direcciones separadas por coma. Si la variable falta, los pedidos se envían a `kmizs@protonmail.com`, que es el correo publicado del sitio. Los pedidos de contraentrega y transferencia se confirman manualmente por WhatsApp.
 
 El checkout digital usa Mercado Pago Checkout Pro. `MERCADO_PAGO_ENVIRONMENT` declara si las credenciales son de prueba (`test`, por defecto) o reales (`production`). En modo `test` se aceptan tokens `TEST-` y `APP_USR-` copiados de la pestaña "Prueba"; en modo `production` solo se acepta `APP_USR-` de la pestaña "Producción", así que un token de prueba no puede cobrar dinero real. `MERCADO_PAGO_WEBHOOK_SECRET` valida la firma del webhook. Los tokens solo se leen en funciones del servidor. El paso a paso para probar está en [`docs/mercado-pago-sandbox.md`](docs/mercado-pago-sandbox.md).
 

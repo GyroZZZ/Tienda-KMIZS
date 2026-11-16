@@ -90,7 +90,8 @@ departamento, líneas (producto, color, talla, cantidad, total), subtotal, enví
 
 - El correo al cliente no se envía: el dominio no está verificado en Resend. Se entrega página de
   gracias + registro al equipo. Decisión aceptada por el alcance académico.
-- `hola@kmizs.co` se mantiene publicado aunque el dominio no resuelva; es una decisión de alcance.
+- `kmizs@protonmail.com` reemplazó a `hola@kmizs.co` el 16 de noviembre de 2026: el dominio
+  `kmizs.co` nunca estuvo registrado y esa dirección no podía recibir correo.
 - El comprobante vive en `sessionStorage`; si el cliente borra los datos del navegador, conserva el
   número de pedido y el respaldo genérico.
 - El envío gratis y la talla XXL se gestionan manualmente por WhatsApp.

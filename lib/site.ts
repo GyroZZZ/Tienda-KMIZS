@@ -11,7 +11,7 @@ export const site = {
   url: "https://tienda-kmizs.vercel.app",
   locale: "es_CO",
   city: "Colombia",
-  email: "hola@kmizs.co",
+  email: "kmizs@protonmail.com",
   whatsapp: "573103898707",
   whatsappDisplay: "+57 310 389 8707",
 } as const;
