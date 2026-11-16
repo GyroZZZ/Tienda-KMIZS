@@ -66,6 +66,19 @@ cualquier enlace `sandbox_*`.
 3. Copia el **Access Token**. Ese valor va en `MERCADO_PAGO_ACCESS_TOKEN` y **nunca** se sube al
    repositorio ni se expone en el navegador.
 
+### Estado del entorno de prueba (16 de noviembre)
+
+| Dato                | Valor                                                                     |
+| ------------------- | ------------------------------------------------------------------------- |
+| Aplicación          | `KMIZS Tienda` · ID `5353395853534570` · Colombia (MCO) · Checkout Pro    |
+| Vendedor de prueba  | usuario `3852045262`                                                      |
+| Comprador de prueba | `TESTUSER8164834918474591249` (ID `3852045264`), saldo cargado de $50.000 |
+| Webhook             | `https://tienda-kmizs.vercel.app/api/payments/webhook`, tópico `payment`  |
+
+La preferencia se validó contra la API real con las credenciales de prueba: responde `201` y devuelve
+`init_point` **y** `sandbox_init_point`. Por eso la app usa el enlace `sandbox.mercadopago.com.co`
+mientras `MERCADO_PAGO_ENVIRONMENT=test`.
+
 ## 5. Crear la cuenta de comprador de prueba
 
 1. En la misma aplicación → **Cuentas de prueba** → **Crear cuenta de prueba**.
