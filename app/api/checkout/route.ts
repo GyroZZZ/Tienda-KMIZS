@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { formatPrice, getProductBySlug, type Product, type Size } from "@/lib/products";
 import { qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { sendOrderEmail } from "@/lib/order-email";
-import { getMercadoPagoAccessToken } from "@/lib/payments";
+import { getMercadoPagoAccessToken, getMercadoPagoCheckoutUrl } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { getShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
@@ -187,8 +187,8 @@ async function createPaymentPreference({
     throw new Error("Mercado Pago no pudo preparar el pago.");
   }
 
-  const paymentUrl = result.sandbox_init_point;
-  if (typeof paymentUrl !== "string" || !paymentUrl.startsWith("https://")) {
+  const paymentUrl = getMercadoPagoCheckoutUrl(result);
+  if (!paymentUrl) {
     console.error("La preferencia de Mercado Pago no incluyó un enlace válido.");
     throw new Error("Mercado Pago no devolvió un enlace de pago válido.");
   }
