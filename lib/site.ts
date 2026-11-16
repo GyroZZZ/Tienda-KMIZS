@@ -20,14 +20,19 @@ export const currentYear = new Date().getFullYear();
 
 /**
  * URL pública del sitio.
- * Prioridad: variable explícita → dominio de este deployment en Vercel → localhost.
+ * Prioridad: variable explícita → dominio de producción del proyecto en Vercel → localhost.
+ *
+ * `VERCEL_PROJECT_PRODUCTION_URL` va antes que `VERCEL_URL` a propósito: `VERCEL_URL` es el
+ * hostname de este deployment y en Vercel queda detrás de Deployment Protection, así que el
+ * comprador aterrizaría en un login de Vercel al volver de la pasarela y Mercado Pago no podría
+ * entregar el webhook. El dominio de producción es público y estable.
  */
 export function getSiteUrl(): string {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
   }
 
-  const vercelUrl = process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
   if (vercelUrl) {
     return `https://${vercelUrl}`;
   }
