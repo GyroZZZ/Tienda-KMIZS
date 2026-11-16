@@ -38,7 +38,7 @@ El contenido se redactó con base en:
 | Decisión                             | Valor adoptado                                                                                              |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | Identificación del vendedor          | “KMIZS · proyecto académico”, sin NIT ni sociedad constituida                                               |
-| Canales de atención                  | `hola@kmizs.co` y WhatsApp +57 310 389 8707                                                                 |
+| Canales de atención                  | `kmizs@protonmail.com` y WhatsApp +57 310 389 8707                                                          |
 | Cambio de talla                      | 5 días hábiles desde la entrega                                                                             |
 | Derecho de retracto                  | 5 días hábiles desde la entrega (art. 47, Ley 1480)                                                         |
 | Reembolso                            | Hasta 15 días calendario desde el retracto (Ley 2439 de 2024)                                               |
@@ -82,8 +82,10 @@ WhatsApp.
 - **Correo al cliente:** no se envía porque el dominio de la marca no está verificado en Resend. Se
   entrega página de gracias, resumen en el navegador y registro al equipo. Queda documentado como
   pendiente para cuando exista un dominio verificado.
-- **Correo publicado:** `hola@kmizs.co` se mantiene como canal oficial aunque el dominio no resuelva.
-  Es una decisión de alcance académico: no se comprará dominio ni se constituirá empresa.
+- **Correo publicado:** `kmizs@protonmail.com` es el canal oficial. Reemplazó a `hola@kmizs.co` el 16 de
+  noviembre de 2026: era un placeholder y el dominio `kmizs.co` no está registrado, así que esa
+  dirección nunca pudo recibir correo. Es una decisión de alcance académico: no se comprará dominio ni
+  se constituirá empresa.
 - **Sin historial de pedidos:** el comprobante vive en el navegador. El envío gratis ya no depende
   del historial porque se calcula por unidades del pedido actual.
 - **Tarifas de envío:** siguen pendientes de confirmación con la transportadora

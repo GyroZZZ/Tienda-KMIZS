@@ -43,7 +43,7 @@ el envío figura "por confirmar" en `/checkout`.
 | ---------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Cuenta de Mercado Pago | Cuenta real con credenciales de la pestaña "Prueba"                         | Mercado Pago genera las credenciales al crear la aplicación; la cuenta de comprador solo se usa para pagar |
 | Tarifas de envío       | Tarifas de referencia por zona, marcadas como pendientes de cotización real | Permiten probar el flujo completo; la política y el checkout deben decirlo                                 |
-| Correo de pedidos      | Buzón real del equipo mediante `ORDER_NOTIFY_EMAIL`                         | `hola@kmizs.co` sigue publicado, pero no recibe pedidos                                                    |
+| Correo de pedidos      | Buzón real del equipo mediante `ORDER_NOTIFY_EMAIL`                         | `kmizs@protonmail.com` es el buzón de pedidos y el correo publicado del sitio                              |
 | Envío gratis           | Automático desde 2 prendas o en pedidos personalizados                      | Reemplaza el beneficio manual de la 3.ª compra; sin provisión, el margen por pedido queda en 45,9–49,7%    |
 
 ### Regla de envío gratis (10 de noviembre)
@@ -103,7 +103,7 @@ ORDER_NOTIFY_EMAIL=kmizs@protonmail.com
 La app acepta tokens `TEST-` y `APP_USR-` de la pestaña "Prueba" cuando
 `MERCADO_PAGO_ENVIRONMENT=test`. Con `MERCADO_PAGO_ENVIRONMENT=production` solo acepta `APP_USR-` de
 la pestaña "Producción", de modo que un token de prueba no puede cobrar dinero real. Los pedidos se
-envían a `ORDER_NOTIFY_EMAIL`; si la variable falta, se usa `hola@kmizs.co`.
+envían a `ORDER_NOTIFY_EMAIL`; si la variable falta, se usa `kmizs@protonmail.com`.
 
 **Camino de integración elegido (16 de noviembre):** API de Preferencias. Mercado Pago la marca como
 "legacy" —soportada, pero sin funcionalidades nuevas— y recomienda la API de Orders para integraciones
