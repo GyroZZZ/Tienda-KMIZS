@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { formatPrice, getProductBySlug, type Product, type Size } from "@/lib/products";
 import { qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { sendOrderEmail } from "@/lib/order-email";
+import { isLocalOrderStoreEnabled, saveLocalOrder } from "@/lib/order-store";
 import { getMercadoPagoAccessToken, getMercadoPagoCheckoutUrl } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { getShippingOptions } from "@/lib/shipping";
@@ -10,6 +11,10 @@ import { getShippingZoneForAddress } from "@/lib/shipping-location";
 import { getSiteUrl, site } from "@/lib/site";
 
 type PaymentMethod = "mercado_pago" | "cash_on_delivery";
+
+function isPaymentMethod(value: unknown): value is PaymentMethod {
+  return value === "mercado_pago" || value === "cash_on_delivery";
+}
 
 interface Customer {
   name: string;
@@ -277,9 +282,11 @@ export async function POST(request: Request) {
   }
 
   const paymentMethod = body.paymentMethod;
-  if (paymentMethod !== "mercado_pago" && paymentMethod !== "cash_on_delivery") {
+  if (!isPaymentMethod(paymentMethod)) {
     return Response.json({ error: "Selecciona un medio de pago válido." }, { status: 400 });
   }
+  // El estrechamiento de `unknown` no llega a las funciones anidadas; se fija aquí.
+  const orderPaymentMethod: PaymentMethod = paymentMethod;
 
   const shippingOptions = getShippingOptions();
   const zone = shippingOptions.confirmed
@@ -357,7 +364,9 @@ export async function POST(request: Request) {
       { status: 503 },
     );
   }
-  if (!process.env.RESEND_API_KEY || !process.env.RESEND_FROM_EMAIL) {
+  const canEmail = Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
+  const canStoreLocally = isLocalOrderStoreEnabled();
+  if (!canEmail && !canStoreLocally) {
     return Response.json(
       {
         error:
@@ -365,6 +374,31 @@ export async function POST(request: Request) {
       },
       { status: 503 },
     );
+  }
+
+  /** En desarrollo el pedido queda en `.data/pedidos.jsonl`; en producción esto no hace nada. */
+  async function recordLocally(status: string, paymentUrl?: string): Promise<void> {
+    if (!canStoreLocally) return;
+    const file = await saveLocalOrder({
+      orderId,
+      createdAt: new Date().toISOString(),
+      paymentMethod: orderPaymentMethod,
+      status,
+      customer,
+      lines: lines.map((line) => ({
+        name: line.product.name,
+        color: line.color,
+        size: line.size,
+        quantity: line.quantity,
+        total: line.total,
+      })),
+      subtotal,
+      shipping: shippingRate,
+      shippingZone: shippingZoneLabel,
+      total,
+      ...(paymentUrl ? { paymentUrl } : {}),
+    });
+    console.info(`Pedido ${orderId} guardado en ${file}`);
   }
 
   if (paymentMethod === "mercado_pago") {
@@ -375,28 +409,30 @@ export async function POST(request: Request) {
       );
     }
 
-    try {
-      await sendOrderEmail(
-        `Pedido ${orderId} · pago sandbox solicitado`,
-        orderEmailHtml({
-          orderId,
-          customer,
-          lines,
-          paymentMethod,
-          shipping: shippingRate,
-          shippingZone: shippingZoneLabel,
-          orderStatus: "Pedido registrado; preparando pago en sandbox",
-          subtotal,
-          total,
-          paymentUrl: null,
-        }),
-        `order-${orderId}`,
-      );
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
-      console.error("No se pudo registrar el pedido de Mercado Pago.", error);
-      return Response.json({ error: message }, { status: 502 });
+    if (canEmail) {
+      try {
+        await sendOrderEmail(
+          `Pedido ${orderId} · pago sandbox solicitado`,
+          orderEmailHtml({
+            orderId,
+            customer,
+            lines,
+            paymentMethod,
+            shipping: shippingRate,
+            shippingZone: shippingZoneLabel,
+            orderStatus: "Pedido registrado; preparando pago en sandbox",
+            subtotal,
+            total,
+            paymentUrl: null,
+          }),
+          `order-${orderId}`,
+        );
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
+        console.error("No se pudo registrar el pedido de Mercado Pago.", error);
+        return Response.json({ error: message }, { status: 502 });
+      }
     }
 
     try {
@@ -407,6 +443,7 @@ export async function POST(request: Request) {
         shippingRate,
         total,
       });
+      await recordLocally("Pedido registrado; pago en sandbox iniciado", paymentUrl);
       return Response.json({ orderId, paymentUrl });
     } catch (error) {
       const message =
@@ -416,30 +453,34 @@ export async function POST(request: Request) {
     }
   }
 
-  try {
-    await sendOrderEmail(
-      `Pedido ${orderId} · requiere confirmación`,
-      orderEmailHtml({
-        orderId,
-        customer,
-        lines,
-        paymentMethod,
-        shipping: shippingRate,
-        shippingZone: shippingZoneLabel,
-        orderStatus:
-          shippingRate === null
-            ? "Pendiente de cotizar envío y confirmar por WhatsApp"
-            : "Pendiente de confirmación por WhatsApp",
-        subtotal,
-        total,
-        paymentUrl: null,
-      }),
-    );
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
-    console.error("No se pudo registrar el pedido.", error);
-    return Response.json({ error: message }, { status: 502 });
+  const orderStatus =
+    shippingRate === null
+      ? "Pendiente de cotizar envío y confirmar por WhatsApp"
+      : "Pendiente de confirmación por WhatsApp";
+
+  if (canEmail) {
+    try {
+      await sendOrderEmail(
+        `Pedido ${orderId} · requiere confirmación`,
+        orderEmailHtml({
+          orderId,
+          customer,
+          lines,
+          paymentMethod,
+          shipping: shippingRate,
+          shippingZone: shippingZoneLabel,
+          orderStatus,
+          subtotal,
+          total,
+          paymentUrl: null,
+        }),
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
+      console.error("No se pudo registrar el pedido.", error);
+      return Response.json({ error: message }, { status: 502 });
+    }
   }
 
   const whatsappUrl = buildWhatsAppUrl(
@@ -452,5 +493,6 @@ export async function POST(request: Request) {
     total,
     shippingZoneLabel,
   );
+  await recordLocally(orderStatus);
   return Response.json({ orderId, whatsappUrl });
 }
