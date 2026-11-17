@@ -213,35 +213,39 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 
 ---
 
-## 10. Cierre del sprint (16 de noviembre de 2026)
+## 10. Estado de las subtareas (16 de noviembre de 2026)
 
-| #   | Subtarea                                            | Estado | Evidencia                                                                 |
-| --- | --------------------------------------------------- | ------ | ------------------------------------------------------------------------- |
-| 1   | Aplicación de Mercado Pago y credenciales de prueba | Hecho  | 14 variables en Vercel; `POST /api/checkout` responde `200` en producción |
-| 2   | Tarifas de referencia por zona                      | Hecho  | Cobradas en pagos reales: $12.900 y $18.900 (punto 8.3 de la evidencia)   |
-| 3   | `ORDER_NOTIFY_EMAIL` y entrega con Resend           | Hecho  | Correos entregados a `kmizs@protonmail.com`                               |
-| 4   | Registro local de pedidos en desarrollo             | Hecho  | `lib/order-store.ts` con `.data/` ignorado                                |
-| 5   | Compra de prueba aprobada, rechazada y pendiente    | Hecho  | Pagos `188925368893`, `188927364905`, `188930688193` (punto 8)            |
-| 6   | Contraentrega y transferencia                       | Hecho  | Correo al equipo + WhatsApp con número de pedido                          |
-| 7   | QA móvil del carrito y checkout                     | Hecho  | Capturas 390 px `01`–`05`                                                 |
-| 8   | Política de envíos y textos del checkout            | Hecho  | `data/policies.ts` y `docs/confianza.md`                                  |
-| 9   | Evidencia y retrospectiva                           | Hecho  | `docs/evidencias/e3/pruebas.md`                                           |
-| 10  | DoD                                                 | Hecho  | Checklist abajo                                                           |
+| #   | Subtarea                                            | Estado        | Evidencia / qué falta                                                                                                             |
+| --- | --------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Aplicación de Mercado Pago y credenciales de prueba | Hecho         | 14 variables en Vercel; `POST /api/checkout` responde `200` en producción                                                         |
+| 2   | Tarifas de referencia por zona                      | Hecho         | Cobradas en pagos reales: $12.900 y $18.900 (punto 8.3 de la evidencia)                                                           |
+| 3   | `ORDER_NOTIFY_EMAIL` y entrega con Resend           | Hecho         | Correos entregados a `kmizs@protonmail.com`                                                                                       |
+| 4   | Registro local de pedidos en desarrollo             | **Parcial**   | El error explícito en producción está (503 en `app/api/checkout`). **Falta el registro local:** `lib/order-store.ts` no existe    |
+| 5   | Compra de prueba aprobada, rechazada y pendiente    | Hecho         | Pagos `188925368893`, `188927364905`, `188930688193` (punto 8). El webhook funciona, pero Mercado Pago no lo entregó solo (8.6)   |
+| 6   | Contraentrega y transferencia                       | Hecho         | Pedidos `KM-1056C634…` y `KM-F9051DAD…`, correo entregado y WhatsApp (punto 8.5)                                                  |
+| 7   | QA móvil del carrito y checkout                     | **Parcial**   | Hay capturas 390 px de carrito, checkout y gracias. **Faltan** los casos de stock agotado, recarga de página y zona sin cobertura |
+| 8   | Política de envíos y textos del checkout            | **Parcial**   | El checkout muestra tarifa y plazo. **Falta** que la política publique los montos y diga que son de referencia                    |
+| 9   | Evidencia y retrospectiva                           | **Parcial**   | `docs/evidencias/e3/pruebas.md` completo. **Falta** `docs/retrospectiva-sprint-3.md`                                              |
+| 10  | DoD                                                 | **Pendiente** | Falta la revisión de alguien distinto de quien construyó (Ivan)                                                                   |
 
 ### Bugs encontrados y corregidos durante el cierre
 
-| Bug                                                                      | Corrección                                      |
-| ------------------------------------------------------------------------ | ----------------------------------------------- |
-| `hola@kmizs.co` publicado en todo el sitio, con el dominio sin registrar | Reemplazado por `kmizs@protonmail.com` (PR #19) |
-| El comprador volvía de Mercado Pago a un login de Vercel                 | `getSiteUrl()` usa el dominio público (PR #20)  |
+| Bug                                                                                                        | Corrección                                                                          |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `hola@kmizs.co` publicado en todo el sitio, con el dominio sin registrar                                   | Reemplazado por `kmizs@protonmail.com` (PR #19)                                     |
+| El comprador volvía de Mercado Pago a un login de Vercel                                                   | `getSiteUrl()` usa el dominio público (PR #20)                                      |
+| El checkout decía que el pago digital "se habilita al configurar la pasarela" aunque ya estaba configurado | Texto corregido: describe los medios de pago y explica que hay que elegir municipio |
 
-### Pendientes que quedan abiertos (no bloquean E3)
+### Pendientes que quedan abiertos
 
 - **Confirmar una entrega real del webhook.** Mercado Pago no entregó ninguna notificación por su
-  cuenta durante las pruebas; el endpoint se validó con peticiones firmadas a mano. Hay que
-  confirmarlo con credenciales de producción antes de operar.
-- **Activar credenciales de producción** (KYC comercial pendiente).
-- **Confirmar tarifas con la transportadora.** Ya están publicadas y se cobran.
+  cuenta durante las pruebas; el endpoint se validó con peticiones firmadas a mano.
+- **Registro local de pedidos** para desarrollo (`lib/order-store.ts`).
+- **QA pendiente:** stock agotado, recarga de página y zona sin cobertura.
+- **Política de envíos:** publicar los montos de referencia y su estado.
+- **Retrospectiva del Sprint 3.**
+- **Revisión cruzada** de Ivan para cerrar el DoD.
+- **Credenciales de producción** de Mercado Pago (KYC comercial).
 - **Verificar un dominio en Resend** para dejar de enviar desde `onboarding@resend.dev`.
 - **Migrar de Preferencias a Orders** cuando el volumen lo justifique.
 - **Persistencia en Supabase** (productos, cuentas e historial): tarjeta `[E5]` en el backlog.

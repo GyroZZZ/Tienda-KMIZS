@@ -45,7 +45,7 @@ const paymentOptions: {
   {
     id: "mercado_pago",
     title: "Pago digital · Mercado Pago",
-    description: "Pago digital; se habilita al configurar la pasarela y el envío.",
+    description: "Tarjeta, PSE o efectivo en el checkout seguro de Mercado Pago.",
   },
 ];
 
@@ -416,10 +416,11 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
               Mercado Pago, la firma del webhook, Resend y las tarifas de envío confirmadas.
             </p>
           ) : null}
-          {shippingOptions.confirmed && !selectedZone ? (
+          {onlinePaymentsAvailable && !selectedZone ? (
             <p className="text-xs leading-relaxed text-ink/55">
-              No encontramos este municipio en las zonas configuradas. El pago digital estará
-              disponible cuando el equipo confirme su cobertura.
+              {city && department
+                ? "No encontramos este municipio en las zonas configuradas. El pago digital estará disponible cuando el equipo confirme su cobertura."
+                : "Elige tu departamento y municipio para habilitar el pago digital."}
             </p>
           ) : null}
         </fieldset>
