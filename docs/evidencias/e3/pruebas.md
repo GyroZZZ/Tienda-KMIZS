@@ -167,7 +167,7 @@ La idempotencia se verificó reenviando la notificación del pago rechazado con 
 endpoint respondió `200` y **no** se duplicó el correo, porque la clave de idempotencia depende del
 pago y del estado, no del identificador de la petición.
 
-### 8.5 Contraentrega y transferencia
+### 8.5 Contraentrega y transferencia (histórico)
 
 Los dos medios que no pasan por Mercado Pago se probaron contra el servidor real, sin interceptar
 nada:
@@ -180,6 +180,10 @@ nada:
 El pedido de contraentrega lleva 2 prendas y el enlace de WhatsApp dice "Envío: gratis"; el de
 transferencia lleva 1 prenda y dice "Envío (Ciudad principal): $12.900". Es la misma regla de envío
 que aplica al pago con Mercado Pago, calculada en el servidor.
+
+**Nota (16 de noviembre de 2026):** la opción "transferencia o billetera" se retiró del checkout
+después de estas pruebas. El registro se conserva porque describe lo que se ejecutó ese día; el
+checkout actual solo ofrece contraentrega y Mercado Pago.
 
 ### 8.6 Límites encontrados en el entorno de prueba
 

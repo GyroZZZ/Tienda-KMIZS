@@ -165,7 +165,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Medios de pago",
         body: [
-          "Aceptamos contraentrega, transferencia o billetera (Nequi, DaviPlata y Bancolombia) y pago digital con Mercado Pago.",
+          "Aceptamos contraentrega y pago digital con Mercado Pago: tarjeta, PSE o efectivo en el checkout de la pasarela.",
           "En esta versión académica Mercado Pago funciona en modo de prueba (sandbox): no se procesan cobros reales.",
           "El pago contraentrega está sujeto a la cobertura de la transportadora en tu zona. No almacenamos números completos de tarjeta ni claves.",
         ],

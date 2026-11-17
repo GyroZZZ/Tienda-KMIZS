@@ -66,7 +66,7 @@ del consumidor. La política lo dice de forma explícita y aclara que la garant�
 Flujo implementado:
 
 1. El cliente completa el checkout y el servidor registra el pedido.
-2. Para contraentrega o transferencia, el navegador guarda un resumen en `sessionStorage` y navega a
+2. Para contraentrega, el navegador guarda un resumen en `sessionStorage` y navega a
    `/checkout/gracias?pedido=KM-…`.
 3. La página de gracias muestra el número, los próximos pasos según el medio de pago, el resumen, el
    botón de WhatsApp, el comprobante imprimible y los enlaces a las políticas.
@@ -109,7 +109,7 @@ WhatsApp.
 
 1. Abrir una ficha (`/productos/basica-tinta`) y bajar hasta “Compra con confianza”.
 2. Abrir `/checkout` y revisar el mismo bloque antes del formulario.
-3. Registrar un pedido de contraentrega o transferencia y revisar `/checkout/gracias?pedido=…`.
+3. Registrar un pedido de contraentrega y revisar `/checkout/gracias?pedido=…`.
 4. Recargar la página de gracias: el resumen se conserva en la misma pestaña.
 5. Abrir la página con otro número de pedido: debe aparecer el respaldo genérico.
 6. Revisar `/politicas/envios`, `/politicas/cambios`, `/politicas/terminos` y

@@ -6,7 +6,7 @@
  * del navegador, la página muestra un respaldo genérico con el número de pedido.
  */
 
-export type OrderPaymentMethod = "mercado_pago" | "cash_on_delivery" | "bank_transfer";
+export type OrderPaymentMethod = "mercado_pago" | "cash_on_delivery";
 
 export interface OrderSnapshotLine {
   name: string;

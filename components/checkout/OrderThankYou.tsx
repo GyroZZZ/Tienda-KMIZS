@@ -30,10 +30,6 @@ function nextSteps(snapshot: OrderSnapshot | null): string {
       return freeShipping
         ? "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio y el plazo del envío antes de despachar. El envío es gratis y no pagas nada hasta recibir."
         : "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio, la tarifa y el plazo del envío antes de despachar. No pagas nada hasta recibir.";
-    case "bank_transfer":
-      return freeShipping
-        ? "Confirma el pedido por WhatsApp. El envío es gratis; te compartimos los datos de Nequi, DaviPlata o Bancolombia y el valor exacto a transferir."
-        : "Confirma el pedido por WhatsApp. Después de cotizar el envío te compartimos los datos de Nequi, DaviPlata o Bancolombia y el valor exacto a transferir.";
     case "mercado_pago":
       return "El pago digital se procesa en Mercado Pago. Cuando se confirme, el equipo prepara el pedido y te contacta para coordinar la entrega.";
     default:
