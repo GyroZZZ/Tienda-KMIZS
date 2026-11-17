@@ -85,8 +85,8 @@ export function getShippingOptions(): ShippingOptions {
   return {
     confirmed: true,
     zones: [
-      { id: "main", label: "Ciudad principal", rate: cityRate, eta: cityEta },
-      { id: "extended", label: "Zona extendida o rural", rate: extendedRate, eta: extendedEta },
+      { id: "main", label: "Área metropolitana", rate: cityRate, eta: cityEta },
+      { id: "extended", label: "Ciudades principales", rate: extendedRate, eta: extendedEta },
     ],
     mainMunicipalities,
     extendedMunicipalities,

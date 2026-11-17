@@ -25,7 +25,7 @@ export interface Policy {
 export const policies: Record<PolicySlug, Policy> = {
   envios: {
     title: "Envíos y entregas",
-    updatedAt: "10 de noviembre de 2026",
+    updatedAt: "16 de noviembre de 2026",
     intro:
       "Despachamos desde Colombia. El envío es gratis desde 2 prendas y en pedidos personalizados; para una sola prenda, la tarifa y el plazo dependen del municipio y te los confirmamos antes de cobrar o despachar.",
     sections: [
@@ -40,8 +40,9 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Tarifas",
         body: [
           "El envío es gratis cuando el pedido suma 2 o más prendas, sin importar si son del mismo modelo o de modelos distintos, y en todos los pedidos personalizados, de eventos y de equipos.",
-          "Para un pedido de una sola prenda, la tarifa se calcula por zona y se muestra en el checkout antes de pagar cuando las condiciones con la transportadora están confirmadas.",
-          "Mientras esas condiciones estén pendientes, el pedido se registra y la tarifa de una sola prenda se cotiza por WhatsApp antes de cualquier pago. No cobramos un valor de envío sin confirmarlo contigo.",
+          "Para un pedido de una sola prenda, la tarifa de referencia es de $12.900 en el área metropolitana de Medellín (2 a 4 días hábiles de transporte) y de $18.900 en capitales y ciudades principales fuera de Antioquia (4 a 7 días hábiles).",
+          "Estos montos son de referencia: están pendientes de la cotización definitiva de la transportadora y no incluyen recargos por zonas rurales o de difícil acceso. Si al despachar la tarifa real cambia, te la informamos antes de cobrar.",
+          "El checkout muestra la tarifa y el plazo de tu municipio antes de pagar. Si tu destino no está en las zonas configuradas, el pedido se registra y la tarifa se cotiza por WhatsApp antes de cualquier pago. No cobramos un valor de envío sin confirmarlo contigo.",
         ],
       },
       {
@@ -57,7 +58,7 @@ export const policies: Record<PolicySlug, Policy> = {
         body: [
           "El envío es gratis cuando el pedido suma 2 o más prendas en total, sin importar si son del mismo modelo o de modelos distintos, y en todos los pedidos personalizados, de eventos y de equipos.",
           "La regla se aplica automáticamente en el carrito y en el checkout: el pedido muestra “Gratis” antes de pagar y el total no incluye un cobro de envío. No requiere solicitud ni validación por WhatsApp.",
-          "Un pedido de una sola prenda paga la tarifa de su zona cuando las condiciones con la transportadora están confirmadas.",
+          "Un pedido de una sola prenda paga la tarifa de referencia de su zona, publicada en la sección de tarifas.",
         ],
       },
       {
