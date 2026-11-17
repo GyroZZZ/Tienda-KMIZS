@@ -4,8 +4,9 @@
 **Última actualización:** 16 de noviembre de 2026
 
 Guía para probar el checkout de KMIZS sin mover dinero real. El código ya está en
-`app/api/checkout/route.ts`, `app/api/payments/webhook/route.ts` y `app/api/payments/status/route.ts`;
-lo que falta es crear la aplicación, copiar las credenciales y ejecutar los tres casos de prueba.
+`app/api/checkout/route.ts`, `app/api/payments/webhook/route.ts` y `app/api/payments/status/route.ts`.
+Las credenciales están cargadas en Vercel y los tres casos de prueba ya se ejecutaron: la evidencia
+está en [`docs/evidencias/e3/pruebas.md`](evidencias/e3/pruebas.md), punto 8.
 
 ---
 
@@ -68,16 +69,22 @@ cualquier enlace `sandbox_*`.
 
 ### Estado del entorno de prueba (16 de noviembre)
 
-| Dato                | Valor                                                                     |
-| ------------------- | ------------------------------------------------------------------------- |
-| Aplicación          | `KMIZS Tienda` · ID `5353395853534570` · Colombia (MCO) · Checkout Pro    |
-| Vendedor de prueba  | usuario `3852045262`                                                      |
-| Comprador de prueba | `TESTUSER8164834918474591249` (ID `3852045264`), saldo cargado de $50.000 |
-| Webhook             | `https://tienda-kmizs.vercel.app/api/payments/webhook`, tópico `payment`  |
+| Dato                | Valor                                                                          |
+| ------------------- | ------------------------------------------------------------------------------ |
+| Aplicación          | `KMIZS Tienda` · ID `5353395853534570` · Colombia (MCO) · Checkout Pro         |
+| Vendedor de prueba  | usuario `3852045262`                                                           |
+| Comprador de prueba | `TESTUSER8164834918474591249` (ID `3852045264`), saldo cargado de $50.000      |
+| Webhook             | `https://tienda-kmizs.vercel.app/api/payments/webhook`, tópico `payment`       |
+| Entorno en Vercel   | `MERCADO_PAGO_ENVIRONMENT=test`, 14 variables cargadas en Production y Preview |
+| Dominio de retorno  | `https://tienda-kmizs.vercel.app` (`NEXT_PUBLIC_SITE_URL`)                     |
 
 La preferencia se validó contra la API real con las credenciales de prueba: responde `201` y devuelve
 `init_point` **y** `sandbox_init_point`. Por eso la app usa el enlace `sandbox.mercadopago.com.co`
 mientras `MERCADO_PAGO_ENVIRONMENT=test`.
+
+**Ojo con el dominio de retorno:** `getSiteUrl()` prefiere `NEXT_PUBLIC_SITE_URL` y, si no existe,
+`VERCEL_PROJECT_PRODUCTION_URL`. No uses `VERCEL_URL`: es el hostname del deployment, queda detrás de
+Deployment Protection y el comprador vuelve de la pasarela a un login de Vercel.
 
 ## 5. Crear la cuenta de comprador de prueba
 
@@ -171,6 +178,21 @@ El resultado cambia según el **nombre del titular** (documento `123456789` cuan
 | Rechazado       | `OTHE`  | "Pago no aprobado", carrito intacto, correo con estado rechazado |
 | Pendiente       | `CONT`  | "Pago en proceso", sin vaciar el carrito, correo de pendiente    |
 
+### Tarjetas nuevas: limitación de la cuenta de prueba
+
+Con la cuenta de prueba que genera la herramienta de Mercado Pago (vendedor `3852045262`) **solo
+funcionan las tarjetas que ya vienen sembradas** en el comprador de prueba. Si escribes una tarjeta
+distinta, el formulario acepta los datos y avanza hasta las cuotas, pero el pago no se completa:
+
+| Dominio                      | Dónde termina               | Mensaje                                                      |
+| ---------------------------- | --------------------------- | ------------------------------------------------------------ |
+| `sandbox.mercadopago.com.co` | `…/fatal/`                  | "Oh, no, algo anduvo mal"                                    |
+| `www.mercadopago.com.co`     | `…/congrats/recover/error/` | "No puedes pagar con un e-mail corporativo de Mercado Libre" |
+
+No es un problema de la integración: las tarjetas sembradas pagan bien en los dos dominios y cubren
+los tres estados. Si necesitas probar una tarjeta concreta, crea tu propia aplicación y tu propia
+cuenta de comprador de prueba en el panel; no uses la cuenta automática.
+
 ## 10. Qué revisar en cada caso
 
 | Revisión                         | Aprobado | Rechazado   | Pendiente  |
@@ -188,16 +210,18 @@ evidencia de la subtarea 5 del sprint.
 
 ## 11. Problemas frecuentes
 
-| Síntoma                                          | Causa probable                                                        | Solución                                                                   |
-| ------------------------------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| El checkout no ofrece Mercado Pago               | Falta token, firma, Resend o tarifas confirmadas                      | Revisa las cuatro variables y `SHIPPING_RATES_CONFIRMED=true`              |
-| 503 "requiere las credenciales de Mercado Pago"  | Token vacío, con otro prefijo o `MERCADO_PAGO_ENVIRONMENT=production` | Copia el token de la pestaña correcta y ajusta el entorno                  |
-| 503 "El registro de pedidos no está configurado" | Falta Resend                                                          | Carga `RESEND_API_KEY` y `RESEND_FROM_EMAIL` y redespliega                 |
-| "La firma de la notificación no coincide"        | Clave secreta de otra aplicación o webhook duplicado                  | Vuelve a copiar la clave y deja una sola URL de webhook                    |
-| Mercado Pago rechaza la preferencia al crearla   | `unit_price` con decimales, moneda distinta de COP o ítem sin título  | Revisa los logs de la función; el servidor calcula los precios             |
-| `auto_return` inválido                           | `back_urls` en `http://localhost`                                     | Usa el dominio de Vercel o un túnel HTTPS                                  |
-| El webhook no llega                              | URL privada, evento distinto de "Pagos" o deployment apagado          | Prueba sobre producción y revisa _Webhooks → Historial_                    |
-| Llegan dos correos del mismo pago                | Webhook de la aplicación y `notification_url` de la preferencia       | La clave de idempotencia evita el duplicado; si persiste, revisa el estado |
+| Síntoma                                          | Causa probable                                                              | Solución                                                                   |
+| ------------------------------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| El checkout no ofrece Mercado Pago               | Falta token, firma, Resend o tarifas confirmadas                            | Revisa las cuatro variables y `SHIPPING_RATES_CONFIRMED=true`              |
+| 503 "requiere las credenciales de Mercado Pago"  | Token vacío, con otro prefijo o `MERCADO_PAGO_ENVIRONMENT=production`       | Copia el token de la pestaña correcta y ajusta el entorno                  |
+| 503 "El registro de pedidos no está configurado" | Falta Resend                                                                | Carga `RESEND_API_KEY` y `RESEND_FROM_EMAIL` y redespliega                 |
+| "La firma de la notificación no coincide"        | Clave secreta de otra aplicación o webhook duplicado                        | Vuelve a copiar la clave y deja una sola URL de webhook                    |
+| Mercado Pago rechaza la preferencia al crearla   | `unit_price` con decimales, moneda distinta de COP o ítem sin título        | Revisa los logs de la función; el servidor calcula los precios             |
+| `auto_return` inválido                           | `back_urls` en `http://localhost`                                           | Usa el dominio de Vercel o un túnel HTTPS                                  |
+| El webhook no llega                              | URL privada, evento distinto de "Pagos" o deployment apagado                | Prueba sobre producción y revisa _Webhooks → Historial_                    |
+| El webhook no llega con la cuenta automática     | La preferencia la crea otra aplicación de prueba que no se puede configurar | Usa tu propia aplicación y tu propia cuenta de comprador de prueba         |
+| Llegan dos correos del mismo pago                | Webhook de la aplicación y `notification_url` de la preferencia             | La clave de idempotencia evita el duplicado; si persiste, revisa el estado |
+| El pago termina en `…/fatal/` al agregar tarjeta | Tarjeta no sembrada en la cuenta de prueba automática                       | Usa una tarjeta sembrada o crea tu propia aplicación                       |
 
 ---
 

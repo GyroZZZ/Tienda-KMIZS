@@ -93,17 +93,22 @@ Variables que se cargan en Vercel (Preview y Production mientras se prueba):
 
 ```env
 MERCADO_PAGO_ENVIRONMENT=test
-MERCADO_PAGO_ACCESS_TOKEN=TEST-o-APP_USR-de-la-pestana-Prueba
+MERCADO_PAGO_ACCESS_TOKEN=APP_USR-de-la-pestana-Prueba
 MERCADO_PAGO_WEBHOOK_SECRET=firma-del-webhook
 RESEND_API_KEY=re_...
-RESEND_FROM_EMAIL=pedidos@dominio-verificado
+RESEND_FROM_EMAIL=KMIZS <onboarding@resend.dev>
 ORDER_NOTIFY_EMAIL=kmizs@protonmail.com
+NEXT_PUBLIC_SITE_URL=https://tienda-kmizs.vercel.app
 ```
 
 La app acepta tokens `TEST-` y `APP_USR-` de la pestaña "Prueba" cuando
 `MERCADO_PAGO_ENVIRONMENT=test`. Con `MERCADO_PAGO_ENVIRONMENT=production` solo acepta `APP_USR-` de
 la pestaña "Producción", de modo que un token de prueba no puede cobrar dinero real. Los pedidos se
 envían a `ORDER_NOTIFY_EMAIL`; si la variable falta, se usa `kmizs@protonmail.com`.
+
+`RESEND_FROM_EMAIL` sigue siendo `onboarding@resend.dev` porque no hay dominio verificado: Resend solo
+entrega ese remitente al buzón dueño de la cuenta, que es justamente `kmizs@protonmail.com`. Cuando se
+verifique un dominio de la marca se cambia por `pedidos@…`.
 
 **Camino de integración elegido (16 de noviembre):** API de Preferencias. Mercado Pago la marca como
 "legacy" —soportada, pero sin funcionalidades nuevas— y recomienda la API de Orders para integraciones
@@ -205,3 +210,38 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 | Contraentrega y transferencia registran el pedido                   | Correo al equipo + WhatsApp con número de pedido                |
 | Tarifas y plazos visibles en ficha y checkout                       | Captura con zona, tarifa y plazo                                |
 | Cada pedido queda registrado                                        | Correo recibido y archivo local en desarrollo                   |
+
+---
+
+## 10. Cierre del sprint (16 de noviembre de 2026)
+
+| #   | Subtarea                                            | Estado | Evidencia                                                                 |
+| --- | --------------------------------------------------- | ------ | ------------------------------------------------------------------------- |
+| 1   | Aplicación de Mercado Pago y credenciales de prueba | Hecho  | 14 variables en Vercel; `POST /api/checkout` responde `200` en producción |
+| 2   | Tarifas de referencia por zona                      | Hecho  | Cobradas en pagos reales: $12.900 y $18.900 (punto 8.3 de la evidencia)   |
+| 3   | `ORDER_NOTIFY_EMAIL` y entrega con Resend           | Hecho  | Correos entregados a `kmizs@protonmail.com`                               |
+| 4   | Registro local de pedidos en desarrollo             | Hecho  | `lib/order-store.ts` con `.data/` ignorado                                |
+| 5   | Compra de prueba aprobada, rechazada y pendiente    | Hecho  | Pagos `188925368893`, `188927364905`, `188930688193` (punto 8)            |
+| 6   | Contraentrega y transferencia                       | Hecho  | Correo al equipo + WhatsApp con número de pedido                          |
+| 7   | QA móvil del carrito y checkout                     | Hecho  | Capturas 390 px `01`–`05`                                                 |
+| 8   | Política de envíos y textos del checkout            | Hecho  | `data/policies.ts` y `docs/confianza.md`                                  |
+| 9   | Evidencia y retrospectiva                           | Hecho  | `docs/evidencias/e3/pruebas.md`                                           |
+| 10  | DoD                                                 | Hecho  | Checklist abajo                                                           |
+
+### Bugs encontrados y corregidos durante el cierre
+
+| Bug                                                                      | Corrección                                      |
+| ------------------------------------------------------------------------ | ----------------------------------------------- |
+| `hola@kmizs.co` publicado en todo el sitio, con el dominio sin registrar | Reemplazado por `kmizs@protonmail.com` (PR #19) |
+| El comprador volvía de Mercado Pago a un login de Vercel                 | `getSiteUrl()` usa el dominio público (PR #20)  |
+
+### Pendientes que quedan abiertos (no bloquean E3)
+
+- **Confirmar una entrega real del webhook.** Mercado Pago no entregó ninguna notificación por su
+  cuenta durante las pruebas; el endpoint se validó con peticiones firmadas a mano. Hay que
+  confirmarlo con credenciales de producción antes de operar.
+- **Activar credenciales de producción** (KYC comercial pendiente).
+- **Confirmar tarifas con la transportadora.** Ya están publicadas y se cobran.
+- **Verificar un dominio en Resend** para dejar de enviar desde `onboarding@resend.dev`.
+- **Migrar de Preferencias a Orders** cuando el volumen lo justifique.
+- **Persistencia en Supabase** (productos, cuentas e historial): tarjeta `[E5]` en el backlog.
