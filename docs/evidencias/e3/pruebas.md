@@ -201,8 +201,113 @@ checkout actual solo ofrece contraentrega y Mercado Pago.
    las tarjetas sembradas en la cuenta de comprador de prueba completan el pago, y con ellas los tres
    estados funcionan. Es una limitación de la cuenta de prueba automática, no de la integración.
 
-### 8.6 Pendientes que salen de esta prueba
+### 8.7 Pendientes que salen de esta prueba
 
 - Confirmar una entrega real del webhook con credenciales de producción.
 - Confirmar las tarifas de envío con la transportadora: hoy son de referencia y ya están publicadas.
 - Activar las credenciales de producción (KYC comercial pendiente).
+
+---
+
+## 9. QA móvil de los casos que faltaban
+
+Los tres casos pendientes del ítem 7, probados en el sitio desplegado con el viewport en **390 × 844**
+y `agent-browser`.
+
+### 9.1 Stock agotado
+
+Ficha `/productos/grafica-bogota`, que tiene la talla XL en cero. La talla no aparece en el selector
+`Talla` (solo S, M y L) y en la tabla de disponibilidad figura como **AGOTADA** con sus medidas.
+
+![Stock agotado en la ficha](10-stock-agotado.png)
+
+El servidor también lo rechaza: `POST /api/checkout` valida `stock >= quantity` y responde `400`
+"Un producto, talla o cantidad ya no está disponible" si se envía una talla sin inventario.
+
+### 9.2 Recarga de página
+
+Se agregó una prenda, se abrió `/carrito`, se recargó con `reload` y el pedido siguió completo:
+misma referencia, talla S, cantidad 1 y subtotal de $99.900.
+
+![Carrito después de recargar](11-recarga-carrito.png)
+
+El carrito vive en `localStorage`, así que la recarga no lo pierde. El resumen de la página de gracias
+usa `sessionStorage` y se pierde al cerrar la pestaña, que es el comportamiento documentado.
+
+### 9.3 Zona sin cobertura
+
+Con el carrito de una prenda se eligió **Antioquia → Abejorral**, que no está en las zonas
+configuradas. El checkout muestra dos avisos y deja el pago digital deshabilitado:
+
+> No encontramos cobertura configurada para Abejorral, Antioquia. El equipo confirmará la tarifa y el
+> plazo por WhatsApp antes de cualquier pago.
+>
+> No encontramos este municipio en las zonas configuradas. El pago digital estará disponible cuando
+> el equipo confirme su cobertura.
+
+![Zona sin cobertura](12-zona-sin-cobertura.png)
+
+El pedido se puede registrar igual con contraentrega: la validación del servidor solo exige zona
+confirmada cuando el medio es `mercado_pago`.
+
+---
+
+## 10. Tarifas de referencia en la política y en el checkout
+
+`/politicas/envios` publica los montos y su estado desde el 16 de noviembre de 2026:
+
+> Para un pedido de una sola prenda, la tarifa de referencia es de $12.900 en el área metropolitana de
+> Medellín (2 a 4 días hábiles de transporte) y de $18.900 en capitales y ciudades principales fuera
+> de Antioquia (4 a 7 días hábiles).
+>
+> Estos montos son de referencia: están pendientes de la cotización definitiva de la transportadora y
+> no incluyen recargos por zonas rurales o de difícil acceso. Si al despachar la tarifa real cambia, te
+> la informamos antes de cobrar.
+
+El checkout usa las mismas etiquetas que la política. Con Antioquia → Medellín muestra:
+
+> Zona: Área metropolitana. Tarifa $12.900 · 2 a 4 días hábiles.
+
+![Tarifa de referencia en el checkout](13-tarifa-referencia.png)
+
+---
+
+## 11. Registro local de pedidos en desarrollo
+
+`lib/order-store.ts` escribe cada pedido en `.data/pedidos.jsonl`, que está fuera del repositorio.
+Se probaron los dos entornos con el mismo código:
+
+| Entorno                   | Credenciales de Resend | Resultado                                           |
+| ------------------------- | ---------------------- | --------------------------------------------------- |
+| `next dev`                | ausentes               | `200`, pedido guardado en `.data/pedidos.jsonl`     |
+| `next start` (producción) | ausentes               | `503` "El registro de pedidos no está configurado…" |
+
+Salida real de desarrollo:
+
+```text
+Pedido KM-9C09C47E-6AD3-4451-B2DF-C05F0E9EDE3A guardado en …\.data\pedidos.jsonl
+POST /api/checkout 200 in 461ms
+```
+
+Salida real de producción, con `.env.local` fuera del directorio:
+
+```text
+status=503 body={"error":"El registro de pedidos no está configurado. El equipo debe completar Resend en Vercel."}
+```
+
+La condición es `NODE_ENV !== "production"`, así que los previews de Vercel tampoco escriben archivos.
+
+---
+
+## 12. Medios de pago: solo contraentrega y Mercado Pago
+
+La opción "transferencia o billetera" se retiró del checkout. Quedan dos medios y el servidor rechaza
+cualquier otro:
+
+```text
+POST /api/checkout {"paymentMethod":"bank_transfer", …}
+status=400 body={"error":"Selecciona un medio de pago válido."}
+```
+
+En el formulario aparecen únicamente **Contraentrega** y **Pago digital · Mercado Pago** (captura
+`12-zona-sin-cobertura.png`).
