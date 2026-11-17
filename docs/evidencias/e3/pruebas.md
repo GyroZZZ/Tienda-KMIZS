@@ -51,6 +51,9 @@ prueba: solo se interceptó `fetch` en el navegador para verificar el resumen y 
 | `04-movil-carrito-personalizada.png` | Pedido personalizado con envío gratis y motivo específico      |
 | `05-movil-gracias-envio-gratis.png`  | Página de gracias con “Envío gratis · Gratis” y próximos pasos |
 | `06-prod-carrito-2-prendas.png`      | Producción: dos prendas con envío “Gratis”                     |
+| `07-pago-aprobado.png`               | Pago aprobado en producción con Mercado Pago                   |
+| `08-pago-rechazado.png`              | Pago rechazado: la tienda conserva el carrito                  |
+| `09-pago-pendiente.png`              | Pago en proceso: la tienda no confirma ni descarta             |
 
 ---
 
@@ -104,5 +107,98 @@ La clave usada es la de la aplicación `KMIZS Tienda` (ID `5353395853534570`). M
 la clave del entorno de prueba en el panel, solo permite regenerarla; la de producción sí es visible y
 es la que valida la firma, porque el secreto es por aplicación y no por entorno.
 
-**Pendiente:** la compra de punta a punta (aprobada, rechazada y pendiente) sigue pendiente de cargar
-las variables en Vercel y de las credenciales de Resend.
+---
+
+## 8. Compra de punta a punta en producción (16 de noviembre de 2026)
+
+Las variables quedaron cargadas en Vercel y el sitio se redesplegó. Las tres compras se hicieron sobre
+`https://tienda-kmizs.vercel.app` con las credenciales de prueba, la cuenta de comprador de prueba y
+las tarjetas de prueba del punto 9 de [`docs/mercado-pago-sandbox.md`](../mercado-pago-sandbox.md).
+
+### 8.1 Los tres estados
+
+| Estado    | Pedido                                    | Pago           | Medio               | Valor    | `status` / `status_detail`              | Captura                 |
+| --------- | ----------------------------------------- | -------------- | ------------------- | -------- | --------------------------------------- | ----------------------- |
+| Aprobado  | `KM-C501157B-576F-40F7-BD01-1104AD6D3C8E` | `188925368893` | Mastercard crédito  | $159.800 | `approved` / `accredited`               | `07-pago-aprobado.png`  |
+| Rechazado | `KM-79935B0A-36F2-46A2-8117-15236DB5AED9` | `188927364905` | Visa crédito (OTHE) | $92.800  | `rejected` / `cc_rejected_other_reason` | `08-pago-rechazado.png` |
+| Pendiente | `KM-5B10B99B-6D40-472E-8430-0369D066F448` | `188930688193` | Visa débito (CONT)  | $108.800 | `in_process` / `pending_contingency`    | `09-pago-pendiente.png` |
+
+Los tres estados se consultaron después contra `GET /v1/payments/{id}` para confirmar que el estado
+que muestra la tienda es el que reporta Mercado Pago, no solo lo que trae la URL de retorno.
+
+### 8.2 Qué hizo la tienda en cada caso
+
+| Revisión                                  | Aprobado        | Rechazado                  | Pendiente             |
+| ----------------------------------------- | --------------- | -------------------------- | --------------------- |
+| Página `/checkout/resultado`              | "Pago aprobado" | "Pago no aprobado"         | "Pago en proceso"     |
+| Detalle mostrado                          | `accredited`    | `cc_rejected_other_reason` | `pending_contingency` |
+| Pedido `KM-…` en pantalla                 | Sí              | Sí                         | Sí                    |
+| Carrito después de volver                 | Vacío (0)       | Intacto                    | Intacto               |
+| Correo de pedido a `kmizs@protonmail.com` | Sí              | Sí                         | Sí                    |
+
+El carrito se vacía solo cuando el pago queda aprobado. En rechazado y pendiente se conserva, para que
+el comprador pueda reintentar sin volver a armar el pedido.
+
+### 8.3 Envío cobrado en el pago real
+
+El total que llega a Mercado Pago se comparó con la regla de envío:
+
+| Pedido          | Prendas            | Total    | Composición                |
+| --------------- | ------------------ | -------- | -------------------------- |
+| `KM-C501157B-…` | 2 básicas          | $159.800 | 2 × $79.900, envío gratis  |
+| `KM-2A2F7594-…` | 1 básica, Medellín | $92.800  | $79.900 + $12.900 de envío |
+| `KM-79935B0A-…` | 1 básica, Medellín | $92.800  | $79.900 + $12.900 de envío |
+| `KM-8AD7D62A-…` | 1 básica, Bogotá   | $98.800  | $79.900 + $18.900 de envío |
+| `KM-5B10B99B-…` | 1 oversize, Bogotá | $108.800 | $89.900 + $18.900 de envío |
+
+La preferencia de Mercado Pago lleva exactamente el total calculado por el servidor: no hay envío
+cobrado cuando aplica el envío gratis, y sí cuando es una sola prenda.
+
+### 8.4 Correos
+
+| Correo                                      | Cuándo                      | Estado    |
+| ------------------------------------------- | --------------------------- | --------- |
+| `Pedido KM-… · pago sandbox solicitado`     | Al crear la preferencia     | Entregado |
+| `Actualización de pago · KM-… · approved`   | Webhook firmado con el pago | Entregado |
+| `Actualización de pago · KM-… · rejected`   | Webhook firmado con el pago | Entregado |
+| `Actualización de pago · KM-… · in_process` | Webhook firmado con el pago | Entregado |
+
+La idempotencia se verificó reenviando la notificación del pago rechazado con otro `x-request-id`: el
+endpoint respondió `200` y **no** se duplicó el correo, porque la clave de idempotencia depende del
+pago y del estado, no del identificador de la petición.
+
+### 8.5 Contraentrega y transferencia
+
+Los dos medios que no pasan por Mercado Pago se probaron contra el servidor real, sin interceptar
+nada:
+
+| Medio                   | Pedido                                    | Respuesta | Correo al equipo                      | WhatsApp |
+| ----------------------- | ----------------------------------------- | --------- | ------------------------------------- | -------- |
+| Contraentrega           | `KM-1056C634-3CAE-455A-82F9-590C87F6C77E` | `200`     | `… · requiere confirmación` entregado | Sí       |
+| Transferencia/billetera | `KM-F9051DAD-18A4-47EB-B906-18805A782FCA` | `200`     | `… · requiere confirmación` entregado | Sí       |
+
+El pedido de contraentrega lleva 2 prendas y el enlace de WhatsApp dice "Envío: gratis"; el de
+transferencia lleva 1 prenda y dice "Envío (Ciudad principal): $12.900". Es la misma regla de envío
+que aplica al pago con Mercado Pago, calculada en el servidor.
+
+### 8.6 Límites encontrados en el entorno de prueba
+
+1. **Mercado Pago no entregó el webhook por su cuenta.** El historial de notificaciones de la
+   aplicación `5353395853534570` aparece vacío y no llegó ningún correo de "Actualización de pago"
+   después de las compras. Los tres correos de actualización se produjeron con peticiones firmadas a
+   mano contra el endpoint real, que es lo que valida el punto 7. La causa más probable es que las
+   preferencias las crea la aplicación de prueba automática (`5894382745963165`), que no se puede
+   configurar por API, mientras el webhook quedó registrado en `5353395853534570`. **Antes de salir a
+   producción hay que confirmar una entrega real de Mercado Pago**, no solo la petición simulada.
+2. **Las tarjetas nuevas no se pueden agregar en esta cuenta de prueba.** Con una tarjeta que Mercado
+   Pago no tenga sembrada, el formulario acepta los datos y avanza hasta las cuotas, pero el pago
+   termina en `…/fatal/` en el dominio `sandbox.mercadopago.com.co` y en `…/congrats/recover/error/`
+   con "No puedes pagar con un e-mail corporativo de Mercado Libre" en `www.mercadopago.com.co`. Solo
+   las tarjetas sembradas en la cuenta de comprador de prueba completan el pago, y con ellas los tres
+   estados funcionan. Es una limitación de la cuenta de prueba automática, no de la integración.
+
+### 8.6 Pendientes que salen de esta prueba
+
+- Confirmar una entrega real del webhook con credenciales de producción.
+- Confirmar las tarifas de envío con la transportadora: hoy son de referencia y ya están publicadas.
+- Activar las credenciales de producción (KYC comercial pendiente).
