@@ -223,9 +223,9 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 | 4   | Registro local de pedidos en desarrollo             | Hecho         | `lib/order-store.ts` escribe `.data/pedidos.jsonl` (ignorado). En producción sin credenciales responde `503`, probado con `next start` |
 | 5   | Compra de prueba aprobada, rechazada y pendiente    | Hecho         | Pagos `188925368893`, `188927364905`, `188930688193` (punto 8). El webhook funciona, pero Mercado Pago no lo entregó solo (8.6)        |
 | 6   | Contraentrega                                       | Hecho         | Pedido `KM-1056C634…`, correo entregado y WhatsApp (punto 8.5). La opción de transferencia se retiró del checkout                      |
-| 7   | QA móvil del carrito y checkout                     | **Parcial**   | Hay capturas 390 px de carrito, checkout y gracias. **Faltan** los casos de stock agotado, recarga de página y zona sin cobertura      |
+| 7   | QA móvil del carrito y checkout                     | Hecho         | Capturas 390 px `01`–`05` y `10`–`13`. Stock agotado, recarga y zona sin cobertura en el punto 9                                       |
 | 8   | Política de envíos y textos del checkout            | Hecho         | `data/policies.ts` publica $12.900 y $18.900 con su carácter de referencia y el plazo de cada zona                                     |
-| 9   | Evidencia y retrospectiva                           | **Parcial**   | `docs/evidencias/e3/pruebas.md` completo. **Falta** `docs/retrospectiva-sprint-3.md`                                                   |
+| 9   | Evidencia y retrospectiva                           | Hecho         | `docs/evidencias/e3/pruebas.md` (puntos 1–12) y `docs/retrospectiva-sprint-3.md`                                                       |
 | 10  | DoD                                                 | **Pendiente** | Falta la revisión de alguien distinto de quien construyó (Ivan)                                                                        |
 
 ### Bugs encontrados y corregidos durante el cierre
@@ -240,8 +240,6 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 
 - **Confirmar una entrega real del webhook.** Mercado Pago no entregó ninguna notificación por su
   cuenta durante las pruebas; el endpoint se validó con peticiones firmadas a mano.
-- **QA pendiente:** stock agotado, recarga de página y zona sin cobertura.
-- **Retrospectiva del Sprint 3.**
 - **Revisión cruzada** de Ivan para cerrar el DoD.
 - **Credenciales de producción** de Mercado Pago (KYC comercial).
 - **Verificar un dominio en Resend** para dejar de enviar desde `onboarding@resend.dev`.
