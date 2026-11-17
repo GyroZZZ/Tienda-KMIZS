@@ -13,7 +13,7 @@ import { formatPrice, getProductBySlug } from "@/lib/products";
 import type { ShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
 
-type PaymentMethod = "mercado_pago" | "cash_on_delivery" | "bank_transfer";
+type PaymentMethod = "mercado_pago" | "cash_on_delivery";
 
 interface CheckoutFormProps {
   shippingOptions: ShippingOptions;
@@ -36,11 +36,6 @@ const paymentOptions: {
     id: "cash_on_delivery",
     title: "Contraentrega",
     description: "Confirmaremos por WhatsApp si está disponible para tu destino.",
-  },
-  {
-    id: "bank_transfer",
-    title: "Transferencia o billetera",
-    description: "Te enviaremos los datos para pagar por WhatsApp después de cotizar el envío.",
   },
   {
     id: "mercado_pago",
@@ -331,10 +326,6 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             const unavailable =
               option.id === "mercado_pago" &&
               (!shippingOptions.confirmed || !onlinePaymentsAvailable || !selectedZone);
-            const description =
-              option.id === "bank_transfer" && freeShipping
-                ? "Te enviaremos los datos para pagar por WhatsApp; el envío ya está incluido."
-                : option.description;
             return (
               <label
                 key={option.id}
@@ -354,58 +345,8 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                 <span className="text-sm">
                   <strong>{option.title}</strong>
                   <span className="mt-1 block text-xs leading-relaxed text-ink/60">
-                    {description}
+                    {option.description}
                   </span>
-                  {option.id === "bank_transfer" ? (
-                    <span
-                      className="mt-3 grid max-w-md grid-cols-2 gap-2"
-                      aria-label="Medios de pago"
-                    >
-                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
-                        <span
-                          aria-hidden="true"
-                          className="grid size-7 place-items-center rounded-lg bg-[#4b168c] text-sm font-black text-white"
-                        >
-                          N
-                        </span>
-                        <span className="text-base font-extrabold tracking-tight text-[#4b168c]">
-                          nequi
-                        </span>
-                      </span>
-                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
-                        <span
-                          aria-hidden="true"
-                          className="grid size-7 place-items-center rounded-full bg-[#e3212b] text-sm font-black text-white"
-                        >
-                          D
-                        </span>
-                        <span className="text-sm font-extrabold tracking-tight text-[#d91f2b]">
-                          DaviPlata
-                        </span>
-                      </span>
-                      <span className="flex min-h-12 items-center gap-2 border border-ink/10 bg-white px-3">
-                        <svg
-                          aria-hidden="true"
-                          viewBox="0 0 28 28"
-                          className="size-7 shrink-0"
-                          fill="none"
-                        >
-                          <path d="M5 8.5 14 4l9 4.5-9 4.5L5 8.5Z" fill="#F7C600" />
-                          <path d="M5 8.5v10L14 23V13L5 8.5Z" fill="#D52B1E" />
-                          <path d="m23 8.5-9 4.5v10l9-4.5v-10Z" fill="#B71C1C" />
-                        </svg>
-                        <span className="text-[11px] leading-tight font-extrabold tracking-tight text-[#c62828] sm:text-xs">
-                          Bancolombia
-                        </span>
-                      </span>
-                      <span className="flex min-h-12 items-center justify-between gap-2 border border-dashed border-ink/20 bg-white px-3 opacity-60">
-                        <span className="text-lg font-black tracking-[-0.08em] text-ink">addi</span>
-                        <span className="text-[9px] leading-tight font-semibold tracking-wide text-ink/60 uppercase">
-                          Próximamente
-                        </span>
-                      </span>
-                    </span>
-                  ) : null}
                 </span>
               </label>
             );

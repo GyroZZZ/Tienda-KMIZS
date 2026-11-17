@@ -9,7 +9,7 @@ import { getShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
 import { getSiteUrl, site } from "@/lib/site";
 
-type PaymentMethod = "mercado_pago" | "cash_on_delivery" | "bank_transfer";
+type PaymentMethod = "mercado_pago" | "cash_on_delivery";
 
 interface Customer {
   name: string;
@@ -74,7 +74,6 @@ function orderEmailHtml({
   const methodLabels: Record<PaymentMethod, string> = {
     mercado_pago: "Mercado Pago",
     cash_on_delivery: "Contraentrega",
-    bank_transfer: "Transferencia o billetera",
   };
   const lineRows = lines
     .map(
@@ -214,7 +213,7 @@ function buildWhatsAppUrl(
     `Hola, quiero confirmar el pedido ${orderId}.`,
     `Nombre: ${customer.name}`,
     `Destino: ${customer.city}, ${customer.department}`,
-    `Pago elegido: ${paymentMethod === "cash_on_delivery" ? "contraentrega" : "transferencia o billetera"}`,
+    `Pago elegido: ${paymentMethod === "cash_on_delivery" ? "contraentrega" : "Mercado Pago"}`,
     summary,
     `Subtotal: ${formatPrice(subtotal)}`,
     `Envío${zoneLabel && shipping !== 0 ? ` (${zoneLabel})` : ""}: ${shippingText}`,
@@ -278,11 +277,7 @@ export async function POST(request: Request) {
   }
 
   const paymentMethod = body.paymentMethod;
-  if (
-    paymentMethod !== "mercado_pago" &&
-    paymentMethod !== "cash_on_delivery" &&
-    paymentMethod !== "bank_transfer"
-  ) {
+  if (paymentMethod !== "mercado_pago" && paymentMethod !== "cash_on_delivery") {
     return Response.json({ error: "Selecciona un medio de pago válido." }, { status: 400 });
   }
 

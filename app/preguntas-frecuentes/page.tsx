@@ -89,7 +89,7 @@ const faqGroups = [
       {
         question: "¿Puedo pagar contraentrega?",
         answer:
-          "Sí, siempre que la transportadora tenga cobertura en tu municipio. También puedes pagar por transferencia o billetera (Nequi, DaviPlata y Bancolombia).",
+          "Sí, siempre que la transportadora tenga cobertura en tu municipio. La otra opción es el pago digital con Mercado Pago: tarjeta, PSE o efectivo en el checkout de la pasarela.",
       },
       {
         question: "¿Es seguro pagar en línea?",

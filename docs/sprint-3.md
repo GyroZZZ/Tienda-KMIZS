@@ -10,8 +10,8 @@
 ## 1. Objetivo del sprint
 
 Cerrar la compra de punta a punta en producción: que una persona pueda armar el carrito desde el
-celular, pagar en sandbox de Mercado Pago o elegir contraentrega/transferencia, y que el pedido
-quede registrado con su costo de envío y su número.
+celular, pagar en sandbox de Mercado Pago o elegir contraentrega, y que el pedido quede registrado
+con su costo de envío y su número.
 
 El código ya existe. Lo que falta no es construir la tienda otra vez: es **configurar las
 credenciales, probar con dinero de prueba y dejar evidencia**.
@@ -27,7 +27,7 @@ credenciales, probar con dinero de prueba y dejar evidencia**.
 | Preferencia de Mercado Pago desde el servidor          | Implementado, sin credenciales     | `app/api/checkout/route.ts`                         |
 | Webhook con validación HMAC                            | Implementado, sin credenciales     | `app/api/payments/webhook/route.ts`                 |
 | Verificación de pago y página de resultado             | Implementado                       | `app/api/payments/status`, `app/checkout/resultado` |
-| Contraentrega y transferencia con WhatsApp             | Implementado                       | `app/api/checkout/route.ts`                         |
+| Contraentrega con WhatsApp                             | Implementado                       | `app/api/checkout/route.ts`                         |
 | Zonas de envío por municipio                           | Implementado, sin tarifas cargadas | `lib/shipping.ts`                                   |
 | Registro de pedido por correo                          | Implementado, sin remitente        | `lib/order-email.ts`                                |
 | Página de gracias y comprobante                        | Implementado en E4                 | `app/checkout/gracias`                              |
@@ -128,7 +128,7 @@ antes de escalar el volumen de pedidos.
 3. Hacer configurable el buzón de pedidos (`ORDER_NOTIFY_EMAIL`).
 4. Poder probar el flujo sin credenciales en desarrollo.
 5. Probar sandbox: aprobado, rechazado y pendiente.
-6. Probar contraentrega y transferencia.
+6. Probar contraentrega.
 7. QA móvil del carrito y checkout.
 8. Evidencia y retrospectiva.
 
@@ -151,7 +151,7 @@ antes de escalar el volumen de pedidos.
 | 3   | Configurar `ORDER_NOTIFY_EMAIL` y verificar la entrega con Resend        | Correo de pedido en el buzón real                                 | Captura del correo recibido                 |
 | 4   | Registro local de pedidos en desarrollo y error explícito en producción  | `lib/order-store.ts` + `.data/` ignorado                          | Prueba local con pedido en archivo          |
 | 5   | Compra de prueba aprobada, rechazada y pendiente                         | Pagos de prueba en Mercado Pago                                   | Capturas de los tres estados                |
-| 6   | Contraentrega y transferencia                                            | Pedido registrado + WhatsApp                                      | Captura del correo y del mensaje            |
+| 6   | Contraentrega                                                            | Pedido registrado + WhatsApp                                      | Captura del correo y del mensaje            |
 | 7   | QA móvil del carrito y checkout                                          | Lista de casos probados                                           | Capturas 390 px                             |
 | 8   | Actualizar política de envíos y textos del checkout                      | Contenido coherente con tarifas de referencia                     | Captura de la política                      |
 | 9   | Evidencia y retrospectiva                                                | `docs/evidencias/e3/pruebas.md`, `docs/retrospectiva-sprint-3.md` | Documentos                                  |
@@ -177,7 +177,7 @@ antes de escalar el volumen de pedidos.
 
 | Riesgo                                                       | Impacto                                    | Mitigación                                                                                                                 |
 | ------------------------------------------------------------ | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| La cuenta de Mercado Pago demora o pide KYC                  | Alto — sin pago digital                    | Contraentrega y transferencia ya funcionan; documentar el bloqueo y cerrar con ellas si es necesario                       |
+| La cuenta de Mercado Pago demora o pide KYC                  | Alto — sin pago digital                    | Contraentrega ya funciona; documentar el bloqueo y cerrar con ella si es necesario                                         |
 | Resend no entrega al buzón sin dominio verificado            | Alto — el pedido no queda registrado       | Usar el correo de la cuenta de Resend como destinatario o un servicio gratuito alterno; nunca dejar el pedido sin registro |
 | Las tarifas de referencia no coinciden con la transportadora | Medio — precio incorrecto                  | Aviso visible en checkout y política; confirmar antes de vender                                                            |
 | Sin base de datos, el pedido solo vive en el correo          | Medio — pérdida de trazabilidad            | Registro local en desarrollo y correo idempotente en producción; documentar la limitación                                  |
@@ -207,7 +207,7 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 | Carrito conserva ítems al recargar y permite cambiar talla/cantidad | Prueba en navegador con recarga y cambio de talla               |
 | Checkout fluido en celular                                          | QA 390 px + captura                                             |
 | Pago sandbox exitoso sin exponer claves                             | Compra de prueba; revisar que el token solo viva en el servidor |
-| Contraentrega y transferencia registran el pedido                   | Correo al equipo + WhatsApp con número de pedido                |
+| Contraentrega registra el pedido                                    | Correo al equipo + WhatsApp con número de pedido                |
 | Tarifas y plazos visibles en ficha y checkout                       | Captura con zona, tarifa y plazo                                |
 | Cada pedido queda registrado                                        | Correo recibido y archivo local en desarrollo                   |
 
@@ -222,7 +222,7 @@ Si la revisión de Ivan no ocurre, se cierra dejando constancia explícita, como
 | 3   | `ORDER_NOTIFY_EMAIL` y entrega con Resend           | Hecho         | Correos entregados a `kmizs@protonmail.com`                                                                                       |
 | 4   | Registro local de pedidos en desarrollo             | **Parcial**   | El error explícito en producción está (503 en `app/api/checkout`). **Falta el registro local:** `lib/order-store.ts` no existe    |
 | 5   | Compra de prueba aprobada, rechazada y pendiente    | Hecho         | Pagos `188925368893`, `188927364905`, `188930688193` (punto 8). El webhook funciona, pero Mercado Pago no lo entregó solo (8.6)   |
-| 6   | Contraentrega y transferencia                       | Hecho         | Pedidos `KM-1056C634…` y `KM-F9051DAD…`, correo entregado y WhatsApp (punto 8.5)                                                  |
+| 6   | Contraentrega                                       | Hecho         | Pedido `KM-1056C634…`, correo entregado y WhatsApp (punto 8.5). La opción de transferencia se retiró del checkout                 |
 | 7   | QA móvil del carrito y checkout                     | **Parcial**   | Hay capturas 390 px de carrito, checkout y gracias. **Faltan** los casos de stock agotado, recarga de página y zona sin cobertura |
 | 8   | Política de envíos y textos del checkout            | **Parcial**   | El checkout muestra tarifa y plazo. **Falta** que la política publique los montos y diga que son de referencia                    |
 | 9   | Evidencia y retrospectiva                           | **Parcial**   | `docs/evidencias/e3/pruebas.md` completo. **Falta** `docs/retrospectiva-sprint-3.md`                                              |
