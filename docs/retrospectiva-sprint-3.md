@@ -142,3 +142,15 @@ con Mercado Pago, y pedidos registrados por correo.
 Lo que no se hizo es la revisión cruzada. Por eso `[E3]` **no se cierra**: queda en el backlog con 11
 de 12 subtareas y con la revisión pendiente como única tarea abierta. El objetivo del Sprint 4 no es
 agregar funciones, es que alguien más mire lo que ya funciona.
+
+---
+
+## Addendum · 17 de noviembre de 2026
+
+Al día siguiente de la sesión, Eduardo Jiménez marcó el ítem de DoD y movió `[E3]` a `✅ Hecho`, con lo
+que la checklist quedó en 12 de 12. La revisión quedó registrada por él, no por Ivan, que era el
+revisor asignado. El acta del 16 sigue diciendo lo que decía porque eso fue lo que ocurrió ese día;
+este addendum deja constancia de lo que pasó después sin reescribirla.
+
+El resto de la retrospectiva se mantiene: el sprint se cerró un día después de la fecha prevista y la
+revisión la hizo una persona distinta de la que construyó, aunque no fuera el revisor asignado.
