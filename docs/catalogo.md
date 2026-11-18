@@ -109,6 +109,20 @@ incluye provisión de envío gratis.
 
 **Niveles de precio:** Esencial $79.900–$89.900 · Diseño $94.900–$99.900 · Personalizada $84.900–$89.900.
 
+### Margen con el cupón de primera compra
+
+El cupón `PRIMERA10` descuenta 10% sobre el subtotal de productos, nunca sobre el envío. Estos son los
+márgenes con el costeo real:
+
+| Pedido                                                | Ingreso con 10% | Costo                   | Margen    |
+| ----------------------------------------------------- | --------------- | ----------------------- | --------- |
+| 1 × Básica Tinta                                      | $71.910         | $33.752                 | **53,1%** |
+| 2 × Básica Tinta, área metropolitana (envío gratis)   | $143.820        | $67.504 + $12.900 envío | **44,1%** |
+| 2 × Básica Tinta, ciudades principales (envío gratis) | $143.820        | $67.504 + $18.900 envío | **39,9%** |
+
+El cupón tiene 50 usos, uno por correo y 30 días de vigencia. No se acumula con otros descuentos. El
+peor caso queda en 39,9%, por encima del piso de 35% que el proyecto fijó para no vender a pérdida.
+
 **Qué NO entra en el costo unitario:** envío pagado por el cliente, pauta (KPI del Sprint 5, meta CAC ≤ $30.000) y costos fijos del proyecto.
 
 ---
@@ -119,8 +133,8 @@ incluye provisión de envío gratis.
 | ------------------------------------------- | ---------------------------------------------------------------- |
 | 2 o más prendas (mismo o distintos modelos) | Gratis                                                           |
 | Pedido personalizado, de evento o de equipo | Gratis                                                           |
-| 1 sola prenda, ciudad principal             | Referencia $15.900, pendiente de confirmar con la transportadora |
-| 1 sola prenda, zona extendida               | Referencia $18.900, pendiente de confirmar con la transportadora |
+| 1 sola prenda, área metropolitana           | Referencia $12.900, pendiente de confirmar con la transportadora |
+| 1 sola prenda, ciudades principales         | Referencia $18.900, pendiente de confirmar con la transportadora |
 
 La regla vive en `lib/free-shipping.ts` y la aplican el carrito, el checkout, la API, los correos y
 la página de gracias. Los valores son hipótesis académicas, no tarifas confirmadas por una
