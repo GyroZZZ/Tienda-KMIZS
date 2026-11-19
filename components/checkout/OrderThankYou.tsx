@@ -209,7 +209,7 @@ export function OrderThankYou() {
           <p className="mt-3 text-xs leading-relaxed text-ink/55">
             {snapshot.shipping === null
               ? "Este no es el total final: el envío se cotiza y se comunica antes de pagar."
-              : `Entrega en ${snapshot.city}, ${snapshot.department}.`}
+              : `Entrega en ${`${snapshot.city}, ${snapshot.department}`.replace(/\.+$/, "")}.`}
           </p>
 
           <p className="mt-4 border-t border-ink/10 pt-3 text-xs leading-relaxed text-ink/55">
