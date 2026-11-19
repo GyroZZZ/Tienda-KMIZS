@@ -1,0 +1,18 @@
+{
+  "capturado": "2026-11-19",
+  "sitio": "https://tienda-kmizs.vercel.app",
+  "metodo": "Se envolvió window.va en el navegador, se pulsó el botón flotante y se leyó el payload recibido",
+  "llamada": [
+    "event",
+    {
+      "name": "whatsapp_click",
+      "data": {
+        "content_name": "boton_flotante",
+        "utm_source": "web",
+        "utm_medium": "referral",
+        "utm_campaign": "contacto",
+        "utm_content": "boton_flotante"
+      }
+    }
+  ]
+}
