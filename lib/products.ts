@@ -1,5 +1,3 @@
-import { products } from "@/data/products";
-
 export type ProductType = "basica" | "grafica" | "personalizada";
 
 export const productTypeLabels: Record<ProductType, string> = {
@@ -57,14 +55,6 @@ const priceFormatter = new Intl.NumberFormat("es-CO", {
 
 export function formatPrice(value: number): string {
   return priceFormatter.format(value);
-}
-
-export function getAllProducts(): Product[] {
-  return products;
-}
-
-export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((product) => product.slug === slug);
 }
 
 export function getTotalStock(product: Product): number {

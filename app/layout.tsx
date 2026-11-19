@@ -1,9 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { Anton, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
+import { ConsentBanner } from "@/components/analytics/ConsentBanner";
+import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { WhatsAppButton } from "@/components/layout/WhatsAppButton";
 import { CartProvider } from "@/components/cart/CartProvider";
+import { getCatalog } from "@/lib/catalog";
 import { getSiteUrl, site } from "@/lib/site";
 
 import "./globals.css";
@@ -49,15 +54,22 @@ export const viewport: Viewport = {
   themeColor: "#0c0c0e",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const products = await getCatalog();
+  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
   return (
     <html lang="es-CO" className={`${anton.variable} ${inter.variable}`}>
       <body className="flex min-h-dvh flex-col">
-        <CartProvider>
+        <CartProvider products={products}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
+          <WhatsAppButton />
+          <ConsentBanner />
         </CartProvider>
+        <Analytics />
+        {pixelId ? <MetaPixel pixelId={pixelId} /> : null}
       </body>
     </html>
   );

@@ -5,11 +5,12 @@ import Link from "next/link";
 
 import { useCart } from "@/components/cart/CartProvider";
 import { freeShippingReason, qualifiesForFreeShipping } from "@/lib/free-shipping";
-import { formatPrice, getProductBySlug } from "@/lib/products";
+import { formatPrice } from "@/lib/products";
 import type { Size } from "@/lib/products";
 
 export function CartContents() {
-  const { items, ready, storageError, removeItem, updateQuantity, updateSize } = useCart();
+  const { items, ready, storageError, getProduct, removeItem, updateQuantity, updateSize } =
+    useCart();
 
   if (!ready) {
     return <p className="mt-8 text-sm text-ink/60">Cargando tu carrito…</p>;
@@ -41,12 +42,12 @@ export function CartContents() {
   }
 
   const subtotal = items.reduce((total, item) => {
-    const product = getProductBySlug(item.slug);
+    const product = getProduct(item.slug);
     return total + (product?.price ?? 0) * item.quantity;
   }, 0);
 
   const shippingLines = items.flatMap((item) => {
-    const product = getProductBySlug(item.slug);
+    const product = getProduct(item.slug);
     return product ? [{ quantity: item.quantity, isCustom: product.type === "personalizada" }] : [];
   });
   const freeShipping = qualifiesForFreeShipping(shippingLines);
@@ -62,7 +63,7 @@ export function CartContents() {
         ) : null}
         <ul className="divide-y divide-ink/15 border-y border-ink/15">
           {items.map((item) => {
-            const product = getProductBySlug(item.slug);
+            const product = getProduct(item.slug);
             if (!product) return null;
             const minQuantity = product.minQuantity ?? 1;
             const sizeStock = product.sizes.find((entry) => entry.size === item.size)?.stock ?? 0;

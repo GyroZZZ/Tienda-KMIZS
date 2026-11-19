@@ -9,7 +9,8 @@ import { useCart } from "@/components/cart/CartProvider";
 import colombianLocations from "@/lib/colombian-locations.json";
 import { freeShippingReason, qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { saveOrderSnapshot } from "@/lib/order-snapshot";
-import { formatPrice, getProductBySlug } from "@/lib/products";
+import { trackEvent } from "@/lib/analytics";
+import { formatPrice } from "@/lib/products";
 import type { ShippingOptions } from "@/lib/shipping";
 import { getShippingZoneForAddress } from "@/lib/shipping-location";
 
@@ -18,13 +19,29 @@ type PaymentMethod = "mercado_pago" | "cash_on_delivery";
 interface CheckoutFormProps {
   shippingOptions: ShippingOptions;
   onlinePaymentsAvailable: boolean;
+  defaultCustomer: { name: string; email: string } | null;
+}
+
+interface CheckoutTotals {
+  subtotal: number;
+  discount: number;
+  shipping: number | null;
+  total: number | null;
 }
 
 interface CheckoutResponse {
   orderId?: string;
   paymentUrl?: string;
   whatsappUrl?: string;
+  totals?: CheckoutTotals;
   error?: string;
+}
+
+interface AppliedCoupon {
+  code: string;
+  percentOff: number;
+  discount: number;
+  description: string;
 }
 
 const paymentOptions: {
@@ -44,23 +61,32 @@ const paymentOptions: {
   },
 ];
 
-export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: CheckoutFormProps) {
+export function CheckoutForm({
+  shippingOptions,
+  onlinePaymentsAvailable,
+  defaultCustomer,
+}: CheckoutFormProps) {
   const router = useRouter();
-  const { items, ready, clearCart } = useCart();
+  const { items, ready, clearCart, getProduct } = useCart();
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash_on_delivery");
   const [city, setCity] = useState("");
   const [department, setDepartment] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
   const [error, setError] = useState("");
+  const [couponInput, setCouponInput] = useState("");
+  const [coupon, setCoupon] = useState<AppliedCoupon | null>(null);
+  const [couponMessage, setCouponMessage] = useState("");
+  const [couponError, setCouponError] = useState("");
+  const [checkingCoupon, setCheckingCoupon] = useState(false);
 
   const lines = useMemo(
     () =>
       items.flatMap((item) => {
-        const product = getProductBySlug(item.slug);
+        const product = getProduct(item.slug);
         return product ? [{ ...item, product, total: product.price * item.quantity }] : [];
       }),
-    [items],
+    [items, getProduct],
   );
   const subtotal = lines.reduce((total, item) => total + item.total, 0);
   const shippingLines = lines.map((line) => ({
@@ -73,7 +99,66 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
     colombianLocations.departments.find((location) => location.name === department)
       ?.municipalities ?? [];
   const selectedZone = getShippingZoneForAddress(shippingOptions, city, department);
-  const estimatedTotal = subtotal + (freeShipping ? 0 : (selectedZone?.rate ?? 0));
+  const shippingRate = freeShipping ? 0 : (selectedZone?.rate ?? null);
+  const discount = Math.min(coupon?.discount ?? 0, subtotal);
+  const estimatedTotal = shippingRate === null ? null : subtotal - discount + shippingRate;
+
+  async function applyCoupon() {
+    const code = couponInput.trim().toUpperCase();
+    setCouponError("");
+    setCouponMessage("");
+
+    if (!code) {
+      setCouponError("Escribe un código de descuento.");
+      return;
+    }
+
+    setCheckingCoupon(true);
+    try {
+      const response = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code,
+          items: lines.map(({ slug, size, color, quantity }) => ({ slug, size, color, quantity })),
+        }),
+      });
+      const result = (await response.json()) as {
+        valid?: boolean;
+        code?: string;
+        percentOff?: number;
+        discount?: number;
+        description?: string;
+        reason?: string;
+      };
+
+      if (!response.ok || !result.valid) {
+        setCoupon(null);
+        setCouponError(result.reason ?? "Ese código no está disponible.");
+        return;
+      }
+
+      setCoupon({
+        code: result.code ?? code,
+        percentOff: result.percentOff ?? 0,
+        discount: result.discount ?? 0,
+        description: result.description ?? "",
+      });
+      setCouponMessage(`Cupón aplicado: ${result.description ?? `−${result.percentOff}%`}`);
+    } catch (requestError) {
+      console.error("No se pudo validar el cupón.", requestError);
+      setCouponError("No pudimos validar el cupón. Inténtalo de nuevo.");
+    } finally {
+      setCheckingCoupon(false);
+    }
+  }
+
+  function removeCoupon() {
+    setCoupon(null);
+    setCouponInput("");
+    setCouponMessage("");
+    setCouponError("");
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -97,10 +182,17 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
       },
       items: lines.map(({ slug, size, color, quantity }) => ({ slug, size, color, quantity })),
       paymentMethod,
+      couponCode: coupon?.code ?? null,
       acceptsPrivacy: formData.get("privacy") === "on",
     };
 
     setSubmitting(true);
+    trackEvent("initiate_checkout", {
+      value: estimatedTotal ?? subtotal - discount,
+      currency: "COP",
+      content_ids: lines.map((line) => line.slug),
+      num_items: lines.reduce((count, line) => count + line.quantity, 0),
+    });
     try {
       const response = await fetch("/api/checkout", {
         method: "POST",
@@ -121,7 +213,14 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
         return;
       }
 
-      const snapshot = {
+      const totals: CheckoutTotals = result.totals ?? {
+        subtotal,
+        discount,
+        shipping: shippingRate,
+        total: estimatedTotal,
+      };
+
+      saveOrderSnapshot({
         id: result.orderId,
         createdAt: new Date().toISOString(),
         paymentMethod,
@@ -138,12 +237,13 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
           quantity: line.quantity,
           total: line.total,
         })),
-        subtotal,
-        shipping: freeShipping ? 0 : (selectedZone?.rate ?? null),
+        subtotal: totals.subtotal,
+        discount: totals.discount,
+        couponCode: coupon?.code ?? null,
+        shipping: totals.shipping,
         shippingZone: freeShipping ? "Envío gratis" : (selectedZone?.label ?? null),
-        total: freeShipping ? subtotal : selectedZone ? subtotal + selectedZone.rate : null,
-      };
-      saveOrderSnapshot(snapshot);
+        total: totals.total,
+      });
 
       if (paymentMethod === "mercado_pago") {
         if (!result.paymentUrl) {
@@ -205,6 +305,7 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                 required
                 autoComplete="name"
                 maxLength={80}
+                defaultValue={defaultCustomer?.name ?? ""}
                 className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
               />
             </label>
@@ -216,6 +317,7 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                 required
                 autoComplete="email"
                 maxLength={254}
+                defaultValue={defaultCustomer?.email ?? ""}
                 className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal"
               />
             </label>
@@ -318,6 +420,60 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
                 : "La tarifa y el tiempo para tu ciudad aún no están confirmados con la transportadora. Registraremos el pedido y te confirmaremos ambos por WhatsApp antes de cualquier pago o despacho."}
             </p>
           )}
+        </fieldset>
+
+        <fieldset className="space-y-3">
+          <legend className="text-xl tracking-tight">Cupón de descuento</legend>
+          {coupon ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 border border-ink/15 bg-bone-dim/40 p-4 text-sm">
+              <span>
+                <strong>{coupon.code}</strong> · {coupon.description || `${coupon.percentOff}% de descuento`}
+                <span className="block text-xs text-ink/60">
+                  Se aplica sobre el subtotal de productos, no sobre el envío.
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={removeCoupon}
+                className="min-h-10 px-2 text-xs font-semibold tracking-wide text-ink/60 underline underline-offset-4 hover:text-accent"
+              >
+                Quitar cupón
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              <label className="flex-1 text-sm font-semibold">
+                Código
+                <input
+                  name="coupon"
+                  value={couponInput}
+                  onChange={(event) => setCouponInput(event.target.value.toUpperCase())}
+                  maxLength={32}
+                  autoComplete="off"
+                  placeholder="PRIMERA10"
+                  className="mt-2 min-h-11 w-full border border-ink/25 bg-bone px-3 font-normal tracking-widest uppercase"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={applyCoupon}
+                disabled={checkingCoupon}
+                className="mt-7 min-h-11 self-start border border-ink/25 px-5 text-xs font-semibold tracking-[0.12em] uppercase transition-colors hover:border-ink disabled:opacity-50"
+              >
+                {checkingCoupon ? "Revisando…" : "Aplicar"}
+              </button>
+            </div>
+          )}
+          {couponError ? (
+            <p role="alert" className="text-sm text-accent">
+              {couponError}
+            </p>
+          ) : null}
+          {couponMessage ? (
+            <p role="status" className="text-sm text-ink/70">
+              {couponMessage}
+            </p>
+          ) : null}
         </fieldset>
 
         <fieldset className="space-y-3">
@@ -432,6 +588,15 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
             <span>Subtotal</span>
             <strong>{formatPrice(subtotal)}</strong>
           </div>
+          {coupon ? (
+            <div className="flex justify-between gap-3">
+              <span>
+                Descuento
+                <span className="block text-xs text-ink/55">{coupon.code}</span>
+              </span>
+              <strong>−{formatPrice(discount)}</strong>
+            </div>
+          ) : null}
           {freeShipping ? (
             <div className="flex justify-between gap-3">
               <span>
@@ -460,17 +625,9 @@ export function CheckoutForm({ shippingOptions, onlinePaymentsAvailable }: Check
           )}
           <div className="flex justify-between gap-3 border-t border-ink/15 pt-3 text-base">
             <strong>
-              {freeShipping || (shippingOptions.confirmed && selectedZone)
-                ? "Total"
-                : "Subtotal de productos"}
+              {freeShipping || (shippingOptions.confirmed && selectedZone) ? "Total" : "Por pagar"}
             </strong>
-            <strong>
-              {formatPrice(
-                freeShipping || (shippingOptions.confirmed && selectedZone)
-                  ? estimatedTotal
-                  : subtotal,
-              )}
-            </strong>
+            <strong>{formatPrice(estimatedTotal ?? subtotal - discount)}</strong>
           </div>
           {freeShipping ? (
             <p className="text-xs leading-relaxed text-ink/55">

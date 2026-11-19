@@ -1,3 +1,4 @@
+import { settlePayment } from "@/lib/orders";
 import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 
@@ -49,6 +50,13 @@ export async function GET(request: Request) {
   ) {
     console.error("Mercado Pago no pudo verificar el pago.", { status: response.status });
     return Response.json({ error: "No pudimos verificar el estado del pago." }, { status: 502 });
+  }
+
+  // Corrige el estado aunque el webhook no haya llegado.
+  try {
+    await settlePayment(payment.external_reference, paymentId, payment.status);
+  } catch (error) {
+    console.error("No se pudo actualizar el pedido al consultar el pago.", error);
   }
 
   return Response.json({

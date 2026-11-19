@@ -5,25 +5,27 @@ import { notFound } from "next/navigation";
 
 import {
   formatPrice,
-  getAllProducts,
-  getProductBySlug,
   productTypeLabels,
   type Product,
 } from "@/lib/products";
 import { AddToCart } from "@/components/cart/AddToCart";
+import { ProductViewTracker } from "@/components/analytics/ProductViewTracker";
+import { ProductJsonLd } from "@/components/seo/ProductJsonLd";
 import { SizeAvailability } from "@/components/product/SizeAvailability";
 import { TrustSignals } from "@/components/trust/TrustSignals";
+import { getCatalogSlugs, getProductBySlug } from "@/lib/catalog";
 import { getShippingOptions } from "@/lib/shipping";
 
-export function generateStaticParams() {
-  return getAllProducts().map((product) => ({ slug: product.slug }));
+export async function generateStaticParams() {
+  const slugs = await getCatalogSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
   params,
 }: PageProps<"/productos/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
 
   if (!product) {
     return { title: "Camiseta no encontrada" };
@@ -32,6 +34,7 @@ export async function generateMetadata({
   return {
     title: product.name,
     description: product.summary,
+    alternates: { canonical: `/productos/${product.slug}` },
     openGraph: {
       title: `${product.name} · KMIZS`,
       description: product.summary,
@@ -137,7 +140,7 @@ function ProductDetails({
 
 export default async function ProductPage({ params }: PageProps<"/productos/[slug]">) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   const shippingOptions = getShippingOptions();
 
   if (!product) {
@@ -146,6 +149,8 @@ export default async function ProductPage({ params }: PageProps<"/productos/[slu
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <ProductJsonLd product={product} />
+      <ProductViewTracker slug={product.slug} name={product.name} price={product.price} />
       <nav aria-label="Ruta de navegación" className="text-xs text-ink/50">
         <Link href="/" className="hover:text-ink">
           Inicio

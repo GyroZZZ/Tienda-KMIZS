@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { ProductCard } from "@/components/product/ProductCard";
-import { getAllProducts } from "@/lib/products";
+import { getCatalog } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "Camisetas",
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
     "Catálogo de camisetas KMIZS: básicas de algodón pesado, gráficas de serie corta y personalizadas para equipos.",
 };
 
-export default function ProductsPage() {
-  const products = getAllProducts();
+export default async function ProductsPage() {
+  const products = await getCatalog();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">

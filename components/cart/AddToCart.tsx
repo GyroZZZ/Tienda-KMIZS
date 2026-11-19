@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { useCart } from "@/components/cart/CartProvider";
+import { trackEvent } from "@/lib/analytics";
 import type { Product, Size } from "@/lib/products";
 
 export function AddToCart({ product }: { product: Product }) {
@@ -23,6 +24,13 @@ export function AddToCart({ product }: { product: Product }) {
     if (!size) return;
     if (addItem(product, size, color)) {
       setMessage("Agregado al carrito.");
+      trackEvent("add_to_cart", {
+        content_ids: [product.slug],
+        content_name: product.name,
+        value: product.price,
+        currency: "COP",
+        num_items: 1,
+      });
     } else {
       setMessage("No hay inventario suficiente para esa talla.");
     }

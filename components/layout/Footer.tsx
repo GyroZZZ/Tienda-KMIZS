@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ConsentPreferences } from "@/components/analytics/ConsentPreferences";
 import { currentYear, footerNav, site } from "@/lib/site";
 
 export function Footer() {
@@ -50,6 +51,7 @@ export function Footer() {
             Superintendencia de Industria y Comercio (SIC)
           </a>
           <p>Proyecto académico · Comercio electrónico</p>
+          <ConsentPreferences />
         </div>
       </div>
     </footer>

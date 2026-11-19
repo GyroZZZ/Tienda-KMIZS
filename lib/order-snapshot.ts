@@ -28,6 +28,8 @@ export interface OrderSnapshot {
   department: string;
   lines: OrderSnapshotLine[];
   subtotal: number;
+  discount: number;
+  couponCode: string | null;
   shipping: number | null;
   shippingZone: string | null;
   total: number | null;
@@ -45,6 +47,15 @@ function isOrderSnapshot(value: unknown): value is OrderSnapshot {
     Array.isArray(snapshot.lines) &&
     typeof snapshot.subtotal === "number"
   );
+}
+
+/** Los comprobantes guardados antes de los cupones no traen `discount`. */
+export function normalizeSnapshot(snapshot: OrderSnapshot): OrderSnapshot {
+  return {
+    ...snapshot,
+    discount: typeof snapshot.discount === "number" ? snapshot.discount : 0,
+    couponCode: typeof snapshot.couponCode === "string" ? snapshot.couponCode : null,
+  };
 }
 
 export function saveOrderSnapshot(snapshot: OrderSnapshot): void {
@@ -65,7 +76,7 @@ export function readOrderSnapshot(orderId: string): OrderSnapshot | null {
     if (cached !== undefined) return cached;
 
     const parsed: unknown = JSON.parse(raw);
-    const snapshot = isOrderSnapshot(parsed) ? parsed : null;
+    const snapshot = isOrderSnapshot(parsed) ? normalizeSnapshot(parsed) : null;
     snapshotCache.set(raw, snapshot);
     return snapshot;
   } catch {

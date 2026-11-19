@@ -1,9 +1,17 @@
-import { randomUUID } from "node:crypto";
-
-import { formatPrice, getProductBySlug, type Product, type Size } from "@/lib/products";
+import { formatPrice, type Size } from "@/lib/products";
+import { getCatalog } from "@/lib/catalog";
+import { getCurrentUser } from "@/lib/auth";
 import { qualifiesForFreeShipping } from "@/lib/free-shipping";
 import { sendOrderEmail } from "@/lib/order-email";
-import { isLocalOrderStoreEnabled, saveLocalOrder } from "@/lib/order-store";
+import {
+  createOrder,
+  describeOrderError,
+  generateOrderCode,
+  savePreferenceId,
+  settlePayment,
+  type OrderCustomer,
+  type OrderItemInput,
+} from "@/lib/orders";
 import { getMercadoPagoAccessToken, getMercadoPagoCheckoutUrl } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { getShippingOptions } from "@/lib/shipping";
@@ -14,24 +22,6 @@ type PaymentMethod = "mercado_pago" | "cash_on_delivery";
 
 function isPaymentMethod(value: unknown): value is PaymentMethod {
   return value === "mercado_pago" || value === "cash_on_delivery";
-}
-
-interface Customer {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  department: string;
-  notes: string;
-}
-
-interface OrderLine {
-  product: Product;
-  size: Size;
-  color: string;
-  quantity: number;
-  total: number;
 }
 
 function readText(value: unknown, maxLength: number): string | null {
@@ -53,8 +43,17 @@ function escapeHtml(value: string): string {
   });
 }
 
+interface EmailLine {
+  name: string;
+  color: string;
+  size: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
+}
+
 function orderEmailHtml({
-  orderId,
+  orderCode,
   customer,
   lines,
   paymentMethod,
@@ -62,19 +61,21 @@ function orderEmailHtml({
   shippingZone,
   orderStatus,
   subtotal,
+  discount,
+  couponCode,
   total,
-  paymentUrl,
 }: {
-  orderId: string;
-  customer: Customer;
-  lines: OrderLine[];
+  orderCode: string;
+  customer: OrderCustomer;
+  lines: EmailLine[];
   paymentMethod: PaymentMethod;
   shipping: number | null;
   shippingZone: string | null;
   orderStatus: string;
   subtotal: number;
+  discount: number;
+  couponCode: string | null;
   total: number | null;
-  paymentUrl: string | null;
 }): string {
   const methodLabels: Record<PaymentMethod, string> = {
     mercado_pago: "Mercado Pago",
@@ -83,11 +84,11 @@ function orderEmailHtml({
   const lineRows = lines
     .map(
       (line) =>
-        `<li>${escapeHtml(line.product.name)} · ${escapeHtml(line.color)} · talla ${escapeHtml(line.size)} · ${line.quantity} × ${formatPrice(line.product.price)} = ${formatPrice(line.total)}</li>`,
+        `<li>${escapeHtml(line.name)} · ${escapeHtml(line.color)} · talla ${escapeHtml(line.size)} · ${line.quantity} × ${formatPrice(line.unitPrice)} = ${formatPrice(line.total)}</li>`,
     )
     .join("");
 
-  return `<h1>Pedido ${escapeHtml(orderId)}</h1>
+  return `<h1>Pedido ${escapeHtml(orderCode)}</h1>
     <p><strong>Estado:</strong> ${escapeHtml(orderStatus)}</p>
     <p><strong>Cliente:</strong> ${escapeHtml(customer.name)}<br>
     <strong>Correo:</strong> ${escapeHtml(customer.email)}<br>
@@ -97,25 +98,25 @@ function orderEmailHtml({
     <h2>Productos</h2><ul>${lineRows}</ul>
     <p><strong>Pago:</strong> ${methodLabels[paymentMethod]}</p>
     <p><strong>Subtotal:</strong> ${formatPrice(subtotal)}<br>
+    ${discount > 0 ? `<strong>Descuento${couponCode ? ` (${escapeHtml(couponCode)})` : ""}:</strong> −${formatPrice(discount)}<br>` : ""}
     <strong>Envío:</strong> ${shipping === null ? "Pendiente de cotización" : shipping === 0 ? "Gratis" : `${formatPrice(shipping)} (${escapeHtml(shippingZone ?? "")})`}<br>
     <strong>Total:</strong> ${total === null ? "Pendiente de cotización de envío" : formatPrice(total)}</p>
-    ${paymentUrl ? `<p><a href="${escapeHtml(paymentUrl)}">Abrir enlace de pago</a></p>` : ""}
     <p>KMIZS · ${escapeHtml(site.email)}</p>`;
 }
 
 async function createPaymentPreference({
-  orderId,
+  orderCode,
   customer,
   lines,
   shippingRate,
   total,
 }: {
-  orderId: string;
-  customer: Customer;
-  lines: OrderLine[];
+  orderCode: string;
+  customer: OrderCustomer;
+  lines: EmailLine[];
   shippingRate: number;
   total: number;
-}): Promise<string> {
+}): Promise<{ paymentUrl: string; preferenceId: string | null }> {
   const accessToken = getMercadoPagoAccessToken();
   if (!accessToken)
     throw new Error("Configura en Vercel las credenciales de prueba de Mercado Pago.");
@@ -127,11 +128,11 @@ async function createPaymentPreference({
   const payload = {
     items: [
       ...lines.map((line) => ({
-        id: line.product.slug,
-        title: `${line.product.name} · ${line.color} · ${line.size}`,
+        id: line.name,
+        title: `${line.name} · ${line.color} · ${line.size}`,
         quantity: line.quantity,
         currency_id: "COP",
-        unit_price: line.product.price,
+        unit_price: line.unitPrice,
       })),
       ...(shippingRate > 0
         ? [
@@ -151,7 +152,7 @@ async function createPaymentPreference({
       phone: { number: customer.phone.replace(/\D/g, "").slice(-10) },
       address: { street_name: customer.address },
     },
-    external_reference: orderId,
+    external_reference: orderCode,
     back_urls: {
       success: `${origin}/checkout/resultado`,
       pending: `${origin}/checkout/resultado`,
@@ -160,7 +161,7 @@ async function createPaymentPreference({
     notification_url: `${origin}/api/payments/webhook`,
     auto_return: "approved",
     statement_descriptor: "KMIZS",
-    metadata: { order_id: orderId, calculated_total: total },
+    metadata: { order_id: orderCode, calculated_total: total },
   };
 
   let response: Response;
@@ -196,31 +197,37 @@ async function createPaymentPreference({
     console.error("La preferencia de Mercado Pago no incluyó un enlace válido.");
     throw new Error("Mercado Pago no devolvió un enlace de pago válido.");
   }
-  return paymentUrl;
+
+  return {
+    paymentUrl,
+    preferenceId: typeof result.id === "string" ? result.id : null,
+  };
 }
 
 function buildWhatsAppUrl(
-  orderId: string,
-  customer: Customer,
-  lines: OrderLine[],
+  orderCode: string,
+  customer: OrderCustomer,
+  lines: EmailLine[],
   paymentMethod: PaymentMethod,
   subtotal: number,
+  discount: number,
   shipping: number | null,
   total: number | null,
   zoneLabel: string | null,
 ): string {
   const summary = lines
-    .map((line) => `- ${line.product.name} (${line.color}, talla ${line.size}) x${line.quantity}`)
+    .map((line) => `- ${line.name} (${line.color}, talla ${line.size}) x${line.quantity}`)
     .join("\n");
   const shippingText =
     shipping === null ? "por cotizar" : shipping === 0 ? "gratis" : formatPrice(shipping);
   const message = [
-    `Hola, quiero confirmar el pedido ${orderId}.`,
+    `Hola, quiero confirmar el pedido ${orderCode}.`,
     `Nombre: ${customer.name}`,
     `Destino: ${customer.city}, ${customer.department}`,
     `Pago elegido: ${paymentMethod === "cash_on_delivery" ? "contraentrega" : "Mercado Pago"}`,
     summary,
     `Subtotal: ${formatPrice(subtotal)}`,
+    ...(discount > 0 ? [`Descuento: −${formatPrice(discount)}`] : []),
     `Envío${zoneLabel && shipping !== 0 ? ` (${zoneLabel})` : ""}: ${shippingText}`,
     `Total: ${total === null ? "pendiente de cotizar el envío" : formatPrice(total)}`,
     shipping === 0
@@ -245,9 +252,9 @@ export async function POST(request: Request) {
   }
 
   const customerInput = body.customer;
-  const customer: Customer = {
+  const customer: OrderCustomer = {
     name: readText(customerInput.name, 80) ?? "",
-    email: readText(customerInput.email, 254) ?? "",
+    email: (readText(customerInput.email, 254) ?? "").toLowerCase(),
     phone: readText(customerInput.phone, 20) ?? "",
     address: readText(customerInput.address, 160) ?? "",
     city: readText(customerInput.city, 80) ?? "",
@@ -285,13 +292,73 @@ export async function POST(request: Request) {
   if (!isPaymentMethod(paymentMethod)) {
     return Response.json({ error: "Selecciona un medio de pago válido." }, { status: 400 });
   }
-  // El estrechamiento de `unknown` no llega a las funciones anidadas; se fija aquí.
-  const orderPaymentMethod: PaymentMethod = paymentMethod;
+
+  const couponCode =
+    typeof body.couponCode === "string" && body.couponCode.trim().length > 0
+      ? body.couponCode.trim().toUpperCase()
+      : null;
+
+  const catalog = new Map((await getCatalog()).map((product) => [product.slug, product]));
+
+  const items: OrderItemInput[] = [];
+  const emailLines: EmailLine[] = [];
+  const seenItems = new Set<string>();
+
+  for (const rawItem of body.items) {
+    if (!isRecord(rawItem)) {
+      return Response.json({ error: "Hay un producto con datos inválidos." }, { status: 400 });
+    }
+
+    const product = typeof rawItem.slug === "string" ? catalog.get(rawItem.slug) : undefined;
+    const size = rawItem.size;
+    const color = rawItem.color;
+    const quantity = rawItem.quantity;
+
+    if (
+      !product ||
+      typeof size !== "string" ||
+      typeof color !== "string" ||
+      !Number.isInteger(quantity) ||
+      typeof quantity !== "number" ||
+      quantity < (product.minQuantity ?? 1) ||
+      !product.sizes.some((entry) => entry.size === size) ||
+      !product.colors.some((entry) => entry.name === color)
+    ) {
+      return Response.json(
+        { error: "Un producto, talla o cantidad ya no está disponible. Actualiza el carrito." },
+        { status: 400 },
+      );
+    }
+
+    const key = `${product.slug}:${size}:${color}`;
+    if (seenItems.has(key)) {
+      return Response.json({ error: "El carrito contiene productos duplicados." }, { status: 400 });
+    }
+    seenItems.add(key);
+
+    items.push({ slug: product.slug, size: size as Size, color, quantity });
+    emailLines.push({
+      name: product.name,
+      color,
+      size,
+      quantity,
+      unitPrice: product.price,
+      total: product.price * quantity,
+    });
+  }
+
+  const freeShipping = qualifiesForFreeShipping(
+    items.map((item) => ({
+      quantity: item.quantity,
+      isCustom: catalog.get(item.slug)?.type === "personalizada",
+    })),
+  );
 
   const shippingOptions = getShippingOptions();
   const zone = shippingOptions.confirmed
     ? getShippingZoneForAddress(shippingOptions, customer.city, customer.department)
     : undefined;
+
   if (paymentMethod === "mercado_pago" && !zone) {
     return Response.json(
       {
@@ -302,197 +369,149 @@ export async function POST(request: Request) {
     );
   }
 
-  const lines: OrderLine[] = [];
-  const seenItems = new Set<string>();
-  for (const rawItem of body.items) {
-    if (!isRecord(rawItem)) {
-      return Response.json({ error: "Hay un producto con datos inválidos." }, { status: 400 });
-    }
-    const product = typeof rawItem.slug === "string" ? getProductBySlug(rawItem.slug) : undefined;
-    const size = rawItem.size;
-    const color = rawItem.color;
-    const quantity = rawItem.quantity;
-    if (
-      !product ||
-      typeof size !== "string" ||
-      typeof color !== "string" ||
-      !Number.isInteger(quantity) ||
-      typeof quantity !== "number" ||
-      quantity < (product.minQuantity ?? 1) ||
-      !product.sizes.some((entry) => entry.size === size && entry.stock >= quantity) ||
-      !product.colors.some((entry) => entry.name === color)
-    ) {
+  if (paymentMethod === "mercado_pago") {
+    if (!getMercadoPagoAccessToken() || !process.env.MERCADO_PAGO_WEBHOOK_SECRET) {
       return Response.json(
-        { error: "Un producto, talla o cantidad ya no está disponible. Actualiza el carrito." },
-        { status: 400 },
+        {
+          error:
+            "El pago en línea requiere las credenciales de Mercado Pago y la firma de webhook en Vercel.",
+        },
+        { status: 503 },
       );
     }
-    const key = `${product.slug}:${size}:${color}`;
-    if (seenItems.has(key)) {
-      return Response.json({ error: "El carrito contiene productos duplicados." }, { status: 400 });
-    }
-    seenItems.add(key);
-    lines.push({
-      product,
-      size: size as Size,
-      color,
-      quantity: quantity as number,
-      total: product.price * (quantity as number),
-    });
   }
 
-  const subtotal = lines.reduce((total, line) => total + line.total, 0);
-  const freeShipping = qualifiesForFreeShipping(
-    lines.map((line) => ({
-      quantity: line.quantity,
-      isCustom: line.product.type === "personalizada",
-    })),
-  );
   const shippingRate = freeShipping ? 0 : (zone?.rate ?? null);
-  const total = shippingRate === null ? null : subtotal + shippingRate;
   const shippingZoneLabel = freeShipping ? "Envío gratis" : (zone?.label ?? null);
-  const orderId = `KM-${randomUUID().toUpperCase()}`;
-  if (
-    paymentMethod === "mercado_pago" &&
-    (!getMercadoPagoAccessToken() || !process.env.MERCADO_PAGO_WEBHOOK_SECRET)
-  ) {
-    return Response.json(
-      {
-        error:
-          "El pago en línea requiere las credenciales de Mercado Pago y la firma de webhook en Vercel.",
-      },
-      { status: 503 },
-    );
-  }
-  const canEmail = Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
-  const canStoreLocally = isLocalOrderStoreEnabled();
-  if (!canEmail && !canStoreLocally) {
-    return Response.json(
-      {
-        error:
-          "El registro de pedidos no está configurado. El equipo debe completar Resend en Vercel.",
-      },
-      { status: 503 },
-    );
-  }
 
-  /** En desarrollo el pedido queda en `.data/pedidos.jsonl`; en producción esto no hace nada. */
-  async function recordLocally(status: string, paymentUrl?: string): Promise<void> {
-    if (!canStoreLocally) return;
-    const file = await saveLocalOrder({
-      orderId,
-      createdAt: new Date().toISOString(),
-      paymentMethod: orderPaymentMethod,
-      status,
+  const user = await getCurrentUser();
+  const code = generateOrderCode();
+
+  let order;
+  try {
+    order = await createOrder({
+      code,
       customer,
-      lines: lines.map((line) => ({
-        name: line.product.name,
-        color: line.color,
-        size: line.size,
-        quantity: line.quantity,
-        total: line.total,
-      })),
-      subtotal,
+      items,
+      paymentMethod,
       shipping: shippingRate,
       shippingZone: shippingZoneLabel,
-      total,
-      ...(paymentUrl ? { paymentUrl } : {}),
+      userId: user?.id ?? null,
+      couponCode,
     });
-    console.info(`Pedido ${orderId} guardado en ${file}`);
+  } catch (error) {
+    console.error("No se pudo registrar el pedido.", error);
+    return Response.json({ error: describeOrderError(error) }, { status: 409 });
   }
 
+  const totals = {
+    subtotal: order.subtotal,
+    discount: order.discount,
+    shipping: order.shipping,
+    total: order.total,
+  };
+
+  const canEmail = Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL);
+
   if (paymentMethod === "mercado_pago") {
-    if (shippingRate === null || total === null) {
+    if (shippingRate === null || order.total === null) {
+      await settlePayment(code, null, "cancelled");
       return Response.json(
         { error: "Falta confirmar el costo de envío antes del pago." },
         { status: 409 },
       );
     }
 
-    if (canEmail) {
-      try {
-        await sendOrderEmail(
-          `Pedido ${orderId} · pago sandbox solicitado`,
-          orderEmailHtml({
-            orderId,
-            customer,
-            lines,
-            paymentMethod,
-            shipping: shippingRate,
-            shippingZone: shippingZoneLabel,
-            orderStatus: "Pedido registrado; preparando pago en sandbox",
-            subtotal,
-            total,
-            paymentUrl: null,
-          }),
-          `order-${orderId}`,
-        );
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
-        console.error("No se pudo registrar el pedido de Mercado Pago.", error);
-        return Response.json({ error: message }, { status: 502 });
-      }
-    }
-
+    let preference: { paymentUrl: string; preferenceId: string | null };
     try {
-      const paymentUrl = await createPaymentPreference({
-        orderId,
+      preference = await createPaymentPreference({
+        orderCode: code,
         customer,
-        lines,
+        lines: emailLines,
         shippingRate,
-        total,
+        total: order.total,
       });
-      await recordLocally("Pedido registrado; pago en sandbox iniciado", paymentUrl);
-      return Response.json({ orderId, paymentUrl });
     } catch (error) {
+      // Si el pago no se puede iniciar, el pedido no debe retener stock ni cupón.
+      await settlePayment(code, null, "cancelled").catch(() => undefined);
       const message =
         error instanceof Error ? error.message : "No pudimos preparar el pago digital.";
       console.error("No se pudo crear el pago de Mercado Pago.", error);
       return Response.json({ error: message }, { status: 502 });
     }
+
+    if (preference.preferenceId) {
+      await savePreferenceId(code, preference.preferenceId).catch(() => undefined);
+    }
+
+    if (canEmail) {
+      try {
+        await sendOrderEmail(
+          `Pedido ${code} · pago en Mercado Pago iniciado`,
+          orderEmailHtml({
+            orderCode: code,
+            customer,
+            lines: emailLines,
+            paymentMethod,
+            shipping: order.shipping,
+            shippingZone: order.shipping_zone,
+            orderStatus: "Pedido registrado; esperando confirmación del pago",
+            subtotal: order.subtotal,
+            discount: order.discount,
+            couponCode: order.coupon_code,
+            total: order.total,
+          }),
+          `order-${code}`,
+        );
+      } catch (error) {
+        console.error("No se pudo notificar el pedido de Mercado Pago.", error);
+      }
+    }
+
+    return Response.json({ orderId: code, paymentUrl: preference.paymentUrl, totals });
   }
 
   const orderStatus =
-    shippingRate === null
+    order.shipping === null
       ? "Pendiente de cotizar envío y confirmar por WhatsApp"
       : "Pendiente de confirmación por WhatsApp";
 
   if (canEmail) {
     try {
       await sendOrderEmail(
-        `Pedido ${orderId} · requiere confirmación`,
+        `Pedido ${code} · requiere confirmación`,
         orderEmailHtml({
-          orderId,
+          orderCode: code,
           customer,
-          lines,
+          lines: emailLines,
           paymentMethod,
-          shipping: shippingRate,
-          shippingZone: shippingZoneLabel,
+          shipping: order.shipping,
+          shippingZone: order.shipping_zone,
           orderStatus,
-          subtotal,
-          total,
-          paymentUrl: null,
+          subtotal: order.subtotal,
+          discount: order.discount,
+          couponCode: order.coupon_code,
+          total: order.total,
         }),
+        `order-${code}`,
       );
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "No pudimos registrar el pedido por correo.";
-      console.error("No se pudo registrar el pedido.", error);
-      return Response.json({ error: message }, { status: 502 });
+      // El pedido ya existe en la base: el correo es solo una notificación.
+      console.error("No se pudo notificar el pedido por correo.", error);
     }
   }
 
   const whatsappUrl = buildWhatsAppUrl(
-    orderId,
+    code,
     customer,
-    lines,
+    emailLines,
     paymentMethod,
-    subtotal,
-    shippingRate,
-    total,
-    shippingZoneLabel,
+    order.subtotal,
+    order.discount,
+    order.shipping,
+    order.total,
+    order.shipping_zone,
   );
-  await recordLocally(orderStatus);
-  return Response.json({ orderId, whatsappUrl });
+
+  return Response.json({ orderId: code, whatsappUrl, totals });
 }
