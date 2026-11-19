@@ -73,7 +73,7 @@ cualquier enlace `sandbox_*`.
 | ------------------- | ------------------------------------------------------------------------------ |
 | Aplicación          | `KMIZS Tienda` · ID `5353395853534570` · Colombia (MCO) · Checkout Pro         |
 | Vendedor de prueba  | usuario `3852045262`                                                           |
-| Comprador de prueba | `TESTUSER8164834918474591249` (ID `3852045264`), saldo cargado de $50.000      |
+| Comprador de prueba | `test_user_8164834918474591249@testuser.com` (ID `3852045264`), clave `5iXYGLbhoY`, saldo cargado |
 | Webhook             | `https://tienda-kmizs.vercel.app/api/payments/webhook`, tópico `payment`       |
 | Entorno en Vercel   | `MERCADO_PAGO_ENVIRONMENT=test`, 14 variables cargadas en Production y Preview |
 | Dominio de retorno  | `https://tienda-kmizs.vercel.app` (`NEXT_PUBLIC_SITE_URL`)                     |
@@ -156,11 +156,32 @@ Con `http://localhost:3000`, `auto_return` y el webhook fallan: no es un error d
    más aparece "Gratis".
 3. Completa los datos con un correo distinto al de tu cuenta de Mercado Pago (la pasarela rechaza
    al comprador si coincide con el vendedor), elige **Mercado Pago** y envía el pedido.
-4. En el checkout de Mercado Pago inicia sesión con la **cuenta de comprador de prueba** y el código
-   de 6 dígitos.
-5. Paga con una tarjeta de prueba y el nombre del titular que define el resultado.
-6. Vuelve a la tienda: `/checkout/resultado` consulta el pago y muestra el estado; si fue aprobado,
-   vacía el carrito y ofrece el resumen del pedido.
+4. En el checkout elige **Ingresar con mi cuenta** y entra con el correo y la clave del comprador de
+   prueba de la tabla anterior. No hace falta código de 6 dígitos en este flujo.
+5. Elige una de las **tarjetas sembradas** que muestra la cuenta (no escribas los datos a mano) y
+   completa solo el CVV `123`. El resultado lo define la tarjeta:
+   - **Mastercard terminada en 3564** → aprobado (`APRO`).
+   - **Visa terminada en 6260** → rechazado (`OTHE`).
+   - **Visa Débito terminada en 1904** → pendiente (`CONT`).
+6. Pulsa **Pagar**. En el caso aprobado Mercado Pago devuelve a `/checkout/resultado`, que consulta el
+   pago y muestra "Pago aprobado". En rechazado y pendiente Mercado Pago muestra su propia pantalla;
+   el pedido se actualiza con el webhook o, si no llega, al consultar
+   `/api/payments/status?payment_id=<id>`.
+
+> **Importante:** con esta aplicación de prueba creada automáticamente, la opción **Sin cuenta de
+> Mercado Pago → Tarjeta** termina en `/fatal/`. Para que la compra funcione hay que entrar con la
+> cuenta de comprador de prueba. El flujo de invitado se conserva para contraentrega.
+
+### Verificación del 19 de noviembre de 2026
+
+| Caso | Pedido | Resultado en la tienda |
+| ---- | ------ | ---------------------- |
+| Aprobado | `KM-9514564A-4BDF-45A0-AFFE-94ED19D0E834` | `approved`, `payment_id=190592168556`, stock descontado; llegaron 3 webhooks y no duplicaron el pedido |
+| Rechazado | `KM-9C8FAB2C-249B-419B-8167-2C8B5EB6D3C1` | `rejected`, `stock_released_at` calculado; el pago `189505679217` se corrigió con `/api/payments/status` porque el webhook no llegó |
+| Pendiente | `KM-1FF21BE3-53E4-4655-94E6-7BF55AFE6EE5` | `pending` con stock retenido, esperando confirmación |
+
+Los tres pedidos generaron correo entregado a `kmizs@protonmail.com`. El entorno sigue en `test`:
+no hay credenciales de producción en Vercel ni en el repositorio.
 
 ### Tarjetas de prueba (Colombia)
 
@@ -221,7 +242,8 @@ evidencia de la subtarea 5 del sprint.
 | El webhook no llega                              | URL privada, evento distinto de "Pagos" o deployment apagado                | Prueba sobre producción y revisa _Webhooks → Historial_                    |
 | El webhook no llega con la cuenta automática     | La preferencia la crea otra aplicación de prueba que no se puede configurar | Usa tu propia aplicación y tu propia cuenta de comprador de prueba         |
 | Llegan dos correos del mismo pago                | Webhook de la aplicación y `notification_url` de la preferencia             | La clave de idempotencia evita el duplicado; si persiste, revisa el estado |
-| El pago termina en `…/fatal/` al agregar tarjeta | Tarjeta no sembrada en la cuenta de prueba automática                       | Usa una tarjeta sembrada o crea tu propia aplicación                       |
+| El pago termina en `…/fatal/` al agregar tarjeta | Tarjeta no sembrada, o se intentó comprar "Sin cuenta" con la cuenta automática | Entra con la cuenta de comprador de prueba y elige una tarjeta sembrada |
+| El pedido sigue en `pending` aunque el pago terminó | El webhook no llegó (puede pasar en la cuenta automática)               | Consulta `/api/payments/status?payment_id=<id>`; corrige el estado sin duplicar |
 
 ---
 

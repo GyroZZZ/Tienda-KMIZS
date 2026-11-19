@@ -13,6 +13,7 @@ Proyecto académico de comercio electrónico — 5 sprints, entrega **30 de novi
 | Lenguaje   | TypeScript                             |
 | Estilos    | Tailwind CSS                           |
 | Despliegue | Vercel                                 |
+| Base de datos | Supabase Postgres                   |
 | Pagos      | Mercado Pago (sandbox) + contraentrega |
 
 ## Requisitos
@@ -55,12 +56,16 @@ Comprueba que quedó bien con `git config --global --list`.
 | ------------------ | --------------------------------------------------------------------------- |
 | `app/`             | Rutas y páginas (App Router). Una carpeta por ruta.                         |
 | `components/`      | Componentes reutilizables: layout, producto, UI.                            |
-| `data/products.ts` | Catálogo. Es el archivo que más se toca.                                    |
-| `lib/`             | Tipos, utilidades y configuración del sitio.                                |
+| `data/products.ts` | Catálogo de origen del seed; el sitio ya no lo lee en runtime.              |
+| `supabase/migrations/` | Esquema, funciones de stock, cupones y cuentas.                        |
+| `lib/`             | Tipos, utilidades, acceso a la base y configuración del sitio.              |
 | `public/`          | Imágenes y assets estáticos.                                                |
 | `docs/`            | Documentos del proyecto: catálogo, costos, sprints, confianza y evidencias. |
 
-Para cambiar un precio, una talla o un texto de producto **no se toca el HTML**: se edita `data/products.ts` y el sitio se actualiza solo.
+Para cambiar un precio, una talla o un texto de producto se edita la fila correspondiente en
+Supabase Studio; el catálogo se actualiza en menos de un minuto. `data/products.ts` solo se usa para
+volver a cargar el catálogo desde cero con `scripts/seed-catalog.ts`. El detalle está en
+[`docs/base-de-datos.md`](docs/base-de-datos.md).
 
 ## Scripts
 
@@ -122,7 +127,15 @@ Para registrar pedidos, configura `RESEND_API_KEY` y `RESEND_FROM_EMAIL` con una
 
 El checkout digital usa Mercado Pago Checkout Pro. `MERCADO_PAGO_ENVIRONMENT` declara si las credenciales son de prueba (`test`, por defecto) o reales (`production`). En modo `test` se aceptan tokens `TEST-` y `APP_USR-` copiados de la pestaña "Prueba"; en modo `production` solo se acepta `APP_USR-` de la pestaña "Producción", así que un token de prueba no puede cobrar dinero real. `MERCADO_PAGO_WEBHOOK_SECRET` valida la firma del webhook. Los tokens solo se leen en funciones del servidor. El paso a paso para probar está en [`docs/mercado-pago-sandbox.md`](docs/mercado-pago-sandbox.md).
 
-Las tarifas, los plazos y los municipios por zona aún están pendientes de confirmación con la transportadora. Mantén `SHIPPING_RATES_CONFIRMED=false`; cuando estén confirmados, carga tarifas, plazos y las listas `SHIPPING_MAIN_MUNICIPALITIES` y `SHIPPING_EXTENDED_MUNICIPALITIES` en formato `Municipio|Departamento, ...`. Luego activa `SHIPPING_RATES_CONFIRMED=true`. El servidor determina la zona a partir de la dirección (no confía en un total enviado por el navegador). Sin cobertura confirmada, el checkout registra pedidos por correo/WhatsApp, pero no permite cobrar en línea.
+Las tarifas, los plazos y los municipios por zona son de referencia y aún están pendientes de
+confirmación con la transportadora. En producción `SHIPPING_RATES_CONFIRMED=true` con esas tarifas
+de referencia para permitir el pago en línea; en local puede quedar en `false`. El servidor
+determina la zona a partir de la dirección (no confía en un total enviado por el navegador). Sin
+cobertura confirmada, el checkout registra pedidos por correo/WhatsApp, pero no permite cobrar.
+
+Para que un compañero o el profesor haga una compra de prueba con Mercado Pago, no hay que cambiar
+nada: el entorno se mantiene en `test` de forma permanente. El paso a paso, la cuenta de comprador y
+las tarjetas sembradas están en [`docs/mercado-pago-sandbox.md`](docs/mercado-pago-sandbox.md).
 
 En el checkout, el municipio se elige de una lista dependiente del departamento. El catálogo local de Colombia está en `lib/colombian-locations.json`; su fuente y licencia MIT se incluyen allí y en `lib/colombian-locations.LICENSE`.
 
@@ -140,12 +153,14 @@ En el checkout, el municipio se elige de una lista dependiente del departamento.
 | 1      | Base en código, identidad de marca y despliegue en Vercel                 | Completado                                                                |
 | 2      | Catálogo, fichas, guía de tallas, políticas, FAQ y confirmación de pedido | Completado; el correo al cliente queda pendiente de un dominio verificado |
 | 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos             | Completado (10–16 nov); ver [`docs/sprint-3.md`](docs/sprint-3.md)        |
-| 4      | Base de datos, WhatsApp, analítica, SEO, cupón y QA                       | En curso (17–23 nov); ver [`docs/sprint-4.md`](docs/sprint-4.md)          |
+| 4      | Base de datos, WhatsApp, analítica, SEO, cupón y QA                       | Completado (17–23 nov); ver [`docs/sprint-4.md`](docs/sprint-4.md)       |
 | 5      | Lanzamiento, tablero de KPIs, documentación y presentación                | Pendiente (24–30 nov)                                                     |
 
 La base legal, las decisiones y las limitaciones del contenido de confianza están en
 [`docs/confianza.md`](docs/confianza.md). La evidencia de pruebas, en
-[`docs/evidencias/e4/pruebas.md`](docs/evidencias/e4/pruebas.md).
+[`docs/evidencias/e4/pruebas.md`](docs/evidencias/e4/pruebas.md) y
+[`docs/evidencias/e5/pruebas.md`](docs/evidencias/e5/pruebas.md). La base de datos y la medición, en
+[`docs/base-de-datos.md`](docs/base-de-datos.md) y [`docs/analitica.md`](docs/analitica.md).
 
 ## Equipo
 

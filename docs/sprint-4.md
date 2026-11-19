@@ -14,6 +14,29 @@
 
 ---
 
+## Estado real del sprint (19 de noviembre)
+
+Este archivo conserva el **plan original**. Durante la implementación se tomaron decisiones distintas
+en cuatro puntos; lo desplegado en producción es esto:
+
+| Tema            | Plan                                             | Implementación final                                                              |
+| --------------- | ------------------------------------------------ | --------------------------------------------------------------------------------- |
+| Cuentas         | Supabase Auth con enlace mágico                  | Tabla `public.users`, contraseña con scrypt y cookie HMAC de 30 días               |
+| Acceso a datos | `anon` lee catálogo y `service_role` escribe     | Un solo rol `postgres` desde el servidor con `pg` y `DATABASE_URL`; sin claves API |
+| Cupones         | Solo `PRIMERA10`                                 | `PRIMERA10`, `VUELVE10`, `KMIZS15` y `EQUIPO20`, aprobados por el PO              |
+| `proxy.ts`      | Refrescaba la sesión de Supabase Auth            | Redirige `/cuenta` a `/cuenta/ingresar` cuando no hay cookie                      |
+| Dependencias    | `@supabase/supabase-js`, `@supabase/ssr`         | Se retiraron; se agregaron `pg`, `server-only` y `@vercel/analytics`               |
+
+La documentación vigente de la base es [`docs/base-de-datos.md`](base-de-datos.md) y la de medición,
+[`docs/analitica.md`](analitica.md). Las pruebas reales sobre producción están en
+[`docs/evidencias/e5/pruebas.md`](evidencias/e5/pruebas.md).
+
+**Cierre:** los cuatro pull requests del sprint están fusionados en `main` (#26 a #29) y el
+deployment de producción los incluye. Quedan dos pendientes ajenos al código: el identificador del
+pixel de Meta y la verificación de Search Console.
+
+---
+
 ## 1. Objetivo del sprint
 
 Cerrar la semana 4 con cuatro resultados verificables:
@@ -738,12 +761,12 @@ Si la revisión cruzada no ocurre, se cierra dejando constancia explícita, como
 
 ## 12. Estado de las subtareas (18 de noviembre)
 
-| Tarjeta                         | Subtareas | Hechas | Estado    |
-| ------------------------------- | --------- | ------ | --------- |
-| `[E5]` Persistencia en Supabase | 12        | 0      | Pendiente |
-| `[E6-E8]` Atender y medir       | 7         | 0      | Pendiente |
-| `[E5]` Atraer visitas           | 8         | 0      | Pendiente |
-| `[E8]` Pruebas end-to-end       | 6         | 0      | Pendiente |
+| Tarjeta                         | Subtareas | Hechas | Estado                                             |
+| ------------------------------- | --------- | ------ | -------------------------------------------------- |
+| `[E5]` Persistencia en Supabase | 12        | 10     | Implementada y verificada; sin evidencia visual de Studio |
+| `[E6-E8]` Atender y medir       | 7         | 5      | Analítica y botón de WhatsApp; pixel y Business pendientes |
+| `[E5]` Atraer visitas           | 8         | 6      | Cupones, sitemap y robots; redes y Search Console pendientes |
+| `[E8]` Pruebas end-to-end       | 6         | 4      | QA en producción con pagos y correos; sin Lighthouse |
 
 Esta tabla se actualiza a medida que avanza el sprint. El plan no afirma que algo esté hecho antes de
 estarlo.
