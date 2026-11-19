@@ -12,8 +12,8 @@ export const site = {
   locale: "es_CO",
   city: "Colombia",
   email: "kmizs@protonmail.com",
-  whatsapp: "573103898707",
-  whatsappDisplay: "+57 310 389 8707",
+  whatsapp: "573150196386",
+  whatsappDisplay: "+57 315 019 6386",
 } as const;
 
 export const currentYear = new Date().getFullYear();
