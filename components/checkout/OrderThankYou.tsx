@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useSyncExternalStore } from "react";
+import { useEffect, useSyncExternalStore } from "react";
 
+import { trackEvent } from "@/lib/analytics";
 import { formatPrice } from "@/lib/products";
 import { readOrderSnapshot, type OrderSnapshot } from "@/lib/order-snapshot";
 import { site } from "@/lib/site";
@@ -49,6 +50,24 @@ export function OrderThankYou() {
     () => true,
     () => false,
   );
+
+  // La compra se cuenta una sola vez por pedido, aunque se recargue la página.
+  useEffect(() => {
+    if (!orderId || !snapshot) return;
+    const key = `kmizs:compra-contada:${orderId}`;
+    try {
+      if (window.sessionStorage.getItem(key)) return;
+      window.sessionStorage.setItem(key, "1");
+    } catch {
+      // Sin almacenamiento se cuenta igual una vez por montaje.
+    }
+    trackEvent("purchase", {
+      value: snapshot.total ?? snapshot.subtotal,
+      currency: "COP",
+      content_ids: snapshot.lines.map((line) => line.name),
+      num_items: snapshot.lines.reduce((count, line) => count + line.quantity, 0),
+    });
+  }, [orderId, snapshot]);
 
   if (!orderId) {
     return (
@@ -159,6 +178,12 @@ export function OrderThankYou() {
               <dt>Subtotal</dt>
               <dd>{formatPrice(snapshot.subtotal)}</dd>
             </div>
+            {snapshot.discount > 0 ? (
+              <div className="flex justify-between gap-3">
+                <dt>Descuento{snapshot.couponCode ? ` · ${snapshot.couponCode}` : ""}</dt>
+                <dd>−{formatPrice(snapshot.discount)}</dd>
+              </div>
+            ) : null}
             <div className="flex justify-between gap-3">
               <dt>
                 {snapshot.shipping === 0

@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { sendOrderEmail } from "@/lib/order-email";
+import { settlePayment } from "@/lib/orders";
 import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { isRecord } from "@/lib/request";
 import { formatPrice } from "@/lib/products";
@@ -126,6 +127,15 @@ export async function POST(request: Request) {
   const status = escapeHtml(payment.status);
   const orderId = escapeHtml(payment.external_reference);
 
+  // La base es la fuente de verdad: primero se actualiza el pedido y se libera
+  // stock o cupón si el pago se rechazó. Reenviar la notificación no duplica nada.
+  try {
+    await settlePayment(payment.external_reference, paymentId, payment.status);
+  } catch (error) {
+    console.error("No se pudo actualizar el estado del pedido desde el webhook.", error);
+    return Response.json({ error: "No pudimos actualizar el pedido." }, { status: 502 });
+  }
+
   try {
     await sendOrderEmail(
       `Actualización de pago · ${payment.external_reference} · ${payment.status}`,
@@ -140,11 +150,8 @@ export async function POST(request: Request) {
       `mercadopago-${paymentId}-${payment.status}`,
     );
   } catch (error) {
+    // El pedido ya quedó actualizado; el correo es solo una notificación.
     console.error("No se pudo enviar al equipo la actualización del pago.", error);
-    return Response.json(
-      { error: "No pudimos registrar la actualización del pago." },
-      { status: 502 },
-    );
   }
 
   return Response.json({ received: true });

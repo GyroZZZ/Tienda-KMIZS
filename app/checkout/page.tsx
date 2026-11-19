@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { TrustSignals } from "@/components/trust/TrustSignals";
+import { getCurrentUser } from "@/lib/auth";
 import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { getShippingOptions } from "@/lib/shipping";
 
@@ -11,8 +12,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function CheckoutPage() {
+// Prellena los datos con la sesión: la ruta se renderiza en cada petición.
+export const instant = false;
+
+export default async function CheckoutPage() {
   const shippingOptions = getShippingOptions();
+  const user = await getCurrentUser();
   const onlinePaymentsAvailable =
     Boolean(getMercadoPagoAccessToken()) &&
     Boolean(process.env.MERCADO_PAGO_WEBHOOK_SECRET) &&
@@ -33,6 +38,7 @@ export default function CheckoutPage() {
       <CheckoutForm
         shippingOptions={shippingOptions}
         onlinePaymentsAvailable={onlinePaymentsAvailable}
+        defaultCustomer={user ? { name: user.name, email: user.email } : null}
       />
     </div>
   );
