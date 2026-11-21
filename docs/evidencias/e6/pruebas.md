@@ -74,6 +74,8 @@ O abrir el panel y revisar **Analytics → Events** buscando `whatsapp_click`.
 
 - `03-panel-cuenta-movil.png`: panel lateral abierto a 390 px. Ocupa el 90% del ancho, deja ver el
   fondo y no bloquea la navegación completa.
+- `04-ayuda-mp-checkout.png`: checkout de producción con Mercado Pago seleccionado y la caja de ayuda
+  desplegada, con las tres tarjetas y sus resultados.
 - El botón **Entrar con cuenta demo** creó el usuario `demo@kmizs.test` en `public.users` y abrió la
   sesión sin pedir correo ni contraseña. El panel pasó a mostrar "Hola, Usuario Demo" con enlaces a
   "Ver mi cuenta", "Mis pedidos" y "Cerrar sesión".
