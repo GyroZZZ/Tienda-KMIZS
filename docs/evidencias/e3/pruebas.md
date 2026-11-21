@@ -113,7 +113,7 @@ es la que valida la firma, porque el secreto es por aplicación y no por entorno
 
 Las variables quedaron cargadas en Vercel y el sitio se redesplegó. Las tres compras se hicieron sobre
 `https://tienda-kmizs.vercel.app` con las credenciales de prueba, la cuenta de comprador de prueba y
-las tarjetas de prueba del punto 9 de [`docs/mercado-pago-sandbox.md`](../mercado-pago-sandbox.md).
+las tarjetas de prueba del punto 9 de [`docs/mercado-pago-sandbox.md`](../../mercado-pago-sandbox.md).
 
 ### 8.1 Los tres estados
 
