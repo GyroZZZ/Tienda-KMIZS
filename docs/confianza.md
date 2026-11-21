@@ -2,7 +2,7 @@
 
 **Tarjeta:** `[E4] Generar confianza: políticas, páginas legales, FAQ y confirmación de pedido`
 **Sprint:** 2 · 5 puntos
-**Responsable:** Horacio Campillo · **Revisor:** Ivan Arroyo
+**Responsable:** Ivan Arroyo · **Revisor:** Eduardo Cambronel
 **Fecha de cierre:** 9 de noviembre de 2026
 
 ## 1. Objetivo

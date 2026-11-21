@@ -97,12 +97,12 @@ no se realizó. La tarjeta queda en `🎯 Sprint 3 Backlog` con 11 de 12 subtare
 | #   | Acción                                                                                                | Responsable | Fecha límite          |
 | --- | ----------------------------------------------------------------------------------------------------- | ----------- | --------------------- |
 | 1   | Revisar `[E3]` de punta a punta: checkout en móvil, los tres estados de pago y la política de envíos. | Ivan        | 18 nov                |
-| 2   | Verificar un dominio en Resend para dejar de enviar desde `onboarding@resend.dev`.                    | Horacio     | 20 nov                |
-| 3   | Iniciar el KYC para activar credenciales de producción de Mercado Pago.                               | Horacio     | 27 nov                |
-| 4   | Cotizar con la transportadora y reemplazar las tarifas de referencia por tarifas reales.              | Horacio     | 27 nov                |
+| 2   | Verificar un dominio en Resend para dejar de enviar desde `onboarding@resend.dev`.                    | Jesús       | 20 nov                |
+| 3   | Iniciar el KYC para activar credenciales de producción de Mercado Pago.                               | Eduardo     | 27 nov                |
+| 4   | Cotizar con la transportadora y reemplazar las tarifas de referencia por tarifas reales.              | Ivan        | 27 nov                |
 | 5   | Confirmar una entrega real del webhook con credenciales de producción.                                | Horacio     | Al activar producción |
-| 6   | Migrar de Preferencias a Orders API cuando el volumen lo justifique.                                  | Horacio     | Sprint 5              |
-| 7   | Persistencia en Supabase para productos, cuentas e historial (`[E5]`).                                | Por asignar | Sprint 5              |
+| 6   | Migrar de Preferencias a Orders API cuando el volumen lo justifique.                                  | Eduardo     | Sprint 5              |
+| 7   | Persistencia en Supabase para productos, cuentas e historial (`[E5]`).                                | Jesús       | Sprint 5              |
 | 8   | Revisar el copy del checkout contra el estado real de la configuración en cada entrega.               | Todos       | Permanente            |
 
 ---

@@ -2,6 +2,7 @@
 
 **Tarjeta:** `[E6-E8] Atender y medir` · **Sprint:** 4 (18 – 23 nov 2026)
 **Sitio:** https://tienda-kmizs.vercel.app
+**Responsable:** Jesús Bohorques · **Revisor:** Horacio Campillo
 
 > Lo que se mide, dónde se ve y qué falta. Nada de esto envía datos personales: los eventos llevan nombre de producto, cantidad y valor, nunca correo, teléfono o dirección.
 

@@ -61,7 +61,7 @@ El sprint se cumplió en alcance, pero **no en el DoD completo**: la revisión p
 | --- | ------------------------------------------------------------------------------------------------------------- | --------------- | ------------ |
 | 1   | Invitar a Eduardo y Jesus como colaboradores del repositorio con permiso de escritura y al tablero de Trello. | Horacio         | 3 nov        |
 | 2   | Cada integrante configura su propio acceso a GitHub y clona el repositorio en su equipo.                      | Todos           | 4 nov        |
-| 3   | Definir la estrategia de imágenes del catálogo (mockups, fotos de muestra o mixta) y documentarla.            | Ivan            | 4 nov        |
+| 3   | Definir la estrategia de imágenes del catálogo (mockups, fotos de muestra o mixta) y documentarla.            | Eduardo         | 4 nov        |
 | 4   | Rotar la revisión: ninguna tarjeta se cierra sin que la revise alguien distinto de quien la construyó.        | Todos           | Permanente   |
 | 5   | Cerrar el DoD del Sprint 1: revisión de `[E1]` y `[E1-E2]` por otro integrante y capturas adjuntas.           | Eduardo / Jesus | 4 nov        |
 | 6   | Probar en móvil en cada entrega, no al final del sprint.                                                      | Todos           | Permanente   |

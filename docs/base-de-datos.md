@@ -2,6 +2,7 @@
 
 **Tarjeta:** `[E5] Persistencia` · **Sprint:** 4 (18 – 23 nov 2026)
 **Proyecto de Supabase:** `ydaekcscnyloqfzzwmzb` · **Región:** `us-west-2` (pooler)
+**Responsable:** Horacio Campillo · **Revisor:** Ivan Arroyo
 
 > Documento de la base real. Todo lo que aparece aquí se aplicó con las migraciones de `supabase/migrations/` y se verificó contra el proyecto remoto el 18 de noviembre de 2026.
 
