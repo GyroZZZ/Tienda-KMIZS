@@ -1,7 +1,7 @@
 # Catálogo, costos y precios
 
 **Tarjeta:** `[E1-E2] Definir catálogo inicial, costos y precios` · **Puntos:** 8
-**Sprint:** 1 (27 oct – 2 nov) · **Responsable:** Ivan Arroyo (PO) · **Revisa:** Horacio Campillo
+**Sprint:** 1 (27 oct – 2 nov) · **Responsable:** Ivan Arroyo (PO) · **Revisa:** Jesús Bohorques
 
 > Documento base del catálogo. Los costos son de referencia del ejercicio y deben confirmarse con cotización formal antes de la primera compra real.
 

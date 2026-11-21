@@ -3,7 +3,7 @@
 **Proyecto:** KMIZS — tienda de camisetas · **Curso:** Comercio Electrónico
 **Sprint:** 3 · **10 – 16 de noviembre de 2026**
 **Tarjeta:** `[E3] Habilitar compra en móvil: carrito, checkout, pagos y envíos` · 21 puntos
-**Responsable:** Horacio Campillo · **Revisor:** Ivan Arroyo
+**Responsable:** Jesús Bohorques · **Revisor:** Eduardo Cambronel
 
 ---
 

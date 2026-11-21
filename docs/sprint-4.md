@@ -3,7 +3,7 @@
 **Proyecto:** KMIZS — tienda de camisetas · **Curso:** Comercio Electrónico
 **Sprint:** 4 · **17 – 23 de noviembre de 2026**
 **Tarjetas:** 4 · 40 puntos
-**Responsable:** Horacio Campillo · **Revisor:** Ivan Arroyo
+**Responsable:** Eduardo Cambronel · **Revisor:** Jesús Bohorques
 
 | Tarjeta                                                                   | Puntos |
 | ------------------------------------------------------------------------- | ------ |
