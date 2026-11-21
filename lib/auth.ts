@@ -4,6 +4,7 @@ import { createHmac, randomBytes, scrypt as scryptCallback, timingSafeEqual } fr
 import { promisify } from "node:util";
 
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 
 import { query, queryOne } from "@/lib/db";
 
@@ -116,6 +117,10 @@ function readSessionUserId(token: string | undefined): string | null {
 }
 
 export async function getCurrentUser(): Promise<AccountUser | null> {
+  // La comprobación de caducidad usa Date.now(); esto excluye la función del
+  // prerenderizado del shell estático en Next 16 con Cache Components.
+  await connection();
+
   const store = await cookies();
   const userId = readSessionUserId(store.get(SESSION_COOKIE)?.value);
   if (!userId) return null;

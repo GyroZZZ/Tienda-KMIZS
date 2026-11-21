@@ -20,6 +20,12 @@ interface CheckoutFormProps {
   shippingOptions: ShippingOptions;
   onlinePaymentsAvailable: boolean;
   defaultCustomer: { name: string; email: string } | null;
+  mpDemo: {
+    email: string;
+    password: string;
+    loginUrl: string;
+    cards: { result: string; card: string; holder: string }[];
+  };
 }
 
 interface CheckoutTotals {
@@ -65,6 +71,7 @@ export function CheckoutForm({
   shippingOptions,
   onlinePaymentsAvailable,
   defaultCustomer,
+  mpDemo,
 }: CheckoutFormProps) {
   const router = useRouter();
   const { items, ready, clearCart, getProduct } = useCart();
@@ -79,6 +86,7 @@ export function CheckoutForm({
   const [couponMessage, setCouponMessage] = useState("");
   const [couponError, setCouponError] = useState("");
   const [checkingCoupon, setCheckingCoupon] = useState(false);
+  const [copyMessage, setCopyMessage] = useState("");
 
   const lines = useMemo(
     () =>
@@ -102,6 +110,15 @@ export function CheckoutForm({
   const shippingRate = freeShipping ? 0 : (selectedZone?.rate ?? null);
   const discount = Math.min(coupon?.discount ?? 0, subtotal);
   const estimatedTotal = shippingRate === null ? null : subtotal - discount + shippingRate;
+
+  async function copyDemo(value: string, label: string) {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopyMessage(`${label} copiado.`);
+    } catch {
+      setCopyMessage("No se pudo copiar. Está en docs/mercado-pago-sandbox.md.");
+    }
+  }
 
   async function applyCoupon() {
     const code = couponInput.trim().toUpperCase();
@@ -519,6 +536,65 @@ export function CheckoutForm({
                 ? "No encontramos este municipio en las zonas configuradas. El pago digital estará disponible cuando el equipo confirme su cobertura."
                 : "Elige tu departamento y municipio para habilitar el pago digital."}
             </p>
+          ) : null}
+
+          {paymentMethod === "mercado_pago" ? (
+            <aside
+              aria-label="Ayuda para la compra de prueba en Mercado Pago"
+              className="border border-ink/15 bg-bone p-4"
+            >
+              <h3 className="text-sm font-semibold">Cómo pagar en la prueba</h3>
+              <p className="mt-2 text-xs leading-relaxed text-ink/70">
+                Abre Mercado Pago en otra pestaña, entra con la cuenta de prueba y elige una tarjeta
+                guardada. Usa un correo de ejemplo en el formulario de la tienda, no tu correo real
+                de Mercado Pago.
+              </p>
+
+              <ul className="mt-3 space-y-1 text-xs">
+                {mpDemo.cards.map((demoCard) => (
+                  <li key={demoCard.card} className="flex flex-wrap gap-x-2">
+                    <strong className="min-w-20">{demoCard.result}</strong>
+                    <span>
+                      {demoCard.card}
+                      <span className="text-ink/55"> · titular {demoCard.holder}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2 text-xs text-ink/55">CVV 123 si la pasarela lo solicita.</p>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => copyDemo(mpDemo.email, "Correo")}
+                  className="min-h-10 border border-ink/25 px-3 text-xs font-semibold tracking-[0.06em] uppercase hover:border-ink"
+                >
+                  Copiar correo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => copyDemo(mpDemo.password, "Clave")}
+                  className="min-h-10 border border-ink/25 px-3 text-xs font-semibold tracking-[0.06em] uppercase hover:border-ink"
+                >
+                  Copiar clave
+                </button>
+                <a
+                  href={mpDemo.loginUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex min-h-10 items-center border border-ink/15 bg-ink px-3 text-xs font-semibold tracking-[0.06em] text-bone uppercase hover:bg-accent"
+                >
+                  Abrir Mercado Pago
+                  <span className="sr-only"> (se abre en una pestaña nueva)</span>
+                </a>
+              </div>
+
+              {copyMessage ? (
+                <p role="status" className="mt-2 text-xs text-ink/60">
+                  {copyMessage}
+                </p>
+              ) : null}
+            </aside>
           ) : null}
         </fieldset>
 

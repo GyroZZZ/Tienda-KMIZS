@@ -69,3 +69,23 @@ O abrir el panel y revisar **Analytics → Events** buscando `whatsapp_click`.
   evento aparte.
 - Limitación matizada: Vercel captura UTMs de la navegación, pero no se guardan en `orders`.
 - Sección de evidencia enlazada a esta carpeta.
+
+## 5. Panel lateral de cuenta y ayuda de Mercado Pago (21 de noviembre)
+
+- `03-panel-cuenta-movil.png`: panel lateral abierto a 390 px. Ocupa el 90% del ancho, deja ver el
+  fondo y no bloquea la navegación completa.
+- El botón **Entrar con cuenta demo** creó el usuario `demo@kmizs.test` en `public.users` y abrió la
+  sesión sin pedir correo ni contraseña. El panel pasó a mostrar "Hola, Usuario Demo" con enlaces a
+  "Ver mi cuenta", "Mis pedidos" y "Cerrar sesión".
+- El panel se cierra con la X y con `Escape`; al cerrarlo el foco vuelve al botón "Abrir mi cuenta".
+- Al marcar **Pago digital · Mercado Pago** en el checkout aparece una caja con:
+  - Mastercard terminada en 3564 → aprobado (`APRO`).
+  - Visa terminada en 6260 → rechazado (`OTHE`).
+  - Visa Débito terminada en 1904 → pendiente (`CONT`).
+  - Botones **Copiar correo** y **Copiar clave** y enlace **Abrir Mercado Pago**.
+- Se comprobó que **Copiar correo** escribe en el portapapeles y muestra "Correo copiado." en un
+  `role="status"`.
+- Los enlaces del panel llevan `prefetch={false}` porque en Next 16 el prefetch de `/cuenta` disparaba
+  el aviso de `Date.now()` durante el prerender. Además `getCurrentUser()` llama a `connection()` para
+  quedar excluida del prerender del shell estático. Sin esos dos ajustes, `/cuenta` y
+  `/cuenta/pedidos` mostraban el error al navegar o al prefetchear.
