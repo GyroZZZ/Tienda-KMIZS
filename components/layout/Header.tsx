@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
+import { AccountMenu } from "@/components/account/AccountMenu";
 import { useCart } from "@/components/cart/CartProvider";
 import { mainNav, site } from "@/lib/site";
 
@@ -52,6 +53,8 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <AccountMenu />
+
           <Link
             href="/carrito"
             aria-label="Carrito"

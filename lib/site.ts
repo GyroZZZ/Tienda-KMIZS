@@ -45,7 +45,6 @@ export const mainNav = [
   { href: "/productos", label: "Camisetas" },
   { href: "/guia-de-tallas", label: "Guía de tallas" },
   { href: "/contacto", label: "Contacto" },
-  { href: "/cuenta", label: "Cuenta" },
 ] as const;
 
 export const footerNav = [

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { CheckoutForm } from "@/components/checkout/CheckoutForm";
 import { TrustSignals } from "@/components/trust/TrustSignals";
 import { getCurrentUser } from "@/lib/auth";
+import { MP_DEMO } from "@/lib/demo";
 import { getMercadoPagoAccessToken } from "@/lib/payments";
 import { getShippingOptions } from "@/lib/shipping";
 
@@ -39,6 +40,7 @@ export default async function CheckoutPage() {
         shippingOptions={shippingOptions}
         onlinePaymentsAvailable={onlinePaymentsAvailable}
         defaultCustomer={user ? { name: user.name, email: user.email } : null}
+        mpDemo={MP_DEMO}
       />
     </div>
   );

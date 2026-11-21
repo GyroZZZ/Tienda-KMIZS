@@ -1,7 +1,7 @@
 # Mercado Pago en modo de prueba
 
 **Tarjeta:** `[E3] Habilitar compra en móvil: carrito, checkout, pagos y envíos` · **Sprint:** 3
-**Última actualización:** 19 de noviembre de 2026
+**Última actualización:** 21 de noviembre de 2026
 
 Guía para probar el checkout de KMIZS sin mover dinero real. El código ya está en
 `app/api/checkout/route.ts`, `app/api/payments/webhook/route.ts` y `app/api/payments/status/route.ts`.
@@ -155,7 +155,10 @@ Con `http://localhost:3000`, `auto_return` y el webhook fallan: no es un error d
 2. Agrega una prenda al carrito y ve a `/checkout`. Con 1 prenda aparece la tarifa de envío; con 2 o
    más aparece "Gratis".
 3. Completa los datos con un correo distinto al de tu cuenta de Mercado Pago (la pasarela rechaza
-   al comprador si coincide con el vendedor), elige **Mercado Pago** y envía el pedido.
+   al comprador si coincide con el vendedor), elige **Mercado Pago** y envía el pedido. Al marcar esa
+   opción aparece en el propio checkout una caja de ayuda con los botones **Copiar correo** y
+   **Copiar clave**, el enlace **Abrir Mercado Pago** y la lista de tarjetas sembradas con su
+   resultado (aprobado, rechazado o pendiente).
 4. En el checkout elige **Ingresar con mi cuenta** y entra con el correo y la clave del comprador de
    prueba de la tabla anterior. No hace falta código de 6 dígitos en este flujo.
 5. Elige una de las **tarjetas sembradas** que muestra la cuenta (no escribas los datos a mano) y
