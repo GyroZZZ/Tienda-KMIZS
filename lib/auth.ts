@@ -116,11 +116,11 @@ function readSessionUserId(token: string | undefined): string | null {
   }
 }
 
-export async function getCurrentUser(): Promise<AccountUser | null> {
-  // La comprobación de caducidad usa Date.now(); esto excluye la función del
-  // prerenderizado del shell estático en Next 16 con Cache Components.
-  await connection();
-
+/**
+ * Lee la sesión y el usuario. No llama a `connection()`: úsala solo después de
+ * haber esperado la petición (ver `getCurrentUser`).
+ */
+export async function readCurrentUser(): Promise<AccountUser | null> {
   const store = await cookies();
   const userId = readSessionUserId(store.get(SESSION_COOKIE)?.value);
   if (!userId) return null;
@@ -131,6 +131,13 @@ export async function getCurrentUser(): Promise<AccountUser | null> {
   );
 
   return row ? { id: row.id, name: row.name, email: row.email } : null;
+}
+
+export async function getCurrentUser(): Promise<AccountUser | null> {
+  // La comprobación de caducidad usa Date.now(); esto excluye la función del
+  // prerenderizado del shell estático en Next 16 con Cache Components.
+  await connection();
+  return readCurrentUser();
 }
 
 export interface RegisterResult {

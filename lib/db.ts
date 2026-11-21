@@ -9,12 +9,29 @@ import { Pool, type PoolClient, type QueryResultRow } from "pg";
  * componentes de servidor, server actions y route handlers. El navegador nunca
  * recibe la cadena de conexión ni puede leer pedidos o cupones directamente.
  *
- * En producción se usa el pooler de Supabase, que ya multiplexa conexiones; por
- * eso el pool local se mantiene pequeño y se reutiliza entre invocaciones.
+ * En producción se usa el pooler de Supabase en **modo transacción** (puerto
+ * 6543): reparte cada consulta entre un número pequeño de conexiones reales y
+ * admite muchas más instancias que el modo sesión, que se corta en 15. El pool
+ * local se mantiene mínimo y se reutiliza entre invocaciones.
  */
 
 declare global {
   var __kmizsPool: Pool | undefined;
+}
+
+/**
+ * Fallos que ocurren al **conseguir** la conexión, no al ejecutar la consulta.
+ * Solo esos se reintentan: repetir una consulta que ya llegó a la base podría
+ * duplicar una escritura. Los tiempos de espera quedan fuera para no duplicar
+ * la latencia que ya consumió el primer intento.
+ */
+const CONNECT_FAILURE =
+  /max clients reached|ECONNREFUSED|ENOTFOUND|EAI_AGAIN|getaddrinfo/i;
+
+function isConnectFailure(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const message = (error as { message?: unknown }).message;
+  return typeof message === "string" && CONNECT_FAILURE.test(message);
 }
 
 function createPool(): Pool {
@@ -26,13 +43,33 @@ function createPool(): Pool {
     );
   }
 
-  return new Pool({
+  const pool = new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false },
-    max: 5,
+    max: 2,
     idleTimeoutMillis: 10_000,
-    connectionTimeoutMillis: 10_000,
+    connectionTimeoutMillis: 5_000,
+    // Deja que la instancia termine cuando no hay trabajo pendiente.
+    allowExitOnIdle: true,
   });
+
+  // Sin este manejador, un cliente que el servidor cierra en reposo emite un
+  // error sin escuchar y tumba la invocación completa.
+  pool.on("error", (error) => {
+    console.error("[db] el servidor cerró una conexión inactiva:", error.message);
+  });
+
+  return pool;
+}
+
+async function withConnectRetry<T>(run: () => Promise<T>): Promise<T> {
+  try {
+    return await run();
+  } catch (error) {
+    if (!isConnectFailure(error)) throw error;
+    await new Promise((resolve) => setTimeout(resolve, 150));
+    return run();
+  }
 }
 
 export function getPool(): Pool {
@@ -46,8 +83,10 @@ export async function query<T extends QueryResultRow>(
   sql: string,
   params: unknown[] = [],
 ): Promise<T[]> {
-  const result = await getPool().query<T>(sql, params);
-  return result.rows;
+  return withConnectRetry(async () => {
+    const result = await getPool().query<T>(sql, params);
+    return result.rows;
+  });
 }
 
 export async function queryOne<T extends QueryResultRow>(
@@ -60,7 +99,7 @@ export async function queryOne<T extends QueryResultRow>(
 
 /** Transacción explícita para operaciones de varios pasos. */
 export async function withTransaction<T>(run: (client: PoolClient) => Promise<T>): Promise<T> {
-  const client = await getPool().connect();
+  const client = await withConnectRetry(() => getPool().connect());
   try {
     await client.query("begin");
     const result = await run(client);
