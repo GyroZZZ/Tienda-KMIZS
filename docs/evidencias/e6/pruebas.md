@@ -91,3 +91,63 @@ O abrir el panel y revisar **Analytics → Events** buscando `whatsapp_click`.
   el aviso de `Date.now()` durante el prerender. Además `getCurrentUser()` llama a `connection()` para
   quedar excluida del prerender del shell estático. Sin esos dos ajustes, `/cuenta` y
   `/cuenta/pedidos` mostraban el error al navegar o al prefetchear.
+
+## 6. Conexiones agotadas del pooler (21 de noviembre)
+
+### Síntoma
+
+Al volver al panel de cuenta después de un rato aparecía como si no hubiera sesión, el botón
+**Entrar con cuenta demo** respondía "no pudimos conectar" y al pasar del carrito al checkout salía
+"This page couldn't load" de forma intermitente.
+
+### Evidencia en los logs de Vercel
+
+`get_runtime_errors` del proyecto `tienda-kmizs`, ventana de 7 días:
+
+```
+error: (EMAXCONNSESSION) max clients reached in session mode
+       - max clients are limited to pool_size: 15
+count=106
+routes=/api/account/me, /checkout, /checkout.rsc, /carrito, /productos,
+       /productos/basica-hueso, /productos/oversize-tinta, /cuenta/pedidos.rsc, ...
+first=2026-11-19T22:36:22Z (17:36 en Colombia)
+last=2026-11-21T22:48:14Z  (17:48 en Colombia)
+lastDeployment=dpl_Hb4wSAoLqs6kPcykB64bFYk2tS4x  (el deployment anterior al arreglo)
+```
+
+### Causa
+
+`DATABASE_URL` apuntaba al pooler de Supabase en **modo sesión** (puerto `5432`). Ese modo reserva una
+conexión real por cliente y el proyecto admite 15. Cada instancia de Vercel abría un pool de 5, así
+que al segundo o tercer arranque en frío se agotaba el cupo y cualquier consulta fallaba: la lectura
+de la sesión, el login demo y el render del checkout, que consulta la cuenta para prellenar los datos.
+
+### Corrección
+
+- `DATABASE_URL` pasa al pooler en **modo transacción** (puerto `6543`), que comparte las conexiones
+  entre consultas.
+- El pool por instancia baja a 2 conexiones, con `allowExitOnIdle` y un manejador de errores para
+  clientes que el servidor cierra en reposo.
+- Se reintenta una sola vez y solo cuando falla **conseguir** la conexión (cupo agotado, DNS,
+  conexión rechazada). Una consulta que ya llegó a la base nunca se repite.
+- `/api/account/me` responde 503 si no puede leer la sesión y el panel muestra el aviso con
+  **Reintentar** (`05-panel-cuenta-sin-conexion.png`), en lugar de mostrar el formulario de acceso.
+- `/checkout` continúa como invitado si falla la lectura de la sesión, en vez de romper la página.
+- `lib/auth.ts` separa `readCurrentUser()` de `getCurrentUser()` para que `connection()` quede fuera
+  de los `try` y no capture la señal de prerenderizado de Next 16.
+
+### Verificación
+
+- **Local, con la base inalcanzable a propósito** (puerto `6544`): `/api/account/me` con sesión
+  devuelve `503` y `{"user":null,"unavailable":true}`; el panel muestra el aviso con reintento;
+  `/checkout` responde `200` y sigue como invitado.
+- **Local, con la base real**: 45 peticiones concurrentes a `/api/account/me`, `/checkout` y
+  `/carrito` con sesión → todas `200`.
+- **Producción, deployment `dpl_2wyMD3RFLiWkUWNNZEqXnzHs7ze8`** (commit `793d096`, listo a las
+  17:56 de Colombia): dos rondas de 100 peticiones concurrentes sobre `/api/account/me`, `/checkout`,
+  `/carrito`, `/productos` y `/productos/basica-hueso` → `100/100` y `100/100` en `200`; las 40
+  lecturas de sesión devolvieron `demo@kmizs.test`; la petición más lenta tardó 1,7 s (instancia en
+  frío).
+- `get_runtime_errors` no registra ningún `EMAXCONNSESSION` posterior a las 17:48; el último error
+  pertenece al deployment anterior al arreglo.
+- `/cuenta` y `/cuenta/pedidos` cargan con la sesión demo y muestran el nombre y el historial vacío.
