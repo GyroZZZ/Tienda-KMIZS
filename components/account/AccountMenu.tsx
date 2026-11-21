@@ -25,14 +25,19 @@ export function AccountMenu() {
   const [user, setUser] = useState<MenuUser | null | undefined>(undefined);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [loadFailed, setLoadFailed] = useState(false);
 
   const loadUser = useCallback(async () => {
+    setLoadFailed(false);
     try {
       const response = await fetch("/api/account/me", { cache: "no-store" });
+      if (!response.ok) throw new Error(`El servidor respondió ${response.status}`);
       const data = (await response.json()) as { user?: MenuUser | null };
       setUser(data.user ?? null);
     } catch {
-      setUser(null);
+      // No sabemos si hay sesión: no mostramos el formulario de acceso.
+      setUser(undefined);
+      setLoadFailed(true);
     }
   }, []);
 
@@ -73,9 +78,10 @@ export function AccountMenu() {
         return;
       }
       setUser(result.user);
+      setLoadFailed(false);
       router.refresh();
     } catch {
-      setError("No se pudo conectar. Inténtalo de nuevo.");
+      setError("No pudimos conectar con la tienda. Revisa tu conexión e inténtalo otra vez.");
     } finally {
       setBusy(false);
     }
@@ -141,7 +147,22 @@ export function AccountMenu() {
           </div>
 
           <div className="flex-1 overflow-y-auto px-5 py-6">
-            {user === undefined ? (
+            {loadFailed ? (
+              <div role="alert" className="border border-accent/40 bg-accent/5 p-4">
+                <p className="text-sm font-semibold">No pudimos consultar tu sesión</p>
+                <p className="mt-2 text-sm leading-relaxed text-ink/70">
+                  La tienda no recibió respuesta del servidor. Tu sesión sigue guardada; vuelve a
+                  intentarlo en unos segundos.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => void loadUser()}
+                  className="mt-4 min-h-11 border border-ink/25 px-4 text-xs font-semibold tracking-[0.08em] uppercase hover:border-ink"
+                >
+                  Reintentar
+                </button>
+              </div>
+            ) : user === undefined ? (
               <p className="text-sm text-ink/60" role="status">
                 Cargando…
               </p>

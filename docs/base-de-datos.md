@@ -176,7 +176,7 @@ El catálogo se lee con `cacheLife('minutes')` y la etiqueta `catalog`, así que
 | `NEXT_PUBLIC_META_PIXEL_ID`          | preview y producción           | Pixel de Meta; si falta, no se carga                          |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | producción                   | Verificación de Search Console                                |
 
-`DATABASE_URL` usa el pooler (`aws-1-us-west-2.pooler.supabase.com:5432`) porque el host directo `db.<ref>.supabase.co` no resuelve desde esta red. La cadena lleva la contraseña de la base: no se imprime, no se commitea y no se expone con prefijo `NEXT_PUBLIC_`.
+`DATABASE_URL` usa el pooler **en modo transacción** (`aws-1-us-west-2.pooler.supabase.com:6543`) porque el host directo `db.<ref>.supabase.co` no resuelve desde esta red. El puerto `5432` es el modo sesión: reserva una conexión real por cliente y el proyecto solo admite 15, así que con varias instancias de Vercel devolvía `EMAXCONNSESSION`. El modo transacción comparte las conexiones entre consultas y tolera muchas más instancias. La cadena lleva la contraseña de la base: no se imprime, no se commitea y no se expone con prefijo `NEXT_PUBLIC_`.
 
 Generar secretos nuevos:
 
