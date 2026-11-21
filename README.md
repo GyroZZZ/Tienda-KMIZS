@@ -153,8 +153,11 @@ En el checkout, el municipio se elige de una lista dependiente del departamento.
 | 1      | Base en código, identidad de marca y despliegue en Vercel                 | Completado                                                                |
 | 2      | Catálogo, fichas, guía de tallas, políticas, FAQ y confirmación de pedido | Completado; el correo al cliente queda pendiente de un dominio verificado |
 | 3      | Carrito persistente, checkout, Mercado Pago sandbox y pedidos             | Completado (10–16 nov); ver [`docs/sprint-3.md`](docs/sprint-3.md)        |
-| 4      | Base de datos, WhatsApp, analítica, SEO, cupón y QA                       | Completado (17–23 nov); ver [`docs/sprint-4.md`](docs/sprint-4.md)       |
+| 4      | Base de datos, WhatsApp, analítica, SEO, cupón y QA                       | Cierre documental 19 nov: 1 tarjeta en ✅ Hecho y 3 en 🔧 En progreso; ver [`docs/sprint-4.md`](docs/sprint-4.md) |
 | 5      | Lanzamiento, tablero de KPIs, documentación y presentación                | Pendiente (24–30 nov)                                                     |
+
+Para escribir el resumen día por día del proyecto, el índice de fuentes, la cronología de commits y
+el estado de cada tarjeta están en [`docs/fuentes-sprint-daily.md`](docs/fuentes-sprint-daily.md).
 
 La base legal, las decisiones y las limitaciones del contenido de confianza están en
 [`docs/confianza.md`](docs/confianza.md). La evidencia de pruebas, en

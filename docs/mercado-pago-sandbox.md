@@ -1,7 +1,7 @@
 # Mercado Pago en modo de prueba
 
 **Tarjeta:** `[E3] Habilitar compra en móvil: carrito, checkout, pagos y envíos` · **Sprint:** 3
-**Última actualización:** 16 de noviembre de 2026
+**Última actualización:** 19 de noviembre de 2026
 
 Guía para probar el checkout de KMIZS sin mover dinero real. El código ya está en
 `app/api/checkout/route.ts`, `app/api/payments/webhook/route.ts` y `app/api/payments/status/route.ts`.

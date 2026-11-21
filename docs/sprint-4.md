@@ -759,14 +759,14 @@ Si la revisión cruzada no ocurre, se cierra dejando constancia explícita, como
 
 ---
 
-## 12. Estado de las subtareas (18 de noviembre)
+## 12. Estado de las subtareas (21 de noviembre)
 
-| Tarjeta                         | Subtareas | Hechas | Estado                                             |
-| ------------------------------- | --------- | ------ | -------------------------------------------------- |
-| `[E5]` Persistencia en Supabase | 12        | 10     | Implementada y verificada; sin evidencia visual de Studio |
-| `[E6-E8]` Atender y medir       | 7         | 5      | Analítica y botón de WhatsApp; pixel y Business pendientes |
-| `[E5]` Atraer visitas           | 8         | 6      | Cupones, sitemap y robots; redes y Search Console pendientes |
-| `[E8]` Pruebas end-to-end       | 6         | 4      | QA en producción con pagos y correos; sin Lighthouse |
+| Tarjeta                         | Subtareas | Hechas | Lista de Trello      | Pendiente |
+| ------------------------------- | --------- | ------ | -------------------- | --------- |
+| `[E5]` Persistencia en Supabase | 10        | 10     | ✅ Hecho             | —         |
+| `[E6-E8]` Atender y medir       | 7         | 5      | 🔧 En progreso       | WhatsApp Business y verificación del pixel |
+| `[E5]` Atraer visitas           | 8         | 5      | 🔧 En progreso       | Redes, piezas de contenido y Search Console |
+| `[E8]` Pruebas end-to-end       | 6         | 3      | 🔧 En progreso       | Matriz de dispositivos, revisión de enlaces y Lighthouse |
 
 Esta tabla se actualiza a medida que avanza el sprint. El plan no afirma que algo esté hecho antes de
-estarlo.
+estarlo. El detalle día por día está en [`fuentes-sprint-daily.md`](fuentes-sprint-daily.md).
