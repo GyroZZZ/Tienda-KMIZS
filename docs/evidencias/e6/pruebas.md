@@ -212,6 +212,9 @@ seguridad de Next 16.4.3), sesión demo y un pedido de contraentrega de una pren
   Pago sigue **PENDIENTE DE CONFIRMACIÓN**.
 - `/cuenta`: "Confirmados 2" y "Último pedido: KM-05A92260… · pedido confirmado".
 - `06-pedidos-confirmados-movil.png` y `07-gracias-contraentrega-movil.png`: capturas a 390 px.
+- Producción (`https://tienda-kmizs.vercel.app`, deployment `dpl_EMUqre6tS4NbXLiwxg3Fiesej3ep`,
+  commit `7148a15`): con la sesión demo, `/cuenta/pedidos` muestra **PEDIDO CONFIRMADO** en los dos
+  pedidos de contraentrega y **PENDIENTE DE CONFIRMACIÓN** en el de Mercado Pago.
 
 Nota: el entorno local tiene `SHIPPING_RATES_CONFIRMED=false`, por eso el pedido de prueba muestra
 "Total por cotizar" y "falta cotizar el envío a tu municipio". En producción las tarifas sí están
