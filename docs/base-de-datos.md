@@ -4,7 +4,7 @@
 **Proyecto de Supabase:** `ydaekcscnyloqfzzwmzb` · **Región:** `us-west-2` (pooler)
 **Responsable:** Horacio Campillo · **Revisor:** Ivan Arroyo
 
-> Documento de la base real. Todo lo que aparece aquí se aplicó con las migraciones de `supabase/migrations/` y se verificó contra el proyecto remoto el 18 de noviembre de 2026.
+> Documento de la base real. Todo lo que aparece aquí se aplicó con las migraciones de `supabase/migrations/` y se verificó contra el proyecto remoto el 23 de noviembre de 2026.
 
 ---
 
@@ -34,21 +34,23 @@ La consigna pedía tres datos: nombre, correo y contraseña. Con una tabla propi
 
 | Tabla                  | Filas hoy | Para qué                                                                 |
 | ---------------------- | --------- | ------------------------------------------------------------------------ |
-| `users`                | 1         | Cuentas de cliente: nombre, correo único y hash de contraseña             |
+| `users`                | 2         | Cuentas de cliente: nombre, correo único y hash de contraseña             |
 | `products`             | 10        | Contenido, precio y orden del catálogo                                    |
 | `product_colors`       | 14        | Colores por referencia con su hexadecimal                                 |
 | `product_sizes`        | 40        | Stock por talla (`S`, `M`, `L`, `XL`)                                     |
 | `coupons`              | 4         | Códigos con porcentaje, mínimo, usos, vigencia y estado                   |
-| `orders`               | 4         | Cabecera del pedido, totales, estado y dueño opcional                     |
-| `order_items`          | 4         | Líneas con copia de nombre, color, talla, precio unitario y total         |
-| `coupon_redemptions`   | 1         | Canjes por pedido y correo, con `released_at` para devolver el uso        |
+| `orders`               | 7         | Cabecera del pedido, totales, estado y dueño opcional                     |
+| `order_items`          | 7         | Líneas con copia de nombre, color, talla, precio unitario y total         |
+| `coupon_redemptions`   | 2         | Canjes por pedido y correo, con `released_at` para devolver el uso        |
 
-Las cuatro filas de `orders` son las compras de prueba del 19 de noviembre (detalle en
-`docs/evidencias/e5/pruebas.md`). Antes de la QA las tablas estaban vacías. Cada compra descuenta
-stock; los pedidos pendientes lo retienen hasta que se confirman, se rechazan o vencen. Para devolver
-el inventario después de una demostración, ver el apartado 8.
+Los pedidos son las compras de prueba del 19 de noviembre (detalle en
+`docs/evidencias/e5/pruebas.md`) más las tres compras de demostración del 23 de noviembre. Antes de
+la QA las tablas estaban vacías. Cada compra descuenta stock; los pedidos de Mercado Pago lo retienen
+hasta que el pago se aprueba, se rechaza o vence, y los de contraentrega quedan confirmados y
+retenidos porque se cobran al entregar. Para devolver el inventario después de una demostración, ver
+el apartado 8.
 
-**Tipos:** `product_type` (`basica`, `grafica`, `personalizada`), `product_fit` (`regular`, `oversize`), `product_size` (`S`, `M`, `L`, `XL`), `payment_method` (`mercado_pago`, `cash_on_delivery`) y `order_status` (`pending`, `in_process`, `approved`, `rejected`, `cancelled`, `refunded`).
+**Tipos:** `product_type` (`basica`, `grafica`, `personalizada`), `product_fit` (`regular`, `oversize`), `product_size` (`S`, `M`, `L`, `XL`), `payment_method` (`mercado_pago`, `cash_on_delivery`) y `order_status` (`pending`, `in_process`, `approved`, `confirmed`, `rejected`, `cancelled`, `refunded`).
 
 ### Reglas que viven en la base
 
@@ -69,7 +71,7 @@ el inventario después de una demostración, ver el apartado 8.
 | `place_order(...)`               | `POST /api/checkout`                        | Pedido + líneas + cupón + stock en una transacción; calcula totales con precios de la base |
 | `settle_payment(code, id, status)` | Webhook y `/api/payments/status`          | Cambia el estado una sola vez; al rechazar libera stock y cupón                |
 | `release_order_stock(order_id)`  | `settle_payment` y vencimiento              | Idempotente: solo devuelve stock si `stock_released_at` es nulo                |
-| `release_expired_orders(72)`     | Cron diario `/api/cron/release-stock`       | Cancela pedidos pendientes de más de 72 horas y libera sus recursos            |
+| `release_expired_orders(72)`     | Cron diario `/api/cron/release-stock`       | Cancela pagos de Mercado Pago pendientes de más de 72 horas y libera sus recursos |
 | `claim_guest_orders(user_id)`    | Registro e inicio de sesión                 | Asigna a la cuenta los pedidos de invitado con el mismo correo                 |
 | `admin_upsert_product(jsonb)`    | `scripts/seed-catalog.ts`                   | Upsert atómico de producto, colores y tallas                                   |
 
@@ -77,7 +79,7 @@ el inventario después de una demostración, ver el apartado 8.
 
 1. Ordena los ítems por `slug` y `size` antes de bloquear filas, para evitar interbloqueos.
 2. Bloquea el cupón con `for update` y verifica existencia, vigencia, usos globales y uso por correo.
-3. Crea el pedido en `pending` con subtotal y total en cero.
+3. Crea el pedido en `confirmed` si el medio es contraentrega y en `pending` si es Mercado Pago, con subtotal y total en cero.
 4. Recorre los ítems: verifica producto, mínimo, color y stock (`for update`), descuenta stock y crea la línea con el precio de la base.
 5. Suma el subtotal, aplica `floor(subtotal × percent_off / 100)` y registra el canje.
 6. Actualiza el pedido con subtotal, descuento y total. Si algo falla, la transacción completa se revierte.
@@ -89,9 +91,14 @@ El navegador nunca envía precios: solo `slug`, `size`, `color` y `quantity`. Cu
 | Momento                          | Stock            | Cupón                          |
 | -------------------------------- | ---------------- | ------------------------------ |
 | Se crea el pedido                | Se descuenta     | Se registra el canje           |
+| Contraentrega                    | Queda descontado | Queda consumido                |
 | Pago aprobado                    | Queda descontado | Queda consumido                |
 | Pago rechazado o cancelado       | Se devuelve      | Se libera (`released_at`)      |
-| Pendiente por más de 72 horas    | Se devuelve      | Se libera                      |
+| Mercado Pago pendiente +72 horas | Se devuelve      | Se libera                      |
+
+La contraentrega no tiene pago en línea: el pedido se acepta al registrarse y nace en `confirmed`.
+El cron solo expira pedidos de Mercado Pago sin pagar, para no cancelar una venta que se cobra al
+entregar.
 
 ---
 
@@ -201,15 +208,16 @@ node --no-warnings --env-file=.env.local scripts/verify-schema.ts
 
 `data/products.ts` queda como fuente del seed. El sitio ya no lo importa: lee de Postgres.
 
-### Resultado de la verificación (18 nov 2026)
+### Resultado de la verificación (23 nov 2026)
 
 ```
-OK · Catálogo y cupones cargados · {"products":10,"colors":14,"sizes":40,"coupons":4,"users":0}
+OK · Catálogo y cupones cargados · {"products":10,"colors":14,"sizes":40,"coupons":4,"users":2}
 OK · anon no lee el catálogo
 OK · anon no lee pedidos
 OK · anon no lee cupones
 OK · anon no lee cuentas
 OK · place_order calcula subtotal, descuento y total · {"subtotal":159800,"discount":15980,"total":143820}
+OK · contraentrega nace confirmada · {"status":"confirmed"}
 OK · place_order descuenta stock · {"before":10,"after":8}
 OK · place_order registra el canje · {"n":1}
 OK · settle_payment marca rechazado

@@ -151,3 +151,71 @@ de la sesión, el login demo y el render del checkout, que consulta la cuenta pa
 - `get_runtime_errors` no registra ningún `EMAXCONNSESSION` posterior a las 17:48; el último error
   pertenece al deployment anterior al arreglo.
 - `/cuenta` y `/cuenta/pedidos` cargan con la sesión demo y muestran el nombre y el historial vacío.
+
+---
+
+## 7. De "por confirmar" a "confirmado" (23 de noviembre)
+
+### Problema observado
+
+El historial mostraba "Pendiente de confirmación" para todo pedido recién creado, también para la
+contraentrega, que no tiene pago en línea que lo mueva de estado. El cron de vencimiento agravaba el
+caso: cancelaba cualquier pedido `pending` o `in_process` de más de 72 horas sin distinguir el medio
+de pago. El pedido de contraentrega `KM-4D3F4E57-…` (19 nov) fue cancelado automáticamente el 22 de
+noviembre a las 09:00 UTC y se le devolvió el stock, aunque era una venta válida que se cobra al
+entregar.
+
+### Decisión
+
+La opción elegida fue que **la contraentrega nazca confirmada**: no hay pago que esperar y nadie debe
+revisarla a mano. Se conserva el estado `pending` para Mercado Pago, que sí espera el webhook.
+
+### Cambios aplicados
+
+- Migración `20261123000000_sprint4_order_confirmed.sql`: `confirmed` en el enum `order_status`.
+- Migración `20261123000100_sprint4_contraentrega_confirmada.sql`: `place_order` graba `confirmed`
+  cuando `p_payment_method = 'cash_on_delivery'`; `release_expired_orders` filtra solo
+  `payment_method = 'mercado_pago'`; los pedidos de contraentrega que seguían `pending` pasaron a
+  `confirmed`.
+- `lib/orders.ts`, `lib/order-status.ts` y `app/cuenta/page.tsx`: nuevo estado, etiqueta verde
+  "Pedido confirmado" y contador "Confirmados" que suma `approved` y `confirmed`.
+- Correos, WhatsApp y pantalla de gracias: la contraentrega ya no pide "confirmar" el pedido, sino
+  coordinar la entrega. El botón dice **Coordinar entrega por WhatsApp**.
+- "Por confirmar" pasó a "Total por cotizar" / "Por cotizar" cuando el envío aún no tiene tarifa,
+  para que no se confunda con un estado pendiente.
+
+### Verificación en la base
+
+`node --no-warnings --env-file=.env.local scripts/verify-schema.ts` → 13/13 correctos, incluido el
+nuevo "contraentrega nace confirmada · {"status":"confirmed"}". Consulta directa al proyecto remoto:
+
+```
+enum: pending, in_process, approved, rejected, cancelled, refunded, confirmed
+cron solo Mercado Pago: true
+contraentrega que el cron podria cancelar: 0
+```
+
+| Pedido                                  | Medio          | Estado antes | Estado después |
+| --------------------------------------- | -------------- | ------------ | -------------- |
+| `KM-6681B860-8067-4FC1-95BD-2ABB48533281` | Contraentrega  | `pending`    | `confirmed`    |
+| `KM-6A25BB89-DA14-4984-A960-3F67D2F75B29` | Mercado Pago   | `pending`    | `pending`      |
+
+### Verificación en la interfaz
+
+Con el build de producción local (`npm run start`, porque `next dev` se detiene con el aviso de
+seguridad de Next 16.4.3), sesión demo y un pedido de contraentrega de una prenda:
+
+- Pedido creado: `KM-05A92260-5308-4B53-8D76-F6D78420430C` (Básica Tinta M, $79.900).
+- `/checkout/gracias`: "Tu pedido quedó confirmado. Coordina la entrega por WhatsApp…" y enlace
+  `https://wa.me/573150196386?text=Hola%2C%20quiero%20coordinar%20la%20entrega%20del%20pedido%20…`.
+- `/cuenta/pedidos`: el pedido nuevo y `KM-6681B860…` muestran **PEDIDO CONFIRMADO**; el de Mercado
+  Pago sigue **PENDIENTE DE CONFIRMACIÓN**.
+- `/cuenta`: "Confirmados 2" y "Último pedido: KM-05A92260… · pedido confirmado".
+- `06-pedidos-confirmados-movil.png` y `07-gracias-contraentrega-movil.png`: capturas a 390 px.
+
+Nota: el entorno local tiene `SHIPPING_RATES_CONFIRMED=false`, por eso el pedido de prueba muestra
+"Total por cotizar" y "falta cotizar el envío a tu municipio". En producción las tarifas sí están
+configuradas y el pedido muestra el total con el envío aplicado.
+
+`npm run typecheck`, `npm run lint` y `npm run build` (segunda pasada, por el aviso de seguridad)
+terminan sin errores.

@@ -75,7 +75,7 @@ export default async function OrdersPage() {
                       {orderStatusLabels[order.status]}
                     </span>
                     <span className="text-base font-semibold">
-                      {order.total === null ? "Por confirmar" : formatPrice(order.total)}
+                      {order.total === null ? "Total por cotizar" : formatPrice(order.total)}
                     </span>
                   </span>
                 </summary>
@@ -113,7 +113,7 @@ export default async function OrdersPage() {
                       <dt>Envío</dt>
                       <dd>
                         {order.shipping === null
-                          ? "Por confirmar"
+                          ? "Por cotizar"
                           : order.shipping === 0
                             ? "Gratis"
                             : formatPrice(order.shipping)}

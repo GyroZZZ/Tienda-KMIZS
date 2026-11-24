@@ -24,13 +24,13 @@ function nextSteps(snapshot: OrderSnapshot | null): string {
     return "Escríbenos por WhatsApp con tu número de pedido para confirmar disponibilidad y plazo de envío antes de pagar o despachar.";
   }
 
-  const freeShipping = snapshot.shipping === 0;
-
-  switch (snapshot.paymentMethod) {
-    case "cash_on_delivery":
-      return freeShipping
-        ? "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio y el plazo del envío antes de despachar. El envío es gratis y no pagas nada hasta recibir."
-        : "Confirma el pedido por WhatsApp. Validamos la cobertura de contraentrega en tu municipio, la tarifa y el plazo del envío antes de despachar. No pagas nada hasta recibir.";
+  switch (snapshot.paymentMethod) {    case "cash_on_delivery":
+      if (snapshot.shipping === null) {
+        return "Tu pedido quedó confirmado. Coordina la entrega por WhatsApp: falta cotizar el envío a tu municipio y no pagas nada hasta recibir.";
+      }
+      return snapshot.shipping === 0
+        ? "Tu pedido quedó confirmado. Coordina la entrega por WhatsApp: el envío es gratis y no pagas nada hasta recibir."
+        : "Tu pedido quedó confirmado. Coordina la entrega por WhatsApp y no pagas nada hasta recibir.";
     case "mercado_pago":
       return "El pago digital se procesa en Mercado Pago. Cuando se confirme, el equipo prepara el pedido y te contacta para coordinar la entrega.";
     default:
@@ -98,10 +98,11 @@ export function OrderThankYou() {
     );
   }
 
+  const isCashOnDelivery = snapshot?.paymentMethod === "cash_on_delivery";
   const whatsappHref =
     snapshot?.whatsappUrl ??
     `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
-      `Hola, quiero confirmar el pedido ${orderId} de KMIZS.`,
+      `Hola, quiero hablar sobre el pedido ${orderId} de KMIZS.`,
     )}`;
 
   return (
@@ -130,7 +131,7 @@ export function OrderThankYou() {
           rel="noreferrer"
           className="mt-5 inline-flex min-h-12 items-center justify-center bg-ink px-6 py-3 text-center text-sm font-semibold tracking-[0.12em] text-bone uppercase transition-colors hover:bg-accent"
         >
-          Confirmar por WhatsApp
+          {isCashOnDelivery ? "Coordinar entrega por WhatsApp" : "Confirmar por WhatsApp"}
         </a>
         <p className="mt-3 text-xs text-ink/55">
           Si no se abre WhatsApp, escríbenos al {site.whatsappDisplay} o a {site.email}.
@@ -192,7 +193,7 @@ export function OrderThankYou() {
               </dt>
               <dd>
                 {snapshot.shipping === null
-                  ? "Por confirmar"
+                  ? "Por cotizar"
                   : snapshot.shipping === 0
                     ? "Gratis"
                     : formatPrice(snapshot.shipping)}
