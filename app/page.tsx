@@ -9,19 +9,19 @@ const collections = [
     name: "Básicas",
     description: "Algodón pesado, corte recto y colores que combinan con todo.",
     image: "/lifestyle/basicas.webp",
-    alt: "Persona con camiseta básica de algodón color hueso",
+    alt: "Persona con camiseta Básica Hueso y logo KMIZS en el pecho",
   },
   {
     name: "Gráficas",
     description: "Diseños propios impresos en serie corta, pensados para durar.",
     image: "/lifestyle/graficas.webp",
-    alt: "Persona con camiseta gráfica de líneas sobre fondo tinta",
+    alt: "Persona con camiseta Gráfica Ruido de bloques rojos y negros",
   },
   {
     name: "Personalizadas",
     description: "Tu equipo, tu evento o tu marca con estampado a una tinta.",
     image: "/lifestyle/personalizadas.webp",
-    alt: "Tres personas con camisetas del mismo color hueso",
+    alt: "Tres personas con camisetas Básica Hueso y logo KMIZS",
   },
 ];
 
@@ -104,7 +104,7 @@ export default async function HomePage() {
             <div className="relative aspect-4/5 overflow-hidden bg-bone-dim">
               <Image
                 src="/lifestyle/hero.webp"
-                alt="Persona con camiseta básica de algodón color tinta"
+                alt="Persona con camiseta Básica Tinta y logo KMIZS en el pecho"
                 fill
                 priority
                 sizes="(min-width: 768px) 42vw, 100vw"
@@ -248,7 +248,7 @@ export default async function HomePage() {
           <div className="relative aspect-3/2 overflow-hidden border border-ink/10 bg-bone">
             <Image
               src="/lifestyle/equipos.webp"
-              alt="Grupo de personas con camisetas del mismo color"
+              alt="Grupo de cinco personas con camisetas KMIZS y diseño de bloques rojos"
               fill
               loading="lazy"
               sizes="(min-width: 768px) 45vw, 100vw"
