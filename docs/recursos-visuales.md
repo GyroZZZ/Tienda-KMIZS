@@ -49,6 +49,9 @@ nuevo con esa indicación explícita.
   (`complete === true`, `naturalWidth > 0`) a 1440 px y a 390 px; las cinco lifestyle son las nuevas.
 - `01-portada-escritorio.png` y `02-portada-movil.png` en `docs/evidencias/inicio/`: portada completa
   en escritorio y en móvil, con la misma paleta `ink`/`bone`/`accent` y sin desbordamiento.
+- Producción: deployment `dpl_96n2A1HYgc41ME7ZF7py28bhwQKN` (commit `8445a05`, `READY`). El HTML de
+  `https://tienda-kmizs.vercel.app/` contiene las cinco rutas `/lifestyle/*.webp` y los productos
+  destacados del catálogo.
 
 ## Cómo regenerarlas
 
