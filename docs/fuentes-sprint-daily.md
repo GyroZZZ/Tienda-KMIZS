@@ -115,6 +115,7 @@ Si el daily se entrega antes de que se cierren esos ítems, el estado debe decir
 | S4 | Cuatro cupones aprobados por el PO: `PRIMERA10`, `VUELVE10`, `KMIZS15`, `EQUIPO20` | [`base-de-datos.md`](base-de-datos.md) §5 |
 | S4 | Pago sandbox verificado en aprobado, rechazado y pendiente; el rechazado se corrigió con `/api/payments/status` porque no llegó el webhook | [`evidencias/e5/pruebas.md`](evidencias/e5/pruebas.md) |
 | S4 | Métrica `whatsapp_click` y convención UTM documentada; pixel de Meta apagado hasta que exista el ID | [`analitica.md`](analitica.md), [`evidencias/e6/pruebas.md`](evidencias/e6/pruebas.md) |
+| S4 | Contraentrega confirmada al registrarse: el cron de 72 h solo expira Mercado Pago; "Total por cotizar" deja de parecer un estado | [`base-de-datos.md`](base-de-datos.md), [`evidencias/e6/pruebas.md`](evidencias/e6/pruebas.md) §7 |
 | S4 | Search Console pendiente de acceso; Lighthouse y QA en dos celulares sin ejecutar; revisión cruzada del DoD no realizada | [`retrospectiva-sprint-4.md`](retrospectiva-sprint-4.md) |
 
 El reparto de responsables y revisores ya está aplicado en las cabeceras de los documentos y en las descripciones de las tarjetas del tablero.

@@ -221,7 +221,7 @@ function buildWhatsAppUrl(
   const shippingText =
     shipping === null ? "por cotizar" : shipping === 0 ? "gratis" : formatPrice(shipping);
   const message = [
-    `Hola, quiero confirmar el pedido ${orderCode}.`,
+    `Hola, quiero coordinar la entrega del pedido ${orderCode}.`,
     `Nombre: ${customer.name}`,
     `Destino: ${customer.city}, ${customer.department}`,
     `Pago elegido: ${paymentMethod === "cash_on_delivery" ? "contraentrega" : "Mercado Pago"}`,
@@ -231,8 +231,8 @@ function buildWhatsAppUrl(
     `Envío${zoneLabel && shipping !== 0 ? ` (${zoneLabel})` : ""}: ${shippingText}`,
     `Total: ${total === null ? "pendiente de cotizar el envío" : formatPrice(total)}`,
     shipping === 0
-      ? "Por favor confirmen disponibilidad contraentrega (si aplica) y el tiempo de envío antes del pago."
-      : "Por favor confirmen disponibilidad contraentrega (si aplica), tarifa y tiempo de envío antes del pago.",
+      ? "Por favor confirmen el tiempo de envío antes del despacho."
+      : "Por favor confirmen la tarifa y el tiempo de envío antes del despacho.",
   ]
     .filter(Boolean)
     .join("\n");
@@ -473,13 +473,13 @@ export async function POST(request: Request) {
 
   const orderStatus =
     order.shipping === null
-      ? "Pendiente de cotizar envío y confirmar por WhatsApp"
-      : "Pendiente de confirmación por WhatsApp";
+      ? "Confirmado; falta cotizar el envío por WhatsApp"
+      : "Confirmado; pago contraentrega al recibir";
 
   if (canEmail) {
     try {
       await sendOrderEmail(
-        `Pedido ${code} · requiere confirmación`,
+        `Pedido ${code} · confirmado (contraentrega)`,
         orderEmailHtml({
           orderCode: code,
           customer,

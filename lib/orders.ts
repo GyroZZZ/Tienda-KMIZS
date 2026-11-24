@@ -35,6 +35,7 @@ export type OrderStatus =
   | "pending"
   | "in_process"
   | "approved"
+  | "confirmed"
   | "rejected"
   | "cancelled"
   | "refunded";

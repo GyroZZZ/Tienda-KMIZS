@@ -20,7 +20,11 @@ export default async function AccountPage() {
   if (!user) redirect("/cuenta/ingresar");
 
   const orders = await listOrdersForUser(user.id);
-  const approved = orders.filter((order) => order.status === "approved").length;
+  // Un pedido de Mercado Pago aprobado y uno de contraentrega confirmado
+  // cuentan igual: la compra quedó en firme.
+  const confirmed = orders.filter(
+    (order) => order.status === "approved" || order.status === "confirmed",
+  ).length;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20">
@@ -35,9 +39,9 @@ export default async function AccountPage() {
         </div>
         <div className="border border-ink/15 bg-bone-dim/40 p-5">
           <dt className="text-xs font-semibold tracking-[0.14em] text-ink/55 uppercase">
-            Pagados
+            Confirmados
           </dt>
-          <dd className="mt-2 text-3xl font-semibold">{approved}</dd>
+          <dd className="mt-2 text-3xl font-semibold">{confirmed}</dd>
         </div>
       </dl>
 

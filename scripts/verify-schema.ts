@@ -107,6 +107,12 @@ try {
     { subtotal: created.subtotal, discount: created.discount, total: created.total },
   );
 
+  check(
+    "contraentrega nace confirmada",
+    created.status === "confirmed",
+    { status: created.status },
+  );
+
   const stockAfterOrder = await client.query(
     `select s.stock
        from public.product_sizes s

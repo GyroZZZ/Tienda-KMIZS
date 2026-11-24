@@ -58,7 +58,7 @@ const paymentOptions: {
   {
     id: "cash_on_delivery",
     title: "Contraentrega",
-    description: "Confirmaremos por WhatsApp si está disponible para tu destino.",
+    description: "El pedido queda confirmado y pagas al recibir.",
   },
   {
     id: "mercado_pago",
