@@ -8,6 +8,8 @@
  * Ver docs/confianza.md.
  */
 
+import { site } from "@/lib/site";
+
 export type PolicySlug = "envios" | "cambios" | "terminos" | "privacidad";
 
 export interface PolicySection {
@@ -127,7 +129,7 @@ export const policies: Record<PolicySlug, Policy> = {
       {
         heading: "Cómo solicitar un cambio o una devolución",
         body: [
-          "Escríbenos a kmizs@protonmail.com o al WhatsApp +57 310 389 8707 con: número de pedido, nombre, motivo y, si aplica, fotos del producto.",
+          `Escríbenos a ${site.email} o al WhatsApp ${site.whatsappDisplay} con: número de pedido, nombre, motivo y, si aplica, fotos del producto.`,
           "Respondemos en un plazo máximo de 2 días hábiles con las instrucciones y la dirección de devolución.",
         ],
       },
@@ -144,7 +146,7 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Identificación del vendedor",
         body: [
           "KMIZS es un proyecto académico de comercio electrónico desarrollado en Colombia. No constituye una empresa constituida ni una sociedad comercial.",
-          "Canal de atención: kmizs@protonmail.com y WhatsApp +57 310 389 8707. Domicilio: Colombia.",
+          `Canal de atención: ${site.email} y WhatsApp ${site.whatsappDisplay}. Domicilio: Colombia.`,
         ],
       },
       {
@@ -238,7 +240,7 @@ export const policies: Record<PolicySlug, Policy> = {
         heading: "Responsable del tratamiento",
         body: [
           "KMIZS, proyecto académico de comercio electrónico con domicilio en Colombia.",
-          "Canal de atención y ejercicio de derechos: kmizs@protonmail.com y WhatsApp +57 310 389 8707.",
+          `Canal de atención y ejercicio de derechos: ${site.email} y WhatsApp ${site.whatsappDisplay}.`,
         ],
       },
       {

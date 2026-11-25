@@ -38,7 +38,7 @@ El contenido se redactó con base en:
 | Decisión                             | Valor adoptado                                                                                              |
 | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | Identificación del vendedor          | “KMIZS · proyecto académico”, sin NIT ni sociedad constituida                                               |
-| Canales de atención                  | `kmizs@protonmail.com` y WhatsApp +57 310 389 8707                                                          |
+| Canales de atención                  | `kmizs@protonmail.com` y WhatsApp +57 315 019 6386 (tomados de `lib/site.ts`)             |
 | Cambio de talla                      | 5 días hábiles desde la entrega                                                                             |
 | Derecho de retracto                  | 5 días hábiles desde la entrega (art. 47, Ley 1480)                                                         |
 | Reembolso                            | Hasta 15 días calendario desde el retracto (Ley 2439 de 2024)                                               |
