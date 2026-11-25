@@ -51,8 +51,11 @@ El canje de `PRIMERA10` quedó con `released_at = null`: el descuento sigue cons
 
 ## 4. Límites de este ensayo
 
-- Se ejecutó contra el build local porque el despliegue de producción aún no incluía la corrección
-  del número de WhatsApp en las políticas. Los datos son los mismos (base remota de Supabase).
+- Se ejecutó contra el build local porque en ese momento el despliegue de producción aún no incluía la
+  corrección del número de WhatsApp en las políticas. Tras fusionar el PR #45, el deployment
+  `dpl_68SBb8t6X98KDLsksQkWqZ1479Pr` quedó `READY` y `/politicas/privacidad` en producción contiene
+  **+57 315 019 6386** y ya no contiene el número anterior. Los datos son los mismos (base remota de
+  Supabase).
 - En local `SHIPPING_RATES_CONFIRMED=false`, por lo que Mercado Pago aparece deshabilitado en el
   checkout. En producción está habilitado y la ruta aprobada quedó verificada en
   [`../e5/pruebas.md`](../e5/pruebas.md) y en
