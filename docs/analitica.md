@@ -142,6 +142,13 @@ Cada ficha de producto incluye JSON-LD `Product` con nombre, descripción, image
 
 **Estado:** pendiente de acceso a la cuenta de Search Console del equipo.
 
+### SEM
+
+No se ejecutaron campañas pagas: no hay presupuesto ni cuenta publicitaria en el proyecto
+académico. La convención UTM del apartado 3 deja la medición preparada para el día en que exista una
+campaña, pero hoy no hay clics ni conversiones de anuncios que reportar. Esta limitación se declara
+también en [`entrega-final.md`](entrega-final.md).
+
 ---
 
 ## 7. Qué revisar cada semana

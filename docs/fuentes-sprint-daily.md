@@ -2,7 +2,7 @@
 
 **Proyecto:** KMIZS · **Curso:** Comercio Electrónico
 **Cobertura:** 27 de octubre – 21 de noviembre de 2026 (Sprints 1 a 4)
-**Preparado:** 21 de noviembre de 2026
+**Preparado:** 21 de noviembre de 2026 · **Actualizado:** 24 de noviembre de 2026 (documentos de entrega final)
 
 > Este archivo **no es el Sprint Daily**. Es el índice de fuentes para quien tenga que escribirlo:
 > aquí están el inventario documental, la cronología reconstruida, el estado real de las tarjetas y
@@ -39,6 +39,10 @@ Documentos transversales:
 - [`mercado-pago-sandbox.md`](mercado-pago-sandbox.md) — credenciales de prueba, comprador, tarjetas sembradas y verificación de los tres estados.
 - [`base-de-datos.md`](base-de-datos.md) — esquema, funciones, RLS, cupones y consultas de control.
 - [`analitica.md`](analitica.md) — herramientas, eventos, convención UTM, consentimiento y SEO.
+- [`recursos-visuales.md`](recursos-visuales.md) — imágenes lifestyle generadas con IA y aviso de ilustración.
+- [`entrega-final.md`](entrega-final.md) — índice del trabajo final en el orden del PDF de entrega.
+- [`cambios-post-entrega.md`](cambios-post-entrega.md) — PR #40 a #44 con motivo y justificación.
+- [`diapositiva-final.md`](diapositiva-final.md) — guion de la diapositiva y de la demo en vivo.
 - `docs/evidencias/*/pruebas.md` — casos probados, comandos de verificación y descripción de cada captura.
 
 ---
