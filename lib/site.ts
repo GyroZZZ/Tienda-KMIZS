@@ -14,6 +14,8 @@ export const site = {
   email: "kmizs@protonmail.com",
   whatsapp: "573150196386",
   whatsappDisplay: "+57 315 019 6386",
+  tiktok: "https://www.tiktok.com/@kmizs5",
+  tiktokHandle: "@kmizs5",
 } as const;
 
 export const currentYear = new Date().getFullYear();
@@ -71,5 +73,9 @@ export const footerNav = [
       { href: "/politicas/terminos", label: "Términos y condiciones" },
       { href: "/politicas/privacidad", label: "Tratamiento de datos" },
     ],
+  },
+  {
+    title: "Síguenos",
+    links: [{ href: site.tiktok, label: `TikTok · ${site.tiktokHandle}` }],
   },
 ] as const;

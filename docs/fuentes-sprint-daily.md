@@ -96,11 +96,12 @@ Fuente: tablero Trello `https://trello.com/b/7lKHNzAp`.
 | `[E4]` Generar confianza | ✅ Hecho | — |
 | `[E5]` Persistencia en Supabase | ✅ Hecho | 10/10 |
 | `[E6-E8]` Atender y medir | 🔧 En progreso | 5/7 |
-| `[E5]` Atraer visitas | 🔧 En progreso | 5/8 |
+| `[E5]` Atraer visitas | 🔧 En progreso | 6/8 |
 | `[E8]` Pruebas end-to-end | 🔧 En progreso | 3/6 |
 
 Pendiente en `Atender y medir`: WhatsApp Business y verificación del pixel.
-Pendiente en `Atraer visitas`: perfiles de redes, piezas de contenido y Search Console.
+Pendiente en `Atraer visitas`: piezas de contenido y Search Console. El perfil de TikTok
+(`@kmizs5`) ya está publicado y enlazado desde el pie del sitio.
 Pendiente en `Pruebas end-to-end`: matriz de dispositivos, revisión de correos/enlaces y Lighthouse.
 
 Si el daily se entrega antes de que se cierren esos ítems, el estado debe decir **en progreso**, no completado.

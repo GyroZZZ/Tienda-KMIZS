@@ -30,8 +30,10 @@ Este documento reúne las pruebas del trabajo final en el orden de la lista del 
 - Botón flotante de WhatsApp con mensaje prellenado, cuatro parámetros UTM y evento
   `whatsapp_click`: [`analitica.md`](analitica.md) y
   [`evidencias/e6/pruebas.md`](evidencias/e6/pruebas.md) §§1–3.
-- **Pendiente declarado:** perfiles de redes sociales y piezas de contenido (tarjeta
-  `[E5] Atraer visitas`, 5/8). No se afirma que estén listos.
+- **TikTok:** perfil publicado en https://www.tiktok.com/@kmizs5 y enlazado desde el pie del sitio;
+  la bio usa el enlace con `utm_source=tiktok` de [`analitica.md`](analitica.md) §3.1.
+- **Pendiente declarado:** Instagram y las piezas de contenido (tarjeta `[E5] Atraer visitas`, 6/8;
+  los pasos "producir 8 piezas" y "Search Console" siguen sin marcar). No se afirma que estén listos.
 
 ## 3. SEO / SEM
 
