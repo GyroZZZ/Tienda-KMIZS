@@ -80,7 +80,7 @@ negocio, métodos de pago, clientes, adaptación del CMS, inconvenientes, retos 
 
 ## 8. Sustentación y demostración
 
-El guion de demostración está en [`diapositiva-final.md`](diapositiva-final.md) §5. La prueba ensayada con
+El guion de demostración está en [`diapositiva-final.md`](diapositiva-final.md), apartado "Guion de la demostración en vivo". La prueba ensayada con
 registro de cliente, variaciones de talla/color, cupón y derivación de envío está en
 [`evidencias/entrega/pruebas.md`](evidencias/entrega/pruebas.md).
 
