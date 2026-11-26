@@ -72,5 +72,6 @@ El canje de `PRIMERA10` quedó con `released_at = null`: el descuento sigue cons
 - Los ocho pasos del ensayo terminaron como se esperaba; no aparecieron errores de sesión ni de base.
 - **Perfil de TikTok:** se comprobó con el oEmbed público de TikTok
   (`https://www.tiktok.com/oembed?url=https://www.tiktok.com/@kmizs5`), que devuelve
-  `author_name: KMIZS`, `author_url` del perfil y `embed_type: profile`. El enlace del pie se verificó
-  en el build local y en producción.
+  `author_name: KMIZS`, `author_url` del perfil y `embed_type: profile`. Tras el PR #49, el deployment
+  `dpl_BUGxEoWazFQhKzwoA9ykf89orzu8` quedó `READY` y el HTML de producción contiene la columna
+  **Síguenos** con el enlace `https://www.tiktok.com/@kmizs5`.

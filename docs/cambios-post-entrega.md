@@ -3,11 +3,11 @@
 El PDF de entrega pide que todo cambio realizado después de la entrega se documente y justifique en
 la herramienta de seguimiento **o** por correo a `hmorenod@unicartagena.edu.co`. Este documento reúne
 los seis pull requests fusionados en `main` después del cierre documental del Sprint 4 (19 de
-noviembre de 2026) que cambian el producto o corrigen un dato publicado, para que un integrante pueda
+noviembre de 2026) que tocan el producto o su evidencia de entrega, para que un integrante pueda
 copiarlos a la tarjeta correspondiente o enviarlos por correo.
 
-Los PR #45 a #48 fueron exclusivamente documentales (índice de entrega, guion de sustentación,
-verificación del WhatsApp y diapositivas) y no se listan uno por uno.
+Los PR #45 a #48 fueron solo de redacción (índice de entrega, guion de sustentación, verificación del
+WhatsApp y diapositivas) y no se listan uno por uno.
 
 No se publicaron comentarios en las tarjetas de Trello y ninguna tarjeta se movió a `✅ Hecho` sin
 tener todas sus casillas completas.
