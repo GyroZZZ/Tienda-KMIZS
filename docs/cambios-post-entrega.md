@@ -2,9 +2,12 @@
 
 El PDF de entrega pide que todo cambio realizado después de la entrega se documente y justifique en
 la herramienta de seguimiento **o** por correo a `hmorenod@unicartagena.edu.co`. Este documento reúne
-los cinco pull requests fusionados en `main` después del cierre documental del Sprint 4 (19 de
-noviembre de 2026), para que un integrante pueda copiarlos a la tarjeta correspondiente o enviarlos
-por correo.
+los seis pull requests fusionados en `main` después del cierre documental del Sprint 4 (19 de
+noviembre de 2026) que cambian el producto o corrigen un dato publicado, para que un integrante pueda
+copiarlos a la tarjeta correspondiente o enviarlos por correo.
+
+Los PR #45 a #48 fueron exclusivamente documentales (índice de entrega, guion de sustentación,
+verificación del WhatsApp y diapositivas) y no se listan uno por uno.
 
 No se publicaron comentarios en las tarjetas de Trello y ninguna tarjeta se movió a `✅ Hecho` sin
 tener todas sus casillas completas.
@@ -16,15 +19,17 @@ tener todas sus casillas completas.
 | [#42](https://github.com/GyroZZZ/Tienda-KMIZS/pull/42) | 24 nov | `8445a05` | Portada con cinco imágenes lifestyle, franja de beneficios, productos destacados y pasos de compra | La portada era únicamente texto. Es un cambio de presentación para la sustentación: no modifica catálogo, precios, pagos ni reglas de negocio, y conserva la paleta `ink`/`bone`/`accent`. Evidencia en [`evidencias/inicio/`](evidencias/inicio/). |
 | [#43](https://github.com/GyroZZZ/Tienda-KMIZS/pull/43) | 24 nov | `9e4ffd3` | Evidencia de la portada en producción | Documentación del PR #42. No toca código. |
 | [#44](https://github.com/GyroZZZ/Tienda-KMIZS/pull/44) | 24 nov | `bb30bc5` | Las imágenes lifestyle llevan el wordmark KMIZS y los estampados del catálogo | Corrección de coherencia visual detectada al revisar la portada: la ropa generada no se reconocía como la del catálogo. No cambia la funcionalidad. Detalle de prompts y aviso de IA en [`recursos-visuales.md`](recursos-visuales.md). |
+| [#49](https://github.com/GyroZZZ/Tienda-KMIZS/pull/49) | 26 nov | `ce002e0` | Perfil de TikTok enlazado desde el pie y documentación corregida | La documentación afirmaba que no había perfiles de redes, pero el perfil `@kmizs5` ya existía y el paso estaba marcado en la tarjeta `[E5]`. Se centraliza la URL en `lib/site.ts`, se agrega la columna "Síguenos" y se ajustan diapositivas, índice y evidencias. Evidencia en [`evidencias/entrega/pruebas.md`](evidencias/entrega/pruebas.md) §3 y §5. |
 
 ## Texto listo para copiar al seguimiento o al correo
 
-> Después del cierre del Sprint 4 se fusionaron cinco PR en `main`: #40 y #41 corrigen y documentan
+> Después del cierre del Sprint 4 se fusionaron seis PR en `main`: #40 y #41 corrigen y documentan
 > el estado de la contraentrega, que el cron cancelaba a las 72 horas aunque se paga al entregar; #42
 > y #43 incorporan y documentan imágenes y contenido real en la portada para la sustentación; #44
-> ajusta esas imágenes para que la ropa muestre el logo y los estampados del catálogo. Ninguno cambia
-> el alcance funcional acordado: son correcciones y mejoras de presentación. El detalle, con commit,
-> motivo y evidencia, está en `docs/cambios-post-entrega.md`.
+> ajusta esas imágenes para que la ropa muestre el logo y los estampados del catálogo; y #49 enlaza
+> el perfil de TikTok `@kmizs5`, que ya existía, y corrige la documentación que lo daba por pendiente.
+> Ninguno cambia el alcance funcional acordado: son correcciones y mejoras de presentación. El
+> detalle, con commit, motivo y evidencia, está en `docs/cambios-post-entrega.md`.
 
 ## Pendiente de registro fuera de este repositorio
 
