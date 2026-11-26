@@ -75,13 +75,18 @@ Este documento reúne las pruebas del trabajo final en el orden de la lista del 
 
 ## 7. Diapositiva
 
-Guion, contenido y notas del orador en [`diapositiva-final.md`](diapositiva-final.md): idea de
-negocio, métodos de pago, clientes, adaptación del CMS, inconvenientes, retos y soluciones.
+Guion, contenido y notas del orador en [`diapositiva-final.md`](diapositiva-final.md): **10 diapositivas**
+que cubren idea de negocio, clientes, captación multicanal, métodos de pago y seguridad, adaptación
+del CMS, SEO/SEM, analítica e impacto, los seis inconvenientes con sus soluciones y el alcance. Todo lo
+evaluable queda escrito en pantalla; el reparto de tiempo suma ~9 minutos.
 
 ## 8. Sustentación y demostración
 
-El guion de demostración está en [`diapositiva-final.md`](diapositiva-final.md), apartado "Guion de la demostración en vivo". La prueba ensayada con
-registro de cliente, variaciones de talla/color, cupón y derivación de envío está en
+La demostración **la hace el docente por su cuenta** entrando a https://tienda-kmizs.vercel.app; no se
+ejecuta durante la exposición. Las instrucciones para probarla (ruta de 6 pasos, cupón `PRIMERA10`,
+condiciones reales del sandbox y qué esperar) están en [`diapositiva-final.md`](diapositiva-final.md),
+apartado "Demostración autónoma". La prueba ensayada con registro de cliente, variaciones de
+talla/color, cupón y derivación de envío está en
 [`evidencias/entrega/pruebas.md`](evidencias/entrega/pruebas.md).
 
 ---
