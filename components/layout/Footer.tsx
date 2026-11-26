@@ -6,7 +6,7 @@ import { currentYear, footerNav, site } from "@/lib/site";
 export function Footer() {
   return (
     <footer className="mt-20 bg-ink text-bone">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_repeat(4,1fr)]">
         <div>
           <p className="font-display text-3xl leading-none">
             {site.name}
@@ -24,12 +24,23 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5">
               {group.links.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-bone/80 transition-colors hover:text-accent"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.href.startsWith("http") ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-bone/80 transition-colors hover:text-accent"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-sm text-bone/80 transition-colors hover:text-accent"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

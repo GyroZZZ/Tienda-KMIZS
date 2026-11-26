@@ -48,6 +48,8 @@ El canje de `PRIMERA10` quedó con `released_at = null`: el descuento sigue cons
 | `04-confirmacion.png` | Página de gracias con pedido confirmado y enlace de WhatsApp |
 | `05-historial-confirmado.png` | Historial de la cuenta con el badge "Pedido confirmado" |
 | `06-privacidad-whatsapp.png` | Política de privacidad con el número **+57 315 019 6386** |
+| `07-pie-tiktok.png` | Pie de página de escritorio con la columna **Síguenos → TikTok · @kmizs5** |
+| `08-pie-tiktok-movil.png` | El mismo pie en móvil (390 × 844 px) |
 
 ## 4. Límites de este ensayo
 
@@ -68,3 +70,7 @@ El canje de `PRIMERA10` quedó con `released_at = null`: el descuento sigue cons
 - `npm run typecheck`, `npm run lint` y `npm run build` (segunda pasada por el aviso de seguridad de
   Next 16.4.3) terminan sin errores.
 - Los ocho pasos del ensayo terminaron como se esperaba; no aparecieron errores de sesión ni de base.
+- **Perfil de TikTok:** se comprobó con el oEmbed público de TikTok
+  (`https://www.tiktok.com/oembed?url=https://www.tiktok.com/@kmizs5`), que devuelve
+  `author_name: KMIZS`, `author_url` del perfil y `embed_type: profile`. El enlace del pie se verificó
+  en el build local y en producción.

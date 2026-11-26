@@ -88,15 +88,16 @@ prefiere controlar inventario y variaciones antes que aparentar un catálogo gra
 | Sitio web | Catálogo, carrito, checkout y cuenta; público y sin instalar nada |
 | WhatsApp **+57 315 019 6386** | Botón flotante con mensaje prellenado; evento `whatsapp_click`; 4 parámetros UTM |
 | Correo `kmizs@protonmail.com` | Recibe el detalle de cada pedido y atiende cambios o garantías |
+| TikTok [@kmizs5](https://www.tiktok.com/@kmizs5) | Perfil publicado y enlazado desde el pie del sitio; bio con enlace UTM a la tienda |
 
 **Pendiente declarado**
 
-- Perfiles de redes sociales y piezas de contenido: **no están publicados** (tarjeta `[E5] Atraer
-  visitas`, 5/8). No se presentan como hechos.
+- Instagram y las piezas de contenido (calendario de 4 semanas): **pendientes**; la tarjeta
+  `[E5] Atraer visitas` va 6/8. No se presentan como hechos.
 
-**Notas (0:50).** El WhatsApp y el correo salen de una sola fuente (`lib/site.ts`), así que no pueden
-quedar desincronizados entre la tienda y las políticas. La captación orgánica quedó preparada, no
-ejecutada.
+**Notas (0:50).** El WhatsApp, el correo y el TikTok salen de una sola fuente (`lib/site.ts`), así que
+no pueden quedar desincronizados entre la tienda y las políticas. La captación orgánica quedó
+preparada: el perfil existe, las piezas todavía no.
 
 ---
 

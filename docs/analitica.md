@@ -77,7 +77,13 @@ https://tienda-kmizs.vercel.app/?utm_source=instagram&utm_medium=social&utm_camp
 
 # Historia de TikTok con el cupón de primera compra
 https://tienda-kmizs.vercel.app/?utm_source=tiktok&utm_medium=social&utm_campaign=primera_compra&utm_content=historia
+
+# Bio del perfil de TikTok (@kmizs5)
+https://tienda-kmizs.vercel.app/?utm_source=tiktok&utm_medium=social&utm_campaign=lanzamiento_s4&utm_content=bio
 ```
+
+El perfil publicado es <https://www.tiktok.com/@kmizs5>. La bio debe llevar el enlace con
+`utm_source=tiktok`, no el dominio pelado, para que la visita se pueda atribuir.
 
 `wa.me` está fuera del sitio, así que esos parámetros no aparecen como pageview en Vercel. Por eso el botón también dispara el evento `whatsapp_click` con los mismos cuatro UTMs: ahí sí se puede contar y filtrar en Analytics → Events.
 
