@@ -1,12 +1,28 @@
-# Diapositiva de sustentación · KMIZS
+# Diapositivas de sustentación · KMIZS
 
-**Formato:** una diapositiva + 3–4 minutos de exposición. El grupo se apoya en ella para demostrar
-después el flujo en el software. Texto pensado para leerse en pantalla; las notas son para quien
-habla.
+**Límite del grupo:** 10 minutos máximo, exposición + demo incluidos.
+**Formato recomendado:** 2 diapositivas · exposición 4 min · demo 5 min · cierre 1 min.
+**Si piden una sola diapositiva:** dejar en pantalla solo la diapositiva 1 y pasar la tabla de
+problemas a las notas del orador (sigue estando en este documento).
 
 ---
 
-## Contenido de la diapositiva
+## 0. Reparto del tiempo (10 min)
+
+| Bloque | Tiempo | Qué se muestra |
+| ------ | ------ | -------------- |
+| Intro + diapositiva 1 | 1:30 | Idea, clientes, métodos de pago y adaptación del CMS |
+| Diapositiva 2 | 1:30 | Tres problemas con evidencia y su solución |
+| Demo en vivo | 5:00 | Pasos 1–7 del guion; el paso 8 solo si sobra tiempo |
+| Cierre y pendientes | 1:00 | Sandbox, tarifas, SEM/Search Console y cambios posteriores |
+| Margen para transición | 1:00 | Pasar de la diapositiva al navegador |
+
+No se lee la tabla completa en voz alta: se mencionan los tres problemas de la diapositiva 2 y los
+demás quedan para preguntas.
+
+---
+
+## Contenido de la diapositiva 1 · Aspectos esenciales
 
 ### Título
 **KMIZS — Camisetas que se leen como se pronuncian**
@@ -25,7 +41,7 @@ necesitan camisetas a juego. Atención por **WhatsApp +57 315 019 6386** y corre
 | Medio | Comportamiento | Seguridad |
 | ----- | -------------- | --------- |
 | Contraentrega | Pedido **confirmado al registrarse**; se paga al recibir | Sin datos de tarjeta |
-| Mercado Pago | Prefencias, pago en checkout de la pasarela; el webhook actualiza el pedido | **Sandbox permanente**, firma HMAC `x-signature`, idempotencia por `code`/`payment_id` |
+| Mercado Pago | Preferencias, pago en checkout de la pasarela; el webhook actualiza el pedido | **Sandbox permanente**, firma HMAC `x-signature`, idempotencia por `code`/`payment_id` |
 
 No se realizó ningún cobro real: la integración está en modo `test` por decisión del proyecto.
 
@@ -35,15 +51,21 @@ No se usa Shopify ni WordPress. El catálogo vive en **Postgres (Supabase)** y s
 son propias (scrypt + cookie HMAC), sin Supabase Auth. Esa es la adaptación del CMS al alcance
 académico: una fuente de verdad, sin panel administrativo propio.
 
-### Inconvenientes → retos → soluciones
+## Contenido de la diapositiva 2 · Inconvenientes, retos y soluciones
+
+**En pantalla (3 filas, 1:30):**
+
 | Inconveniente | Reto | Solución |
 | ------------- | ---- | -------- |
-| 106 errores `EMAXCONNSESSION` en 19–21 nov | El pooler en modo sesión agotaba las 15 conexiones | Pooler de transacción (puerto 6543), pool de 2 y un solo reintento; 200/200 peticiones concurrentes |
-| El webhook no llegaba con la cuenta automática de MP | El pedido se quedaba en `pending` | Consulta al estado del pago en `/api/payments/status`, además del webhook firmado |
-| `Date.now()` rompía el prerender de `/cuenta` | Error al navegar o prefetchear | `connection()` fuera del `try` y `prefetch={false}` en los enlaces del panel |
-| La contraentrega salía "por confirmar" y el cron la cancelaba a las 72 h | Estado engañoso y venta perdida | Estado `confirmed` desde el registro; el cron solo expira Mercado Pago |
-| El WhatsApp viejo seguía en tres textos legales | Datos de contacto incoherentes | Un sola fuente en `lib/site.ts`, interpolada en las políticas |
-| Las imágenes de portada no mostraban el logo | Las prendas no se reconocían como del catálogo | Regeneración con wordmark y estampados; detalle en `docs/recursos-visuales.md` |
+| 106 errores `EMAXCONNSESSION` (19–21 nov) | El pooler en modo sesión agotaba las 15 conexiones | Transacción (puerto 6543), pool de 2 y un reintento; 200/200 concurrentes |
+| Contraentrega "por confirmar" y cron que la cancelaba a las 72 h | Estado engañoso y venta perdida | `confirmed` desde el registro; el cron solo expira Mercado Pago |
+| El webhook no llegaba con la cuenta automática de MP | Pedido estancado en `pending` | Consulta a `/api/payments/status` además del webhook firmado |
+
+**Si preguntan (no se lee en pantalla):**
+
+- `Date.now()` rompía el prerender de `/cuenta` → `connection()` fuera del `try` y `prefetch={false}`.
+- El WhatsApp viejo seguía en tres textos legales → una sola fuente en `lib/site.ts`, interpolada en las políticas.
+- Las imágenes lifestyle no mostraban el logo → regeneración con wordmark y estampados (`recursos-visuales.md`).
 
 ### Lo que se dice en voz alta
 Proyecto académico: pagos en sandbox, tarifas de envío de referencia, políticas sin revisión legal,
@@ -64,9 +86,9 @@ comercial. Los cambios posteriores a la entrega están en `docs/cambios-post-ent
 
 ---
 
-## 5. Guion de la demostración en vivo
+## Guion de la demostración en vivo
 
-Duración estimada: 4–5 minutos. Todas las rutas son públicas salvo `/cuenta*`.
+Duración estimada: 5 minutos. Todas las rutas son públicas salvo `/cuenta*`.
 
 1. **Portada** — `https://tienda-kmizs.vercel.app/`: mostrar hero, colecciones y productos
    destacados. Señalar que las imágenes lifestyle son ilustraciones generadas con IA y que las fotos
