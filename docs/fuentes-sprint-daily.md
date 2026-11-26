@@ -42,7 +42,7 @@ Documentos transversales:
 - [`recursos-visuales.md`](recursos-visuales.md) — imágenes lifestyle generadas con IA y aviso de ilustración.
 - [`entrega-final.md`](entrega-final.md) — índice del trabajo final en el orden del PDF de entrega.
 - [`cambios-post-entrega.md`](cambios-post-entrega.md) — PR #40 a #44 con motivo y justificación.
-- [`diapositiva-final.md`](diapositiva-final.md) — guion de la diapositiva y de la demo en vivo.
+- [`diapositiva-final.md`](diapositiva-final.md) — 10 diapositivas de sustentación (todo lo evaluable en pantalla) e instrucciones para la demo autónoma del docente.
 - `docs/evidencias/*/pruebas.md` — casos probados, comandos de verificación y descripción de cada captura.
 
 ---

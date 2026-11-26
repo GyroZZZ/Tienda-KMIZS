@@ -3,8 +3,8 @@
 **Fecha:** 24 de noviembre de 2026 · **Entorno:** build de producción local (`npm run start`) sobre la
 base real de Supabase · **Viewport:** 390 × 844 px
 
-Ensayo del flujo que el grupo debe mostrar el día de la entrega: registro de cliente, variaciones de
-talla y color, envío gratis por 2 prendas, cupón, confirmación y historial.
+Ensayo del flujo que el docente puede probar por su cuenta el día de la entrega: registro de cliente,
+variaciones de talla y color, envío gratis por 2 prendas, cupón, confirmación e historial.
 
 ## 1. Caso ejecutado
 
